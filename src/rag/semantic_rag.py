@@ -257,7 +257,7 @@ class SemanticRAG:
             "total_texts": len(texts),
             "documents_added": documents_added,
             "failed_embeddings": failed_embeddings,
-            "use_local_model": use_local
+            "embedding_source": "databricks_bge_api"
         }
         
         logger.info(f"Embedding generation completed: {documents_added} documents added to vector DB")

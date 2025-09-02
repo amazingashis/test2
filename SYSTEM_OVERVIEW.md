@@ -119,7 +119,7 @@ python_info = parser.parse_python_file("script.py")
 
 **Features**:
 - **BGE Integration**: Primary embedding model via Databricks API
-- **Local Fallback**: Sentence Transformers backup
+- **Production-Ready**: Databricks BGE API integration
 - **Semantic Matching**: Field and content similarity detection
 - **Batch Processing**: Efficient bulk embedding generation
 

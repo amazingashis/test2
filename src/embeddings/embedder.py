@@ -3,7 +3,6 @@ import requests
 import numpy as np
 from typing import List, Dict, Any, Optional
 import logging
-from sentence_transformers import SentenceTransformer
 import json
 
 # Set up logging
@@ -21,38 +20,32 @@ class EmbeddingGenerator:
             model_type (str): Type of embedding model to use
         """
         self.model_type = model_type
-        self.local_model = None
         
         # Databricks API configuration
-        self.bge_api_url = os.getenv("BGE_API_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/bge_large_en_v1_5/invocations")
+        self.endpoint_url = os.getenv("BGE_API_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/bge_large_en_v1_5/invocations")
         self.api_key = os.getenv("DATABRICKS_API_KEY")
         
-        # Initialize local model as fallback
-        try:
-            self.local_model = SentenceTransformer('BAAI/bge-large-en-v1.5')
-            logger.info("Local BGE model loaded successfully")
-        except Exception as e:
-            logger.warning(f"Could not load local BGE model: {str(e)}")
+        if not self.api_key:
+            logger.warning("No Databricks API key provided. Embedding functionality will be limited.")
+            
+        logger.info("BGE embedding generator initialized (Databricks-only mode)")
     
     def get_embedding(self, text: str, use_local: bool = False) -> Optional[List[float]]:
         """
-        Generate embedding for given text.
+        Generate embedding for given text using Databricks BGE API.
         
         Args:
             text (str): Text to embed
-            use_local (bool): Whether to use local model instead of API
+            use_local (bool): Ignored - only Databricks API is used
             
         Returns:
             Optional[List[float]]: Embedding vector or None if failed
         """
-        if use_local or not self.api_key:
-            return self._get_local_embedding(text)
-        else:
-            return self._get_databricks_embedding(text)
+        return self._get_databricks_embedding(text)
     
     def _get_databricks_embedding(self, text: str) -> Optional[List[float]]:
         """
-        Get embedding from Databricks BGE API.
+        Get embedding using Databricks BGE API.
         
         Args:
             text (str): Text to embed
@@ -60,60 +53,43 @@ class EmbeddingGenerator:
         Returns:
             Optional[List[float]]: Embedding vector or None if failed
         """
+        if not self.api_key:
+            logger.error("Databricks API key not available")
+            return None
+            
         try:
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json"
-            }
-            
-            payload = {
-                "inputs": [text[:512]]  # Truncate to max length
-            }
-            
             response = requests.post(
-                self.bge_api_url,
-                json=payload,
-                headers=headers,
+                self.endpoint_url,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "input": text,
+                    "model": "bge-large-en-v1.5"
+                },
                 timeout=30
             )
+            response.raise_for_status()
             
-            if response.status_code == 200:
-                result = response.json()
-                if "embeddings" in result and len(result["embeddings"]) > 0:
-                    return result["embeddings"][0]
+            result = response.json()
+            if 'data' in result and result['data']:
+                embedding = result['data'][0].get('embedding')
+                if embedding:
+                    logger.info(f"Generated embedding via Databricks BGE API (dim: {len(embedding)})")
+                    return embedding
                 else:
-                    logger.error(f"Unexpected API response format: {result}")
-                    return self._get_local_embedding(text)  # Fallback
+                    logger.error("No embedding data in Databricks response")
+                    return None
             else:
-                logger.error(f"API request failed: {response.status_code} - {response.text}")
-                return self._get_local_embedding(text)  # Fallback
-                
-        except Exception as e:
-            logger.error(f"Error getting Databricks embedding: {str(e)}")
-            return self._get_local_embedding(text)  # Fallback
-    
-    def _get_local_embedding(self, text: str) -> Optional[List[float]]:
-        """
-        Get embedding from local model.
-        
-        Args:
-            text (str): Text to embed
-            
-        Returns:
-            Optional[List[float]]: Embedding vector or None if failed
-        """
-        try:
-            if self.local_model is None:
-                logger.error("No local model available")
+                logger.error("Invalid response format from Databricks BGE API")
                 return None
-            
-            # Truncate text to reasonable length
-            text = text[:512]
-            embedding = self.local_model.encode(text)
-            return embedding.tolist()
-            
-        except Exception as e:
-            logger.error(f"Error getting local embedding: {str(e)}")
+                
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Databricks BGE API request failed: {e}")
+            return None
+        except (KeyError, IndexError, ValueError) as e:
+            logger.error(f"Error parsing Databricks BGE API response: {e}")
             return None
     
     def get_batch_embeddings(self, texts: List[str], batch_size: int = 32, use_local: bool = False) -> List[Optional[List[float]]]:
@@ -122,32 +98,18 @@ class EmbeddingGenerator:
         
         Args:
             texts (List[str]): List of texts to embed
-            batch_size (int): Number of texts to process at once
-            use_local (bool): Whether to use local model
+            batch_size (int): Number of texts to process at once (ignored - processing individually)
+            use_local (bool): Ignored - only Databricks API is used
             
         Returns:
             List[Optional[List[float]]]: List of embedding vectors
         """
         embeddings = []
         
-        for i in range(0, len(texts), batch_size):
-            batch = texts[i:i + batch_size]
-            
-            if use_local and self.local_model:
-                try:
-                    batch_embeddings = self.local_model.encode(batch)
-                    embeddings.extend([emb.tolist() for emb in batch_embeddings])
-                except Exception as e:
-                    logger.error(f"Error in batch embedding: {str(e)}")
-                    # Fallback to individual processing
-                    for text in batch:
-                        emb = self.get_embedding(text, use_local=True)
-                        embeddings.append(emb)
-            else:
-                # Process individually for API calls
-                for text in batch:
-                    emb = self.get_embedding(text, use_local=use_local)
-                    embeddings.append(emb)
+        # Process individually for API calls
+        for text in texts:
+            emb = self.get_embedding(text, use_local=False)
+            embeddings.append(emb)
         
         logger.info(f"Generated {len([e for e in embeddings if e is not None])} embeddings out of {len(texts)} texts")
         return embeddings
