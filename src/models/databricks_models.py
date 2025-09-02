@@ -21,7 +21,7 @@ class DatabricksModelClient:
             base_url (str, optional): Base URL for Databricks API
         """
         self.api_key = api_key or os.getenv("DATABRICKS_API_KEY")
-        self.base_url = base_url or os.getenv("DATABRICKS_BASE_URL", "https://databricks-hosted-url")
+        self.base_url = base_url or os.getenv("DATABRICKS_BASE_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com")
         
         if not self.api_key:
             logger.warning("No Databricks API key provided. Some functionality may be limited.")
@@ -75,7 +75,7 @@ class BGELargeEnV15(DatabricksModelClient):
             api_key (str, optional): Databricks API key
         """
         super().__init__(api_key)
-        self.model_endpoint = "bge_large_en_v1_5/infer"
+        self.model_endpoint = "serving-endpoints/bge_large_en_v1_5/invocations"
         self.max_input_length = 512
     
     def get_embedding(self, text: str) -> Optional[List[float]]:
@@ -180,7 +180,7 @@ class MetaLlama370BInstruct(DatabricksModelClient):
             api_key (str, optional): Databricks API key
         """
         super().__init__(api_key)
-        self.model_endpoint = "meta_llama_3_70b_instruct/infer"
+        self.model_endpoint = "serving-endpoints/databricks-meta-llama-3-3-70b-instruct/invocations"
         self.max_tokens = 4096
     
     def generate_response(self, prompt: str, max_tokens: int = 1000, 
@@ -306,25 +306,25 @@ Provide mapping in JSON format."""
         return None
 
 
-class ClaudeSonet4:
-    """Claude Sonet 4 model client for question answering"""
+class ClaudeSonet4(DatabricksModelClient):
+    """Claude Sonet 4 model client via Databricks"""
     
     def __init__(self, api_key: str = None):
         """
-        Initialize Claude client.
+        Initialize Claude client via Databricks.
         
         Args:
-            api_key (str, optional): Anthropic API key
+            api_key (str, optional): Databricks API key
         """
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-        self.base_url = "https://api.anthropic.com/v1/messages"
+        super().__init__(api_key)
+        self.model_endpoint = "serving-endpoints/databricks-claude-sonnet-4/invocations"
         
         if not self.api_key:
-            logger.warning("No Anthropic API key provided. Claude functionality will be limited.")
+            logger.warning("No Databricks API key provided. Claude functionality will be limited.")
     
     def answer_question(self, question: str, context: str, max_tokens: int = 1000) -> Optional[str]:
         """
-        Answer a question given context.
+        Answer a question given context using Claude via Databricks.
         
         Args:
             question (str): Question to answer
@@ -335,15 +335,7 @@ class ClaudeSonet4:
             Optional[str]: Answer or None if failed
         """
         try:
-            headers = {
-                "x-api-key": self.api_key,
-                "Content-Type": "application/json",
-                "anthropic-version": "2023-06-01"
-            }
-            
             payload = {
-                "model": "claude-3-sonnet-20240229",
-                "max_tokens": max_tokens,
                 "messages": [
                     {
                         "role": "user",
@@ -357,32 +349,31 @@ QUESTION:
 
 Please provide a clear, accurate answer based on the context provided."""
                     }
-                ]
+                ],
+                "max_tokens": max_tokens,
+                "temperature": 0.7
             }
             
-            response = requests.post(
-                self.base_url,
-                json=payload,
-                headers=headers,
-                timeout=30
-            )
+            response = self._make_request(self.model_endpoint, payload)
             
-            if response.status_code == 200:
-                result = response.json()
-                if "content" in result and len(result["content"]) > 0:
-                    return result["content"][0]["text"]
+            if response and "choices" in response and len(response["choices"]) > 0:
+                return response["choices"][0]["message"]["content"]
+            elif response and "content" in response:
+                # Handle different response format
+                if isinstance(response["content"], list) and len(response["content"]) > 0:
+                    return response["content"][0].get("text", "")
+                return str(response["content"])
             else:
-                logger.error(f"Claude API request failed: {response.status_code} - {response.text}")
-            
-            return None
+                logger.error(f"Unexpected Claude response format: {response}")
+                return None
             
         except Exception as e:
-            logger.error(f"Error calling Claude API: {str(e)}")
+            logger.error(f"Error calling Claude via Databricks: {str(e)}")
             return None
     
     def summarize_document(self, document: str, max_tokens: int = 500) -> Optional[str]:
         """
-        Summarize a document.
+        Summarize a document using Claude via Databricks.
         
         Args:
             document (str): Document to summarize
@@ -399,7 +390,7 @@ Please provide a clear, accurate answer based on the context provided."""
     
     def extract_entities(self, text: str) -> Optional[List[str]]:
         """
-        Extract named entities from text.
+        Extract named entities from text using Claude via Databricks.
         
         Args:
             text (str): Text to analyze
@@ -422,17 +413,16 @@ Please provide a clear, accurate answer based on the context provided."""
 class ModelOrchestrator:
     """Orchestrates multiple models for comprehensive analysis"""
     
-    def __init__(self, databricks_api_key: str = None, anthropic_api_key: str = None):
+    def __init__(self, databricks_api_key: str = None):
         """
         Initialize model orchestrator.
         
         Args:
             databricks_api_key (str, optional): Databricks API key
-            anthropic_api_key (str, optional): Anthropic API key
         """
         self.bge_model = BGELargeEnV15(databricks_api_key)
         self.llama_model = MetaLlama370BInstruct(databricks_api_key)
-        self.claude_model = ClaudeSonet4(anthropic_api_key)
+        self.claude_model = ClaudeSonet4(databricks_api_key)
     
     def comprehensive_analysis(self, documents: List[Dict[str, Any]]) -> Dict[str, Any]:
         """

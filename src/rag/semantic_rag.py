@@ -23,8 +23,7 @@ class SemanticRAG:
     
     def __init__(self, collection_name: str = "semantic_rag", 
                  persist_directory: str = "./chroma_db",
-                 databricks_api_key: str = None,
-                 anthropic_api_key: str = None):
+                 databricks_api_key: str = None):
         """
         Initialize Semantic RAG system.
         
@@ -32,7 +31,6 @@ class SemanticRAG:
             collection_name (str): Name for vector database collection
             persist_directory (str): Directory to persist vector database
             databricks_api_key (str, optional): Databricks API key
-            anthropic_api_key (str, optional): Anthropic API key
         """
         self.collection_name = collection_name
         self.persist_directory = persist_directory
@@ -43,7 +41,7 @@ class SemanticRAG:
         self.semantic_matcher = SemanticMatcher(self.embedding_generator)
         self.relationship_graph = RelationshipGraph()
         self.vector_db = VectorDBClient(collection_name, persist_directory)
-        self.model_orchestrator = ModelOrchestrator(databricks_api_key, anthropic_api_key)
+        self.model_orchestrator = ModelOrchestrator(databricks_api_key)
         
         # Data storage
         self.processed_documents = {}

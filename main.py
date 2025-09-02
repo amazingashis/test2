@@ -45,31 +45,35 @@ logger = logging.getLogger(__name__)
 
 def load_environment():
     """Load environment variables and API keys"""
-    from dotenv import load_dotenv
-    load_dotenv()
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        logger.info("python-dotenv not installed, using environment variables directly")
     
     # Check for required API keys
     databricks_key = os.getenv('DATABRICKS_API_KEY')
-    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     
     if not databricks_key:
         logger.warning("DATABRICKS_API_KEY not found. Some features may be limited.")
     
-    if not anthropic_key:
-        logger.warning("ANTHROPIC_API_KEY not found. Claude functionality will be limited.")
-    
-    return databricks_key, anthropic_key
+    return databricks_key
 
-def initialize_system(databricks_key=None, anthropic_key=None):
+def initialize_system(databricks_key=None):
     """Initialize the Semantic RAG system"""
     logger.info("Initializing Semantic RAG system...")
     
     try:
+        # Set Databricks endpoints directly
+        os.environ['BGE_API_URL'] = 'https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/bge_large_en_v1_5/invocations'
+        os.environ['LLAMA_API_URL'] = 'https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/databricks-meta-llama-3-3-70b-instruct/invocations'
+        os.environ['CLAUDE_API_URL'] = 'https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/databricks-claude-sonnet-4/invocations'
+        os.environ['DATABRICKS_BASE_URL'] = 'https://dbc-3735add4-1cb6.cloud.databricks.com'
+        
         semantic_rag = SemanticRAG(
             collection_name="semantic_rag_main",
             persist_directory="./data/chroma_db",
-            databricks_api_key=databricks_key,
-            anthropic_api_key=anthropic_key
+            databricks_api_key=databricks_key
         )
         
         logger.info("System initialized successfully")
@@ -316,11 +320,11 @@ Examples:
         return
     
     # Load environment
-    databricks_key, anthropic_key = load_environment()
+    databricks_key = load_environment()
     
     # Initialize system
     try:
-        semantic_rag = initialize_system(databricks_key, anthropic_key)
+        semantic_rag = initialize_system(databricks_key)
     except Exception as e:
         print(f"❌ Failed to initialize system: {str(e)}")
         return

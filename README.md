@@ -39,27 +39,29 @@ Semantic RAG System
    pip install -r requirements.txt
    ```
 
-3. **Set up environment variables**:
+3. **Set up API key**:
    ```bash
-   cp .env.example .env
-   # Edit .env with your API keys
+   export DATABRICKS_API_KEY=your_databricks_key
+   # Or create a .env file with your key
    ```
 
 ## Configuration
 
 ### Required API Keys
 
-- **Databricks API Key**: For BGE Large EN v1.5 and Meta Llama 3 70B models
-- **Anthropic API Key**: For Claude Sonnet 4
+- **Databricks API Key**: For BGE Large EN v1.5, Meta Llama 3 70B, and Claude Sonnet 4 models
 
 ### Environment Variables
 
-Create a `.env` file with:
+Set your Databricks API key as an environment variable:
 
 ```bash
+export DATABRICKS_API_KEY=your_databricks_key
+```
+
+Or create a `.env` file with:
+```bash
 DATABRICKS_API_KEY=your_databricks_key
-DATABRICKS_BASE_URL=https://your-databricks-instance.cloud.databricks.com
-ANTHROPIC_API_KEY=your_anthropic_key
 ```
 
 ## Usage

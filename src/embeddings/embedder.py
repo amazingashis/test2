@@ -24,7 +24,7 @@ class EmbeddingGenerator:
         self.local_model = None
         
         # Databricks API configuration
-        self.bge_api_url = os.getenv("BGE_API_URL", "https://databricks-hosted-url/bge_large_en_v1_5/infer")
+        self.bge_api_url = os.getenv("BGE_API_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/bge_large_en_v1_5/invocations")
         self.api_key = os.getenv("DATABRICKS_API_KEY")
         
         # Initialize local model as fallback
