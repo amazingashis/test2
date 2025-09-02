@@ -1,0 +1,320 @@
+import os
+import requests
+import numpy as np
+from typing import List, Dict, Any, Optional
+import logging
+from sentence_transformers import SentenceTransformer
+import json
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class EmbeddingGenerator:
+    """Handles embedding generation using different models"""
+    
+    def __init__(self, model_type: str = "bge_large_en_v1_5"):
+        """
+        Initialize embedding generator.
+        
+        Args:
+            model_type (str): Type of embedding model to use
+        """
+        self.model_type = model_type
+        self.local_model = None
+        
+        # Databricks API configuration
+        self.bge_api_url = os.getenv("BGE_API_URL", "https://databricks-hosted-url/bge_large_en_v1_5/infer")
+        self.api_key = os.getenv("DATABRICKS_API_KEY")
+        
+        # Initialize local model as fallback
+        try:
+            self.local_model = SentenceTransformer('BAAI/bge-large-en-v1.5')
+            logger.info("Local BGE model loaded successfully")
+        except Exception as e:
+            logger.warning(f"Could not load local BGE model: {str(e)}")
+    
+    def get_embedding(self, text: str, use_local: bool = False) -> Optional[List[float]]:
+        """
+        Generate embedding for given text.
+        
+        Args:
+            text (str): Text to embed
+            use_local (bool): Whether to use local model instead of API
+            
+        Returns:
+            Optional[List[float]]: Embedding vector or None if failed
+        """
+        if use_local or not self.api_key:
+            return self._get_local_embedding(text)
+        else:
+            return self._get_databricks_embedding(text)
+    
+    def _get_databricks_embedding(self, text: str) -> Optional[List[float]]:
+        """
+        Get embedding from Databricks BGE API.
+        
+        Args:
+            text (str): Text to embed
+            
+        Returns:
+            Optional[List[float]]: Embedding vector or None if failed
+        """
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {
+                "inputs": [text[:512]]  # Truncate to max length
+            }
+            
+            response = requests.post(
+                self.bge_api_url,
+                json=payload,
+                headers=headers,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                if "embeddings" in result and len(result["embeddings"]) > 0:
+                    return result["embeddings"][0]
+                else:
+                    logger.error(f"Unexpected API response format: {result}")
+                    return self._get_local_embedding(text)  # Fallback
+            else:
+                logger.error(f"API request failed: {response.status_code} - {response.text}")
+                return self._get_local_embedding(text)  # Fallback
+                
+        except Exception as e:
+            logger.error(f"Error getting Databricks embedding: {str(e)}")
+            return self._get_local_embedding(text)  # Fallback
+    
+    def _get_local_embedding(self, text: str) -> Optional[List[float]]:
+        """
+        Get embedding from local model.
+        
+        Args:
+            text (str): Text to embed
+            
+        Returns:
+            Optional[List[float]]: Embedding vector or None if failed
+        """
+        try:
+            if self.local_model is None:
+                logger.error("No local model available")
+                return None
+            
+            # Truncate text to reasonable length
+            text = text[:512]
+            embedding = self.local_model.encode(text)
+            return embedding.tolist()
+            
+        except Exception as e:
+            logger.error(f"Error getting local embedding: {str(e)}")
+            return None
+    
+    def get_batch_embeddings(self, texts: List[str], batch_size: int = 32, use_local: bool = False) -> List[Optional[List[float]]]:
+        """
+        Generate embeddings for multiple texts.
+        
+        Args:
+            texts (List[str]): List of texts to embed
+            batch_size (int): Number of texts to process at once
+            use_local (bool): Whether to use local model
+            
+        Returns:
+            List[Optional[List[float]]]: List of embedding vectors
+        """
+        embeddings = []
+        
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i:i + batch_size]
+            
+            if use_local and self.local_model:
+                try:
+                    batch_embeddings = self.local_model.encode(batch)
+                    embeddings.extend([emb.tolist() for emb in batch_embeddings])
+                except Exception as e:
+                    logger.error(f"Error in batch embedding: {str(e)}")
+                    # Fallback to individual processing
+                    for text in batch:
+                        emb = self.get_embedding(text, use_local=True)
+                        embeddings.append(emb)
+            else:
+                # Process individually for API calls
+                for text in batch:
+                    emb = self.get_embedding(text, use_local=use_local)
+                    embeddings.append(emb)
+        
+        logger.info(f"Generated {len([e for e in embeddings if e is not None])} embeddings out of {len(texts)} texts")
+        return embeddings
+    
+    def calculate_similarity(self, embedding1: List[float], embedding2: List[float]) -> float:
+        """
+        Calculate cosine similarity between two embeddings.
+        
+        Args:
+            embedding1 (List[float]): First embedding
+            embedding2 (List[float]): Second embedding
+            
+        Returns:
+            float: Cosine similarity score
+        """
+        try:
+            vec1 = np.array(embedding1)
+            vec2 = np.array(embedding2)
+            
+            # Calculate cosine similarity
+            dot_product = np.dot(vec1, vec2)
+            norm1 = np.linalg.norm(vec1)
+            norm2 = np.linalg.norm(vec2)
+            
+            if norm1 == 0 or norm2 == 0:
+                return 0.0
+            
+            similarity = dot_product / (norm1 * norm2)
+            return float(similarity)
+            
+        except Exception as e:
+            logger.error(f"Error calculating similarity: {str(e)}")
+            return 0.0
+    
+    def find_similar_embeddings(self, query_embedding: List[float], embeddings: List[List[float]], threshold: float = 0.7) -> List[int]:
+        """
+        Find embeddings similar to query embedding.
+        
+        Args:
+            query_embedding (List[float]): Query embedding
+            embeddings (List[List[float]]): List of embeddings to compare
+            threshold (float): Similarity threshold
+            
+        Returns:
+            List[int]: Indices of similar embeddings
+        """
+        similar_indices = []
+        
+        for i, embedding in enumerate(embeddings):
+            if embedding is not None:
+                similarity = self.calculate_similarity(query_embedding, embedding)
+                if similarity >= threshold:
+                    similar_indices.append(i)
+        
+        return similar_indices
+
+
+class SemanticMatcher:
+    """Handles semantic matching and relationship detection"""
+    
+    def __init__(self, embedding_generator: EmbeddingGenerator):
+        """
+        Initialize semantic matcher.
+        
+        Args:
+            embedding_generator (EmbeddingGenerator): Embedding generator instance
+        """
+        self.embedding_generator = embedding_generator
+    
+    def find_field_similarities(self, csv_data: List[Dict[str, Any]], similarity_threshold: float = 0.8) -> List[Dict[str, Any]]:
+        """
+        Find similar fields across CSV data.
+        
+        Args:
+            csv_data (List[Dict[str, Any]]): CSV data rows
+            similarity_threshold (float): Threshold for similarity matching
+            
+        Returns:
+            List[Dict[str, Any]]: List of field similarities
+        """
+        if not csv_data:
+            return []
+        
+        # Get all unique field names
+        all_fields = set()
+        for row in csv_data:
+            all_fields.update(row.keys())
+        
+        field_list = list(all_fields)
+        
+        # Generate embeddings for field names
+        field_embeddings = self.embedding_generator.get_batch_embeddings(field_list, use_local=True)
+        
+        similarities = []
+        
+        for i, field1 in enumerate(field_list):
+            if field_embeddings[i] is None:
+                continue
+                
+            for j, field2 in enumerate(field_list[i+1:], i+1):
+                if field_embeddings[j] is None:
+                    continue
+                
+                similarity = self.embedding_generator.calculate_similarity(
+                    field_embeddings[i], field_embeddings[j]
+                )
+                
+                if similarity >= similarity_threshold:
+                    similarities.append({
+                        'field1': field1,
+                        'field2': field2,
+                        'similarity': similarity,
+                        'type': 'field_similarity'
+                    })
+        
+        return similarities
+    
+    def find_content_relationships(self, documents: List[Dict[str, Any]], similarity_threshold: float = 0.7) -> List[Dict[str, Any]]:
+        """
+        Find content relationships between documents.
+        
+        Args:
+            documents (List[Dict[str, Any]]): List of documents with text content
+            similarity_threshold (float): Threshold for similarity matching
+            
+        Returns:
+            List[Dict[str, Any]]: List of content relationships
+        """
+        relationships = []
+        
+        # Extract text content from documents
+        texts = []
+        doc_ids = []
+        
+        for i, doc in enumerate(documents):
+            if 'text' in doc and doc['text']:
+                texts.append(doc['text'])
+                doc_ids.append(i)
+            elif 'content' in doc and doc['content']:
+                texts.append(doc['content'])
+                doc_ids.append(i)
+        
+        if len(texts) < 2:
+            return relationships
+        
+        # Generate embeddings
+        embeddings = self.embedding_generator.get_batch_embeddings(texts, use_local=True)
+        
+        # Find relationships
+        for i, emb1 in enumerate(embeddings):
+            if emb1 is None:
+                continue
+                
+            for j, emb2 in enumerate(embeddings[i+1:], i+1):
+                if emb2 is None:
+                    continue
+                
+                similarity = self.embedding_generator.calculate_similarity(emb1, emb2)
+                
+                if similarity >= similarity_threshold:
+                    relationships.append({
+                        'doc1_id': doc_ids[i],
+                        'doc2_id': doc_ids[j],
+                        'similarity': similarity,
+                        'type': 'content_similarity',
+                        'doc1_info': documents[doc_ids[i]].get('metadata', {}),
+                        'doc2_info': documents[doc_ids[j]].get('metadata', {})
+                    })
+        
+        return relationships

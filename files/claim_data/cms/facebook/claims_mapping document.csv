@@ -1,0 +1,26 @@
+﻿Source Field,Source Description,Target Table,Target Field,Transformation
+BENE_ID,Beneficiary ID,stg_claim_header,patient_id,Direct mapping
+CLM_ID,Claim ID,stg_claim_header,claim_id,Direct mapping
+CLM_FROM_DT,Claim From Date,stg_claim_header,service_start_date,Convert to standard date format
+CLM_THRU_DT,Claim Through Date,stg_claim_header,service_end_date,Convert to standard date format
+CLM_PMT_AMT,Claim Payment Amount,stg_claim_header,paid_amount,"Convert to decimal(15,2)"
+PRVDR_NUM,Provider Number,stg_claim_header,provider_id,Direct mapping
+ATT_PHYSN_NPI,Attending Physician NPI,stg_claim_header,attending_provider_npi,Direct mapping
+OP_PHYSN_NPI,Operating Physician NPI,stg_claim_header,operating_provider_npi,Direct mapping
+OTH_PHYSN_NPI,Other Physician NPI,stg_claim_header,other_provider_npi,Direct mapping
+NCH_BENE_PTB_DDCTBL_AMT,Part B Deductible Amount,stg_claim_header,deductible_amount,"Convert to decimal(15,2)"
+NCH_BENE_PTB_COINSRNC_AMT,Part B Coinsurance Amount,stg_claim_header,coinsurance_amount,"Convert to decimal(15,2)"
+CLM_TOT_CHRG_AMT,Claim Total Charge Amount,stg_claim_header,total_charge_amount,"Convert to decimal(15,2)"
+CLM_ADMSN_DT,Claim Admission Date,stg_claim_header,admission_date,Convert to standard date format
+CLM_IP_ADMSN_TYPE_CD,Inpatient Admission Type Code,stg_claim_header,admission_type_code,Direct mapping
+CLM_UTLZTN_DAY_CNT,Claim Utilization Day Count,stg_claim_header,utilization_day_count,Convert to integer
+NCH_PTNT_STATUS_IND_CD,Patient Status Indicator Code,stg_claim_header,patient_status_code,Direct mapping
+CLM_DISP_CD,Claim Disposition Code,stg_claim_header,disposition_code,Direct mapping
+PRNCPAL_DGNS_CD,Principal Diagnosis Code,stg_claim_diagnosis,diagnosis_code,"Direct mapping, set as primary"
+PRNCPAL_DGNS_VRSN_CD,Principal Diagnosis Version Code,stg_claim_diagnosis,diagnosis_code_version,"Direct mapping, set as primary"
+ICD_DGNS_CD1-ICD_DGNS_CD25,Diagnosis Codes 1-25,stg_claim_diagnosis,diagnosis_code,"Multiple rows, with diagnosis_sequence"
+ICD_DGNS_VRSN_CD1-CD25,Diagnosis Version Codes 1-25,stg_claim_diagnosis,diagnosis_code_version,Multiple rows
+ICD_PRCDR_CD1-ICD_PRCDR_CD25,Procedure Codes 1-25,stg_claim_procedures,procedure_code,"Multiple rows, with procedure_sequence"
+ICD_PRCDR_VRSN_CD1-CD25,Procedure Version Codes 1-25,stg_claim_procedures,procedure_code_version,Multiple rows
+PRCDR_DT1-PRCDR_DT25,Procedure Dates 1-25,stg_claim_procedures,procedure_date,Convert to standard date format
+CLM_SRVC_CLSFCTN_TYPE_CD,Service Classification Type Code,stg_claim_header,service_classification_code,Direct mapping
