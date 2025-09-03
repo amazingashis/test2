@@ -4,6 +4,8 @@ import json
 from typing import List, Dict, Any, Optional
 import logging
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +22,7 @@ class DatabricksModelClient:
             api_key (str, optional): Databricks API key
             base_url (str, optional): Base URL for Databricks API
         """
-        self.api_key = api_key or os.getenv("DATABRICKS_API_KEY")
+        self.api_key = api_key or os.getenv("DATABRICKS_TOKEN")
         self.base_url = base_url or os.getenv("DATABRICKS_BASE_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com")
         
         if not self.api_key:

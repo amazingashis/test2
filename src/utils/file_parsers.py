@@ -4,6 +4,8 @@ import ast
 from PyPDF2 import PdfReader
 from typing import List, Dict, Any, Optional
 import logging
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

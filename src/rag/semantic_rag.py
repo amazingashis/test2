@@ -4,6 +4,8 @@ import json
 from typing import List, Dict, Any, Optional, Tuple
 import logging
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 # Add src to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))

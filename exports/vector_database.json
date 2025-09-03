@@ -1,0 +1,22 @@
+{
+  "collection_name": "semantic_rag_main",
+  "export_timestamp": "2025-09-03T10:39:17.120130",
+  "total_documents": 49,
+  "documents": [
+    {
+      "id": "csv_0_row_4",
+      "document": "﻿Source Field: CLM_PMT_AMT Source Description: Claim Payment Amount Target Table: stg_claim_header Target Field: paid_amount Transformation: Convert to decimal(15,2) _row_number: 5 _source_file: claims_mapping document.csv",
+      "metadata": {
+        "Transformation": "Convert to decimal(15,2)",
+        "﻿Source Field": "CLM_PMT_AMT",
+        "_row_number": 5,
+        "timestamp": "2025-09-02T18:31:19.525104",
+        "doc_length": 222,
+        "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+        "_source_file": "claims_mapping document.csv",
+        "Target Field": "paid_amount",
+        "type": "csv_row",
+        "Source Description": "Claim Payment Amount",
+        "Target Table": "stg_claim_header"
+      },
+      "embedding": 

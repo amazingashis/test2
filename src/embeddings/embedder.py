@@ -4,6 +4,8 @@ import numpy as np
 from typing import List, Dict, Any, Optional
 import logging
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +25,7 @@ class EmbeddingGenerator:
         
         # Databricks API configuration
         self.endpoint_url = os.getenv("BGE_API_URL", "https://dbc-3735add4-1cb6.cloud.databricks.com/serving-endpoints/bge_large_en_v1_5/invocations")
-        self.api_key = os.getenv("DATABRICKS_API_KEY")
+        self.api_key = os.getenv("DATABRICKS_TOKEN")
         
         if not self.api_key:
             logger.warning("No Databricks API key provided. Embedding functionality will be limited.")

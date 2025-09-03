@@ -26,11 +26,13 @@ import argparse
 import json
 from datetime import datetime
 import logging
+from dotenv import load_dotenv
+load_dotenv()
 
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
-from rag.semantic_rag import SemanticRAG
+from src.rag.semantic_rag import SemanticRAG
 
 # Set up logging
 logging.basicConfig(
@@ -52,7 +54,7 @@ def load_environment():
         logger.info("python-dotenv not installed, using environment variables directly")
     
     # Check for required API keys
-    databricks_key = os.getenv('DATABRICKS_API_KEY')
+    databricks_key = os.getenv('DATABRICKS_TOKEN')
     
     if not databricks_key:
         logger.warning("DATABRICKS_API_KEY not found. Some features may be limited.")

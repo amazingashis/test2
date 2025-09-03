@@ -6,6 +6,8 @@ from typing import Dict, List, Any, Optional, Tuple
 import json
 import logging
 from collections import defaultdict, Counter
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
