@@ -224,7 +224,7 @@ class FileParser:
             return {
                 'text': text,
                 'metadata': metadata,
-                'chunks': FileParser._chunk_text(text, chunk_size=1000, overlap=200)
+                'chunks': FileParser._chunk_text(text, chunk_size=2000, overlap=400)
             }
             
         except Exception as e:
@@ -317,14 +317,14 @@ class FileParser:
             }
 
     @staticmethod
-    def _chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
+    def _chunk_text(text: str, chunk_size: int = 2000, overlap: int = 400) -> List[str]:
         """
         Split text into overlapping chunks.
         
         Args:
             text (str): Text to chunk
-            chunk_size (int): Size of each chunk
-            overlap (int): Overlap between chunks
+            chunk_size (int): Size of each chunk (default: 2000 characters)
+            overlap (int): Overlap between chunks (default: 400 characters)
             
         Returns:
             List[str]: List of text chunks

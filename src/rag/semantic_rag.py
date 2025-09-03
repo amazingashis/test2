@@ -24,6 +24,43 @@ logger = logging.getLogger(__name__)
 class SemanticRAG:
     """Main Semantic RAG system with relationship graphs and vector database"""
     
+    def __init__(self, collection_name: str = "semantic_rag", 
+                 persist_directory: str = "./data/chroma_db",
+                 databricks_api_key: str = None):
+        """
+        Initialize Semantic RAG system.
+        
+        Args:
+            collection_name (str): Name for vector database collection
+            persist_directory (str): Directory to persist vector database
+            databricks_api_key (str, optional): Databricks API key
+        """
+        self.collection_name = collection_name
+        self.persist_directory = persist_directory
+        
+        # Initialize components
+        self.file_parser = FileParser()
+        self.embedding_generator = EmbeddingGenerator()
+        self.semantic_matcher = SemanticMatcher(self.embedding_generator)
+        self.relationship_graph = RelationshipGraph()
+        self.vector_db = VectorDBClient(collection_name, persist_directory)
+        
+        # Initialize model orchestrator if API key provided
+        self.model_orchestrator = None
+        if databricks_api_key:
+            try:
+                from ..models.databricks_models import ModelOrchestrator
+                self.model_orchestrator = ModelOrchestrator(databricks_api_key)
+            except ImportError:
+                logger.warning("ModelOrchestrator not available, running without AI features")
+        
+        # Data storage
+        self.processed_documents = {}
+        self.field_mappings = {}
+        self.relationships = []
+        
+        logger.info("Semantic RAG system initialized")
+    
     def add_document(self, content: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
         """
         Add a document to the semantic RAG system.

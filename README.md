@@ -340,8 +340,8 @@ The system provides comprehensive statistics including:
 ### Core Settings
 ```python
 # Processing Configuration
-CHUNK_SIZE = 1000
-CHUNK_OVERLAP = 200
+CHUNK_SIZE = 2000
+CHUNK_OVERLAP = 400
 MAX_TOKENS = 512
 
 # AI Analysis Configuration
