@@ -265,6 +265,208 @@ class SemanticRAG:
         logger.info(f"Embedding generation completed: {documents_added} documents added to vector DB")
         return results
     
+    async def _analyze_semantic_relationships(self) -> None:
+        """
+        Use Meta Llama 3-3 70B to analyze deeper semantic relationships.
+        """
+        logger.info("Starting advanced relationship analysis with Meta Llama 3-3 70B")
+        
+        try:
+            # Prepare context for analysis
+            document_summaries = []
+            doc_ids = list(self.processed_documents.keys())
+            
+            for doc_id in doc_ids[:10]:  # Analyze first 10 documents to avoid token limits
+                doc = self.processed_documents[doc_id]
+                summary = f"ID: {doc_id}\nType: {doc['type']}\nContent: {doc['content'][:200]}..."
+                document_summaries.append(summary)
+            
+            # Create analysis prompt
+            prompt = f"""
+            Analyze the following documents and identify semantic relationships between them.
+            Focus on conceptual connections, data flow relationships, and domain-specific associations.
+            
+            Documents:
+            {chr(10).join(document_summaries)}
+            
+            For each relationship you identify, provide:
+            1. Source document ID
+            2. Target document ID  
+            3. Relationship type (e.g., "maps_to", "contains", "references", "transforms")
+            4. Relationship strength (0.0 to 1.0)
+            5. Brief explanation
+            
+            Format your response as JSON array:
+            [
+                {{
+                    "source": "doc_id_1",
+                    "target": "doc_id_2", 
+                    "type": "relationship_type",
+                    "strength": 0.8,
+                    "explanation": "brief explanation"
+                }}
+            ]
+            """
+            
+            # Get analysis from Meta Llama 3-3 70B
+            analysis_result = self.model_orchestrator.llama_model.generate_text(prompt)
+            
+            if analysis_result and analysis_result.get('success'):
+                try:
+                    # Parse the JSON response
+                    import json
+                    relationships = json.loads(analysis_result['response'])
+                    
+                    # Add AI-discovered relationships to graph
+                    for rel in relationships:
+                        if (rel['source'] in self.processed_documents and 
+                            rel['target'] in self.processed_documents):
+                            
+                            self.relationship_graph.add_relationship(
+                                rel['source'], rel['target'],
+                                relationship_type=f"ai_{rel['type']}",
+                                weight=rel['strength'],
+                                metadata={
+                                    'explanation': rel['explanation'],
+                                    'ai_generated': True,
+                                    'confidence': rel['strength']
+                                }
+                            )
+                    
+                    logger.info(f"Added {len(relationships)} AI-discovered relationships")
+                    
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Could not parse AI relationship analysis: {e}")
+                    
+        except Exception as e:
+            logger.warning(f"AI relationship analysis failed: {e}")
+    
+    async def _analyze_semantic_relationships(self) -> List[Dict[str, Any]]:
+        """
+        Advanced AI-powered relationship analysis using Meta Llama 3-3 70B.
+        
+        Returns:
+            List[Dict[str, Any]]: AI-identified relationships
+        """
+        logger.info("Performing AI-powered relationship analysis")
+        ai_relationships = []
+        
+        try:
+            # Get document pairs for analysis
+            doc_items = list(self.processed_documents.items())
+            analysis_pairs = []
+            
+            # Sample pairs for AI analysis (to avoid token limits)
+            import random
+            if len(doc_items) > 50:
+                # For large datasets, sample strategically
+                for i in range(min(100, len(doc_items) * len(doc_items) // 20)):
+                    doc1_id, doc1_data = random.choice(doc_items)
+                    doc2_id, doc2_data = random.choice(doc_items)
+                    if doc1_id != doc2_id:
+                        analysis_pairs.append((doc1_id, doc1_data, doc2_id, doc2_data))
+            else:
+                # For smaller datasets, analyze all pairs
+                for i, (doc1_id, doc1_data) in enumerate(doc_items):
+                    for j, (doc2_id, doc2_data) in enumerate(doc_items[i+1:], i+1):
+                        analysis_pairs.append((doc1_id, doc1_data, doc2_id, doc2_data))
+            
+            # Batch process pairs
+            batch_size = 5
+            for i in range(0, len(analysis_pairs), batch_size):
+                batch = analysis_pairs[i:i+batch_size]
+                batch_relationships = await self._analyze_relationship_batch(batch)
+                ai_relationships.extend(batch_relationships)
+                
+                # Prevent rate limiting
+                await asyncio.sleep(1)
+                
+        except Exception as e:
+            logger.error(f"AI relationship analysis failed: {e}")
+            
+        logger.info(f"AI identified {len(ai_relationships)} advanced relationships")
+        return ai_relationships
+    
+    async def _analyze_relationship_batch(self, batch: List[tuple]) -> List[Dict[str, Any]]:
+        """
+        Analyze a batch of document pairs for relationships using AI.
+        
+        Args:
+            batch: List of (doc1_id, doc1_data, doc2_id, doc2_data) tuples
+            
+        Returns:
+            List[Dict[str, Any]]: Identified relationships
+        """
+        relationships = []
+        
+        for doc1_id, doc1_data, doc2_id, doc2_data in batch:
+            try:
+                # Prepare content for analysis
+                content1 = doc1_data.get('content', '')[:500]  # Limit content length
+                content2 = doc2_data.get('content', '')[:500]
+                
+                # Create analysis prompt
+                analysis_prompt = f"""
+                Analyze the relationship between these two documents and identify any meaningful connections:
+
+                Document 1 ({doc1_data.get('type', 'unknown')}):
+                {content1}
+
+                Document 2 ({doc2_data.get('type', 'unknown')}):
+                {content2}
+
+                Please identify if there are any of the following relationship types:
+                1. Conceptual similarity (shared concepts, topics, or themes)
+                2. Complementary information (one extends or complements the other)
+                3. Sequential relationship (one follows from the other)
+                4. Hierarchical relationship (one is a subset/superset of the other)
+                5. Causal relationship (one causes or influences the other)
+
+                Respond with ONLY a JSON object in this format:
+                {{
+                    "has_relationship": true/false,
+                    "relationship_type": "conceptual|complementary|sequential|hierarchical|causal",
+                    "confidence": 0.0-1.0,
+                    "explanation": "brief explanation"
+                }}
+                """
+                
+                # Get AI analysis
+                response = await self.model_orchestrator.generate_with_model(
+                    "llama_model", analysis_prompt
+                )
+                
+                # Parse AI response
+                if response and isinstance(response, str):
+                    try:
+                        import json
+                        import re
+                        
+                        # Extract JSON from response
+                        json_match = re.search(r'\{.*\}', response, re.DOTALL)
+                        if json_match:
+                            analysis = json.loads(json_match.group())
+                            
+                            if (analysis.get('has_relationship', False) and 
+                                analysis.get('confidence', 0) > 0.6):
+                                
+                                relationships.append({
+                                    'source': doc1_id,
+                                    'target': doc2_id,
+                                    'type': f"ai_{analysis.get('relationship_type', 'unknown')}",
+                                    'confidence': analysis.get('confidence', 0),
+                                    'explanation': analysis.get('explanation', ''),
+                                    'weight': analysis.get('confidence', 0)
+                                })
+                                
+                    except (json.JSONDecodeError, KeyError) as e:
+                        logger.debug(f"Failed to parse AI response: {e}")
+                        
+            except Exception as e:
+                logger.debug(f"Failed to analyze pair {doc1_id}-{doc2_id}: {e}")
+                
+        return relationships
+    
     def build_relationship_graph(self, similarity_threshold: float = 0.7) -> Dict[str, Any]:
         """
         Build relationship graph based on semantic similarities and content analysis.
@@ -276,6 +478,13 @@ class SemanticRAG:
             Dict[str, Any]: Graph building results
         """
         logger.info("Building relationship graph")
+        
+        # Enhanced relationship analysis using Meta Llama 3-3 70B
+        import asyncio
+        try:
+            asyncio.run(self._analyze_semantic_relationships())
+        except Exception as e:
+            logger.warning(f"AI relationship analysis failed, continuing with basic analysis: {e}")
         
         # Add documents as nodes
         for doc_id, doc_data in self.processed_documents.items():
@@ -404,8 +613,37 @@ class SemanticRAG:
                         weight=1.0
                     )
         
+        # Enhanced AI relationship analysis with Meta Llama 3-3 70B
+        if self.model_orchestrator:
+            logger.info("Starting AI-powered relationship analysis...")
+            doc_list = list(self.processed_documents.values())
+            
+            # Sample documents for AI analysis (to manage API costs)
+            sample_size = min(15, len(doc_list))
+            doc_sample = doc_list[:sample_size]
+            
+            # Analyze relationships with AI
+            ai_relationships = self._analyze_ai_relationships(doc_sample)
+            
+            # Add AI-discovered relationships to graph
+            if ai_relationships:
+                self._add_ai_relationships(ai_relationships)
+                logger.info(f"Added {len(ai_relationships)} AI-discovered relationships")
+        
+        # Optimize the graph
+        self.optimize_graph()
+        
         # Get graph statistics
         graph_stats = self.relationship_graph.get_statistics()
+        
+        # Auto-save the graph for visualization
+        try:
+            import os
+            os.makedirs("exports", exist_ok=True)
+            self.relationship_graph.save_graph("exports/relationship_graph.json")
+            logger.info("Relationship graph auto-saved to exports/relationship_graph.json")
+        except Exception as e:
+            logger.warning(f"Failed to auto-save graph: {e}")
         
         results = {
             "success": True,
@@ -425,6 +663,189 @@ class SemanticRAG:
         
         logger.info(f"Relationship graph built: {graph_stats['num_nodes']} nodes, {graph_stats['num_edges']} edges")
         return results
+
+    def _analyze_ai_relationships(self, documents_sample: List[Dict]) -> List[Dict[str, Any]]:
+        """
+        Use Meta Llama 3-3 70B to analyze semantic relationships between documents.
+        
+        Args:
+            documents_sample: Sample of documents to analyze
+            
+        Returns:
+            List of discovered relationships
+        """
+        if not self.model_orchestrator or len(documents_sample) < 2:
+            return []
+            
+        try:
+            # Prepare document summary for AI analysis
+            doc_summaries = []
+            for doc in documents_sample[:10]:  # Limit to 10 docs for efficiency
+                summary = {
+                    'id': doc['doc_id'],
+                    'type': doc.get('type', 'unknown'),
+                    'content_preview': doc['content'][:200] + "..." if len(doc['content']) > 200 else doc['content'],
+                    'source': doc.get('source_file', 'unknown')
+                }
+                doc_summaries.append(summary)
+            
+            # Create analysis prompt
+            analysis_prompt = f"""Analyze the following {len(doc_summaries)} documents and identify semantic relationships between them.
+
+Documents:
+{json.dumps(doc_summaries, indent=2)}
+
+Please identify:
+1. Conceptual relationships (e.g., "claims processing" relates to "payment amounts")
+2. Data flow relationships (e.g., "patient_id maps to beneficiary_id") 
+3. Hierarchical relationships (e.g., "claim header contains claim details")
+4. Temporal relationships (e.g., "admission_date precedes discharge_date")
+5. Functional relationships (e.g., "diagnosis codes determine treatment codes")
+
+Return your analysis as a JSON array of relationships in this format:
+[
+  {{
+    "source_doc": "doc_id_1",
+    "target_doc": "doc_id_2", 
+    "relationship_type": "conceptual|dataflow|hierarchical|temporal|functional",
+    "relationship_name": "descriptive name",
+    "strength": 0.0-1.0,
+    "explanation": "brief explanation"
+  }}
+]
+
+Focus on meaningful, actionable relationships for healthcare claims data processing."""
+            
+            # Call Meta Llama 3-3 70B for relationship analysis
+            logger.info("Analyzing document relationships with Meta Llama 3-3 70B...")
+            ai_response = self.model_orchestrator.llama_model.analyze_relationships(
+                analysis_prompt,
+                max_tokens=2000
+            )
+            
+            # Parse AI response
+            try:
+                relationships = json.loads(ai_response)
+                if isinstance(relationships, list):
+                    logger.info(f"AI discovered {len(relationships)} relationships")
+                    return relationships
+                else:
+                    logger.warning("AI response was not a valid list of relationships")
+                    return []
+            except json.JSONDecodeError:
+                logger.warning("Could not parse AI relationship analysis response")
+                return []
+                
+        except Exception as e:
+            logger.error(f"Error in AI relationship analysis: {str(e)}")
+            return []
+    
+    def _add_ai_relationships(self, ai_relationships: List[Dict[str, Any]]):
+        """
+        Add AI-discovered relationships to the graph.
+        
+        Args:
+            ai_relationships: List of relationships from AI analysis
+        """
+        for rel in ai_relationships:
+            try:
+                source_id = rel.get('source_doc')
+                target_id = rel.get('target_doc')
+                rel_type = rel.get('relationship_type', 'semantic')
+                rel_name = rel.get('relationship_name', 'related_to')
+                strength = float(rel.get('strength', 0.5))
+                explanation = rel.get('explanation', '')
+                
+                if source_id and target_id and source_id in self.processed_documents and target_id in self.processed_documents:
+                    self.relationship_graph.add_relationship(
+                        source_id, target_id,
+                        relationship_type=f"ai_{rel_type}",
+                        weight=strength,
+                        relationship_name=rel_name,
+                        explanation=explanation,
+                        discovered_by='meta_llama_3_70b'
+                    )
+                    
+            except Exception as e:
+                logger.warning(f"Error adding AI relationship: {str(e)}")
+                continue
+    
+    def optimize_graph(self):
+        """
+        Optimize the relationship graph for better performance and visualization.
+        """
+        try:
+            logger.info("Optimizing relationship graph...")
+            
+            # Remove redundant relationships
+            removed_count = 0
+            edges_to_remove = []
+            
+            for edge in self.relationship_graph.graph.edges(data=True):
+                source, target, attrs = edge
+                weight = attrs.get('weight', 0.0)
+                
+                # Remove weak relationships
+                if weight < 0.1:
+                    edges_to_remove.append((source, target))
+                    removed_count += 1
+            
+            for source, target in edges_to_remove:
+                if self.relationship_graph.graph.has_edge(source, target):
+                    self.relationship_graph.graph.remove_edge(source, target)
+            
+            # Consolidate similar relationships
+            consolidated_count = self._consolidate_relationships()
+            
+            logger.info(f"Graph optimization complete: removed {removed_count} weak edges, consolidated {consolidated_count} relationships")
+            
+        except Exception as e:
+            logger.error(f"Error optimizing graph: {str(e)}")
+    
+    def _consolidate_relationships(self) -> int:
+        """
+        Consolidate similar relationships between the same nodes.
+        
+        Returns:
+            Number of relationships consolidated
+        """
+        consolidation_count = 0
+        node_pairs = {}
+        
+        # Group relationships by node pairs
+        for edge in self.relationship_graph.graph.edges(data=True):
+            source, target, attrs = edge
+            pair_key = tuple(sorted([source, target]))
+            
+            if pair_key not in node_pairs:
+                node_pairs[pair_key] = []
+            node_pairs[pair_key].append((source, target, attrs))
+        
+        # Consolidate multiple relationships between same nodes
+        for pair_key, relationships in node_pairs.items():
+            if len(relationships) > 1:
+                # Find the strongest relationship
+                best_rel = max(relationships, key=lambda x: x[2].get('weight', 0.0))
+                
+                # Remove all relationships for this pair
+                for source, target, _ in relationships:
+                    if self.relationship_graph.graph.has_edge(source, target):
+                        self.relationship_graph.graph.remove_edge(source, target)
+                
+                # Add back the consolidated relationship
+                source, target, attrs = best_rel
+                consolidated_attrs = attrs.copy()
+                consolidated_attrs['consolidated'] = True
+                consolidated_attrs['original_count'] = len(relationships)
+                
+                self.relationship_graph.add_relationship(
+                    source, target,
+                    **consolidated_attrs
+                )
+                
+                consolidation_count += len(relationships) - 1
+        
+        return consolidation_count
     
     def query(self, query_text: str, n_results: int = 5, include_graph_context: bool = True) -> Dict[str, Any]:
         """

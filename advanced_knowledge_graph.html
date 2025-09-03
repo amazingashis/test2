@@ -1,0 +1,2820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Semantic RAG Knowledge Graph</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-300px);
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-sidebar:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            margin-bottom: 25px;
+        }
+
+        .control-group {
+            margin-bottom: 18px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .control-group input, .control-group select, .control-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .control-group input:focus, .control-group select:focus, .control-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        .btn.success {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .btn.danger {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .btn.small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            padding: 5px 0;
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-results {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .search-result-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .search-result-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .search-result-type {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toolbar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .zoom-controls {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: #667eea;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #333;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        .legend h4 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            pointer-events: none;
+            font-size: 13px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            max-width: 250px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 8px 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            min-width: 160px;
+        }
+
+        .context-menu-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+            color: #333;
+        }
+
+        .context-menu-item:hover {
+            background: #f8f9fa;
+        }
+
+        .context-menu-item:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .context-menu-item:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .performance-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .filter-chip {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .filter-chip:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .filter-chip.active {
+            background: #4c51bf;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: absolute;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .toolbar {
+                top: 10px;
+                right: 10px;
+                flex-direction: column;
+            }
+            
+            .legend {
+                bottom: 10px;
+                right: 10px;
+                padding: 15px;
+            }
+        }
+
+        /* Enhanced Graph Styles */
+        .graph-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+        }
+
+        .graph-container:active {
+            cursor: grabbing;
+        }
+
+        .node {
+            cursor: pointer;
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .node:hover {
+            stroke-width: 4px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .node.selected {
+            stroke-width: 5px;
+            stroke: #ff6b6b;
+        }
+
+        .node.highlighted {
+            stroke-width: 4px;
+            stroke: #ffd93d;
+            filter: drop-shadow(0 0 10px rgba(255, 217, 61, 0.6));
+        }
+
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .link.highlighted {
+            stroke: #ff6b6b;
+            stroke-width: 3px;
+            stroke-opacity: 1;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.6));
+        }
+
+        .link.ai-relationship {
+            stroke: #4facfe;
+            stroke-dasharray: 5,5;
+            animation: dash 1s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -10;
+            }
+        }
+
+        .node-label {
+            text-anchor: middle;
+            font-size: 11px;
+            font-weight: 600;
+            fill: #333;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .cluster {
+            fill: rgba(102, 126, 234, 0.1);
+            stroke: #667eea;
+            stroke-width: 2px;
+            stroke-dasharray: 8,4;
+            opacity: 0.7;
+            border-radius: 15px;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-panel h4 {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .info-panel p {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .relationship-info {
+            background: rgba(79, 172, 254, 0.1);
+            border-left: 4px solid #4facfe;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="toggle-sidebar" onclick="toggleSidebar()" title="Toggle Panel">☰</button>
+        
+        <div class="sidebar" id="sidebar">
+            <h2>🧠 Knowledge Graph</h2>
+            
+            <div class="stats">
+                <h3>📊 Graph Statistics</h3>
+                <div class="stat-item">
+                    <span>Nodes:</span>
+                    <span class="stat-value" id="nodeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Edges:</span>
+                    <span class="stat-value" id="edgeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>AI Relationships:</span>
+                    <span class="stat-value" id="aiRelCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Clusters:</span>
+                    <span class="stat-value" id="clusterCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Density:</span>
+                    <span class="stat-value" id="graphDensity">0%</span>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <h3>🔍 Search Nodes</h3>
+                <div class="control-group">
+                    <input type="text" id="searchInput" placeholder="Search by content, type, or ID..." 
+                           oninput="searchNodes()" />
+                </div>
+                <div class="filter-chips">
+                    <button class="filter-chip active" onclick="filterByType('all')">All</button>
+                    <button class="filter-chip" onclick="filterByType('csv_row')">CSV</button>
+                    <button class="filter-chip" onclick="filterByType('pdf_chunk')">PDF</button>
+                    <button class="filter-chip" onclick="filterByType('python')">Python</button>
+                    <button class="filter-chip" onclick="filterByType('ai')">AI Generated</button>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+
+            <div class="controls">
+                <h3>⚙️ Graph Controls</h3>
+                
+                <div class="control-group">
+                    <label>Layout Algorithm:</label>
+                    <select id="layoutSelect" onchange="changeLayout()">
+                        <option value="force">Force Directed</option>
+                        <option value="circular">Circular</option>
+                        <option value="hierarchical">Hierarchical</option>
+                        <option value="radial">Radial</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Node Size: <span id="nodeSizeValue">6</span></label>
+                    <input type="range" id="nodeSizeSlider" min="3" max="20" value="6" 
+                           oninput="updateNodeSize(this.value)" />
+                </div>
+
+                <div class="control-group">
+                    <label>Link Distance: <span id="linkDistanceValue">50</span></label>
+                    <input type="range" id="linkDistanceSlider" min="20" max="200" value="50" 
+                           oninput="updateLinkDistance(this.value)" />
+                </div>
+
+                <div class="control-group">
+                    <label>Simulation Strength: <span id="strengthValue">-300</span></label>
+                    <input type="range" id="strengthSlider" min="-1000" max="-50" value="-300" 
+                           oninput="updateStrength(this.value)" />
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                    <button class="btn success small" onclick="centerGraph()">🎯 Center</button>
+                    <button class="btn secondary small" onclick="resetZoom()">↺ Reset</button>
+                    <button class="btn danger small" onclick="exportGraph()">💾 Export</button>
+                </div>
+            </div>
+
+            <div class="info-panel" id="nodeInfo" style="display: none;">
+                <h4>📄 Node Details</h4>
+                <div id="nodeDetails"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+                    <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+                    <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">⌂</button>
+                </div>
+                <button class="btn small" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Loading knowledge graph...
+            </div>
+
+            <svg class="graph-container" id="graph"></svg>
+
+            <div class="legend">
+                <h4>🏷️ Node Types</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff6b6b;"></div>
+                    <span>CSV Data</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ecdc4;"></div>
+                    <span>PDF Content</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #45b7d1;"></div>
+                    <span>Python Code</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f9ca24;"></div>
+                    <span>Summary</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #6c5ce7;"></div>
+                    <span>Fields</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a29bfe;"></div>
+                    <span>AI Generated <span class="ai-badge">AI</span></span>
+                </div>
+            </div>
+
+            <div class="performance-info" id="performanceInfo">
+                Loading: 0ms | Rendering: 0ms | Nodes: 0
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="focusNode()">🎯 Focus on Node</div>
+        <div class="context-menu-item" onclick="hideNode()">👁️ Hide Node</div>
+        <div class="context-menu-item" onclick="showNeighbors()">🔗 Show Neighbors</div>
+        <div class="context-menu-item" onclick="showNodeDetails()">📋 View Details</div>
+    </div>
+
+    <!-- Modal for detailed view -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Node Details</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let graphData = null;
+        let simulation = null;
+        let svg = null;
+        let g = null;
+        let currentTransform = null;
+        let selectedNode = null;
+        let hiddenNodes = new Set();
+        let currentFilter = 'all';
+        
+        // Performance tracking
+        const performanceTracker = {
+            loadStart: 0,
+            renderStart: 0,
+            loadTime: 0,
+            renderTime: 0
+        };
+
+        // Initialize the graph
+        async function initGraph() {
+            performanceTracker.loadStart = Date.now();
+            
+            try {
+                // Load graph data
+                const response = await fetch('exports/relationship_graph.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load graph data');
+                }
+                
+                graphData = await response.json();
+                performanceTracker.loadTime = Date.now() - performanceTracker.loadStart;
+                
+                // Setup SVG
+                setupSVG();
+                
+                // Process and render data
+                processGraphData();
+                renderGraph();
+                
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                
+                // Update performance info
+                updatePerformanceInfo();
+                
+            } catch (error) {
+                console.error('Error loading graph:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<div class="spinner"></div>Error loading graph data. Please check the console.';
+            }
+        }
+
+        function setupSVG() {
+            const container = d3.select("#graph");
+            const rect = container.node().getBoundingClientRect();
+            
+            svg = container
+                .attr("viewBox", [0, 0, rect.width, rect.height])
+                .attr("width", rect.width)
+                .attr("height", rect.height);
+
+            // Add zoom behavior
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 10])
+                .on("zoom", function(event) {
+                    currentTransform = event.transform;
+                    g.attr("transform", event.transform);
+                });
+
+            svg.call(zoom);
+
+            // Main group for all graph elements
+            g = svg.append("g");
+
+            // Add patterns for different relationship types
+            const defs = svg.append("defs");
+            
+            // Gradient for AI relationships
+            const aiGradient = defs.append("linearGradient")
+                .attr("id", "aiGradient")
+                .attr("gradientUnits", "userSpaceOnUse");
+            
+            aiGradient.append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", "#4facfe");
+                
+            aiGradient.append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", "#00f2fe");
+        }
+
+        function processGraphData() {
+            if (!graphData || !graphData.nodes || !graphData.edges) {
+                console.error('Invalid graph data structure');
+                return;
+            }
+
+            // Process nodes
+            graphData.nodes.forEach(node => {
+                // Add computed properties
+                node.radius = getNodeRadius(node);
+                node.color = getNodeColor(node);
+                node.displayName = getDisplayName(node);
+            });
+
+            // Process edges
+            graphData.edges.forEach(edge => {
+                edge.isAI = edge.relationship_type && edge.relationship_type.startsWith('ai_');
+            });
+
+            // Update statistics
+            updateStatistics();
+        }
+
+        function getNodeRadius(node) {
+            const baseSize = parseInt(document.getElementById('nodeSizeSlider').value);
+            const multipliers = {
+                'csv_summary': 1.5,
+                'pdf': 1.3,
+                'python': 1.2,
+                'field': 0.8,
+                'source_file': 2.0
+            };
+            return baseSize * (multipliers[node.node_type] || 1);
+        }
+
+        function getNodeColor(node) {
+            const colors = {
+                'csv_row': '#ff6b6b',
+                'csv_summary': '#ff8e8e', 
+                'pdf_chunk': '#4ecdc4',
+                'pdf': '#26d0ce',
+                'python': '#45b7d1',
+                'field': '#6c5ce7',
+                'source_file': '#f9ca24'
+            };
+            return colors[node.node_type] || '#95a5a6';
+        }
+
+        function getDisplayName(node) {
+            if (node.id.includes('csv_') && node.node_type === 'csv_row') {
+                return `Row ${node._row_number || ''}`;
+            }
+            if (node.id.includes('pdf_') && node.node_type === 'pdf_chunk') {
+                return `Chunk ${node.chunk_index || ''}`;
+            }
+            if (node.node_type === 'field') {
+                return node.field_name || node.id;
+            }
+            return node.id.replace(/^[^_]*_/, '').substring(0, 15);
+        }
+
+        function renderGraph() {
+            performanceTracker.renderStart = Date.now();
+
+            // Clear previous render
+            g.selectAll("*").remove();
+
+            // Create simulation
+            const width = parseInt(svg.attr("width"));
+            const height = parseInt(svg.attr("height"));
+            const linkDistance = parseInt(document.getElementById('linkDistanceSlider').value);
+            const strength = parseInt(document.getElementById('strengthSlider').value);
+
+            simulation = d3.forceSimulation(graphData.nodes)
+                .force("link", d3.forceLink(graphData.edges).id(d => d.id).distance(linkDistance))
+                .force("charge", d3.forceManyBody().strength(strength))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(d => d.radius + 2));
+
+            // Create links
+            const link = g.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(graphData.edges)
+                .enter().append("line")
+                .attr("class", d => `link ${d.isAI ? 'ai-relationship' : ''}`)
+                .attr("stroke-width", d => Math.sqrt(d.weight || 1) * 2)
+                .attr("stroke", d => d.isAI ? "url(#aiGradient)" : "#999");
+
+            // Create nodes
+            const node = g.append("g")
+                .attr("class", "nodes")
+                .selectAll("circle")
+                .data(graphData.nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", d => d.radius)
+                .attr("fill", d => d.color)
+                .attr("stroke", "#fff")
+                .on("click", function(event, d) {
+                    selectNode(d);
+                    event.stopPropagation();
+                })
+                .on("contextmenu", function(event, d) {
+                    showContextMenu(event, d);
+                    event.preventDefault();
+                })
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, d);
+                    highlightConnections(d);
+                })
+                .on("mouseout", function(event, d) {
+                    hideTooltip();
+                    unhighlightConnections();
+                })
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            // Add labels
+            const label = g.append("g")
+                .attr("class", "labels")
+                .selectAll("text")
+                .data(graphData.nodes)
+                .enter().append("text")
+                .attr("class", "node-label")
+                .text(d => d.displayName)
+                .attr("dy", d => d.radius + 15);
+
+            // Simulation tick
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                label
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+
+            performanceTracker.renderTime = Date.now() - performanceTracker.renderStart;
+            updatePerformanceInfo();
+        }
+
+        // Event handlers
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        function selectNode(node) {
+            // Remove previous selection
+            g.selectAll('.node').classed('selected', false);
+            
+            // Select current node
+            selectedNode = node;
+            g.selectAll('.node')
+                .filter(d => d.id === node.id)
+                .classed('selected', true);
+            
+            // Show node info
+            showNodeInfo(node);
+        }
+
+        function showNodeInfo(node) {
+            const infoPanel = document.getElementById('nodeInfo');
+            const details = document.getElementById('nodeDetails');
+            
+            let content = `
+                <p><strong>ID:</strong> ${node.id}</p>
+                <p><strong>Type:</strong> ${node.node_type}</p>
+                <p><strong>Content Length:</strong> ${node.content_length || 'N/A'}</p>
+            `;
+            
+            if (node.source_file) {
+                content += `<p><strong>Source:</strong> ${node.source_file}</p>`;
+            }
+            
+            if (node._row_number) {
+                content += `<p><strong>Row Number:</strong> ${node._row_number}</p>`;
+            }
+            
+            if (node.chunk_index !== undefined) {
+                content += `<p><strong>Chunk Index:</strong> ${node.chunk_index}</p>`;
+            }
+
+            // Show AI relationships
+            const aiRelationships = graphData.edges.filter(e => 
+                (e.source.id === node.id || e.target.id === node.id) && e.isAI
+            );
+            
+            if (aiRelationships.length > 0) {
+                content += '<h5>🤖 AI Discovered Relationships:</h5>';
+                aiRelationships.forEach(rel => {
+                    const otherNode = rel.source.id === node.id ? rel.target : rel.source;
+                    content += `<div class="relationship-info">
+                        <strong>${rel.relationship_type.replace('ai_', '')}:</strong> 
+                        ${otherNode.displayName}
+                        ${rel.metadata?.explanation ? `<br><em>${rel.metadata.explanation}</em>` : ''}
+                    </div>`;
+                });
+            }
+            
+            details.innerHTML = content;
+            infoPanel.style.display = 'block';
+        }
+
+        function highlightConnections(node) {
+            // Highlight connected edges
+            g.selectAll('.link')
+                .classed('highlighted', d => 
+                    d.source.id === node.id || d.target.id === node.id
+                );
+            
+            // Highlight connected nodes
+            const connectedNodeIds = new Set();
+            graphData.edges.forEach(edge => {
+                if (edge.source.id === node.id) connectedNodeIds.add(edge.target.id);
+                if (edge.target.id === node.id) connectedNodeIds.add(edge.source.id);
+            });
+            
+            g.selectAll('.node')
+                .classed('highlighted', d => connectedNodeIds.has(d.id));
+        }
+
+        function unhighlightConnections() {
+            g.selectAll('.link').classed('highlighted', false);
+            g.selectAll('.node').classed('highlighted', false);
+        }
+
+        function showTooltip(event, node) {
+            const tooltip = document.getElementById('tooltip');
+            
+            let content = `
+                <strong>${node.displayName}</strong><br>
+                Type: ${node.node_type}<br>
+                Size: ${node.content_length || 'N/A'} chars
+            `;
+            
+            if (node.source_file) {
+                const fileName = node.source_file.split(/[\\\/]/).pop();
+                content += `<br>File: ${fileName}`;
+            }
+            
+            tooltip.innerHTML = content;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
+        }
+
+        function showContextMenu(event, node) {
+            const contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.left = event.pageX + 'px';
+            contextMenu.style.top = event.pageY + 'px';
+            contextMenu.style.display = 'block';
+            
+            // Store selected node for context actions
+            selectedNode = node;
+        }
+
+        // Control functions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function updateStatistics() {
+            document.getElementById('nodeCount').textContent = graphData.nodes.length;
+            document.getElementById('edgeCount').textContent = graphData.edges.length;
+            
+            const aiRelCount = graphData.edges.filter(e => e.isAI).length;
+            document.getElementById('aiRelCount').textContent = aiRelCount;
+            
+            const density = graphData.edges.length / (graphData.nodes.length * (graphData.nodes.length - 1) / 2);
+            document.getElementById('graphDensity').textContent = (density * 100).toFixed(1) + '%';
+        }
+
+        function updatePerformanceInfo() {
+            const info = document.getElementById('performanceInfo');
+            info.textContent = `Loading: ${performanceTracker.loadTime}ms | Rendering: ${performanceTracker.renderTime}ms | Nodes: ${graphData.nodes.length}`;
+        }
+
+        function searchNodes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const results = document.getElementById('searchResults');
+            
+            if (!query) {
+                results.innerHTML = '';
+                return;
+            }
+            
+            const matchingNodes = graphData.nodes.filter(node => 
+                node.id.toLowerCase().includes(query) ||
+                node.node_type.toLowerCase().includes(query) ||
+                (node.content && node.content.toLowerCase().includes(query)) ||
+                (node.source_file && node.source_file.toLowerCase().includes(query))
+            );
+            
+            results.innerHTML = matchingNodes.map(node => `
+                <div class="search-result-item" onclick="focusOnNode('${node.id}')">
+                    <div class="search-result-title">${node.displayName}</div>
+                    <div class="search-result-type">${node.node_type}</div>
+                </div>
+            `).join('');
+        }
+
+        function focusOnNode(nodeId) {
+            const node = graphData.nodes.find(n => n.id === nodeId);
+            if (node) {
+                // Center the view on the node
+                const transform = d3.zoomIdentity
+                    .translate(parseInt(svg.attr("width")) / 2 - node.x, parseInt(svg.attr("height")) / 2 - node.y)
+                    .scale(1.5);
+                
+                svg.transition()
+                    .duration(750)
+                    .call(d3.zoom().transform, transform);
+                
+                selectNode(node);
+            }
+        }
+
+        function filterByType(type) {
+            // Update active filter chip
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentFilter = type;
+            
+            // Show/hide nodes based on filter
+            g.selectAll('.node')
+                .style('opacity', d => {
+                    if (type === 'all') return 1;
+                    if (type === 'ai' && hasAIRelationships(d)) return 1;
+                    if (d.node_type === type) return 1;
+                    return 0.2;
+                });
+                
+            g.selectAll('.node-label')
+                .style('opacity', d => {
+                    if (type === 'all') return 1;
+                    if (type === 'ai' && hasAIRelationships(d)) return 1;
+                    if (d.node_type === type) return 1;
+                    return 0.2;
+                });
+        }
+
+        function hasAIRelationships(node) {
+            return graphData.edges.some(e => 
+                (e.source.id === node.id || e.target.id === node.id) && e.isAI
+            );
+        }
+
+        function updateNodeSize(value) {
+            document.getElementById('nodeSizeValue').textContent = value;
+            
+            // Update node radii and re-render
+            graphData.nodes.forEach(node => {
+                node.radius = getNodeRadius(node);
+            });
+            
+            g.selectAll('.node').attr('r', d => d.radius);
+            
+            // Update collision force
+            simulation.force("collision", d3.forceCollide().radius(d => d.radius + 2));
+            simulation.alpha(0.3).restart();
+        }
+
+        function updateLinkDistance(value) {
+            document.getElementById('linkDistanceValue').textContent = value;
+            simulation.force("link").distance(value);
+            simulation.alpha(0.3).restart();
+        }
+
+        function updateStrength(value) {
+            document.getElementById('strengthValue').textContent = value;
+            simulation.force("charge").strength(value);
+            simulation.alpha(0.3).restart();
+        }
+
+        function changeLayout() {
+            const layout = document.getElementById('layoutSelect').value;
+            const width = parseInt(svg.attr("width"));
+            const height = parseInt(svg.attr("height"));
+            
+            simulation.stop();
+            
+            switch(layout) {
+                case 'circular':
+                    const radius = Math.min(width, height) * 0.3;
+                    graphData.nodes.forEach((node, i) => {
+                        const angle = (i / graphData.nodes.length) * 2 * Math.PI;
+                        node.x = width/2 + radius * Math.cos(angle);
+                        node.y = height/2 + radius * Math.sin(angle);
+                    });
+                    break;
+                    
+                case 'hierarchical':
+                    const levels = new Map();
+                    graphData.nodes.forEach(node => {
+                        const level = node.node_type;
+                        if (!levels.has(level)) levels.set(level, []);
+                        levels.get(level).push(node);
+                    });
+                    
+                    let yOffset = 50;
+                    levels.forEach(nodes => {
+                        nodes.forEach((node, i) => {
+                            node.x = (width / (nodes.length + 1)) * (i + 1);
+                            node.y = yOffset;
+                        });
+                        yOffset += height / levels.size;
+                    });
+                    break;
+                    
+                case 'radial':
+                    const centerNode = graphData.nodes[0];
+                    centerNode.x = width / 2;
+                    centerNode.y = height / 2;
+                    
+                    const rings = 3;
+                    graphData.nodes.slice(1).forEach((node, i) => {
+                        const ring = i % rings;
+                        const nodeRadius = (ring + 1) * (Math.min(width, height) * 0.15);
+                        const angle = (i / graphData.nodes.length) * 2 * Math.PI;
+                        node.x = width/2 + nodeRadius * Math.cos(angle);
+                        node.y = height/2 + nodeRadius * Math.sin(angle);
+                    });
+                    break;
+                    
+                default: // force
+                    simulation.restart();
+                    return;
+            }
+            
+            // Update positions
+            g.selectAll('.node')
+                .transition()
+                .duration(1000)
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+                
+            g.selectAll('.node-label')
+                .transition()
+                .duration(1000)
+                .attr('x', d => d.x)
+                .attr('y', d => d.y);
+                
+            g.selectAll('.link')
+                .transition()
+                .duration(1000)
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+        }
+
+        function zoomIn() {
+            svg.transition().call(d3.zoom().scaleBy, 1.5);
+        }
+
+        function zoomOut() {
+            svg.transition().call(d3.zoom().scaleBy, 1 / 1.5);
+        }
+
+        function resetZoom() {
+            svg.transition().call(d3.zoom().transform, d3.zoomIdentity);
+        }
+
+        function centerGraph() {
+            const bounds = g.node().getBBox();
+            const width = parseInt(svg.attr("width"));
+            const height = parseInt(svg.attr("height"));
+            const midX = bounds.x + bounds.width / 2;
+            const midY = bounds.y + bounds.height / 2;
+            
+            const scale = 0.9 / Math.max(bounds.width / width, bounds.height / height);
+            const translate = [width / 2 - scale * midX, height / 2 - scale * midY];
+            
+            svg.transition()
+                .duration(750)
+                .call(d3.zoom().transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+        }
+
+        function exportGraph() {
+            // Create export data
+            const exportData = {
+                nodes: graphData.nodes.map(node => ({
+                    id: node.id,
+                    type: node.node_type,
+                    x: node.x,
+                    y: node.y,
+                    color: node.color,
+                    radius: node.radius
+                })),
+                edges: graphData.edges.map(edge => ({
+                    source: edge.source.id,
+                    target: edge.target.id,
+                    type: edge.relationship_type,
+                    weight: edge.weight,
+                    isAI: edge.isAI
+                })),
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    nodeCount: graphData.nodes.length,
+                    edgeCount: graphData.edges.length,
+                    aiRelationshipCount: graphData.edges.filter(e => e.isAI).length
+                }
+            };
+            
+            // Download as JSON
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `knowledge_graph_export_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Context menu actions
+        function focusNode() {
+            if (selectedNode) {
+                focusOnNode(selectedNode.id);
+            }
+            hideContextMenu();
+        }
+
+        function hideNode() {
+            if (selectedNode) {
+                hiddenNodes.add(selectedNode.id);
+                g.selectAll('.node')
+                    .filter(d => d.id === selectedNode.id)
+                    .style('opacity', 0.1);
+            }
+            hideContextMenu();
+        }
+
+        function showNeighbors() {
+            if (selectedNode) {
+                filterByNeighbors(selectedNode);
+            }
+            hideContextMenu();
+        }
+
+        function showNodeDetails() {
+            if (selectedNode) {
+                openNodeModal(selectedNode);
+            }
+            hideContextMenu();
+        }
+
+        function hideContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+        }
+
+        function filterByNeighbors(node) {
+            const neighbors = new Set([node.id]);
+            graphData.edges.forEach(edge => {
+                if (edge.source.id === node.id) neighbors.add(edge.target.id);
+                if (edge.target.id === node.id) neighbors.add(edge.source.id);
+            });
+            
+            g.selectAll('.node')
+                .style('opacity', d => neighbors.has(d.id) ? 1 : 0.1);
+            g.selectAll('.link')
+                .style('opacity', d => 
+                    neighbors.has(d.source.id) && neighbors.has(d.target.id) ? 1 : 0.1
+                );
+        }
+
+        function openNodeModal(node) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            
+            let details = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: ${node.color};">📄 ${node.displayName}</h4>
+                    <p><strong>ID:</strong> ${node.id}</p>
+                    <p><strong>Type:</strong> ${node.node_type}</p>
+                    <p><strong>Content Length:</strong> ${node.content_length || 'N/A'} characters</p>
+                </div>
+            `;
+            
+            if (node.source_file) {
+                details += `<p><strong>Source File:</strong> ${node.source_file}</p>`;
+            }
+            
+            // Show content preview
+            if (node.content) {
+                details += `
+                    <div style="margin-top: 20px;">
+                        <h5>📖 Content Preview:</h5>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; line-height: 1.4;">
+                            ${node.content.substring(0, 500)}${node.content.length > 500 ? '...' : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Show relationships
+            const relationships = graphData.edges.filter(e => 
+                e.source.id === node.id || e.target.id === node.id
+            );
+            
+            if (relationships.length > 0) {
+                details += `
+                    <div style="margin-top: 20px;">
+                        <h5>🔗 Relationships (${relationships.length}):</h5>
+                        <div style="max-height: 200px; overflow-y: auto;">
+                `;
+                
+                relationships.forEach(rel => {
+                    const otherNode = rel.source.id === node.id ? rel.target : rel.source;
+                    const direction = rel.source.id === node.id ? '→' : '←';
+                    details += `
+                        <div style="padding: 8px; margin: 5px 0; background: ${rel.isAI ? 'rgba(79, 172, 254, 0.1)' : 'rgba(0, 0, 0, 0.05)'}; border-radius: 5px; border-left: 3px solid ${rel.isAI ? '#4facfe' : '#999'};">
+                            <strong>${direction} ${otherNode.displayName}</strong><br>
+                            <small>Type: ${rel.relationship_type} | Weight: ${(rel.weight || 0).toFixed(2)}</small>
+                            ${rel.isAI ? '<span class="ai-badge">AI</span>' : ''}
+                            ${rel.metadata?.explanation ? `<br><em>${rel.metadata.explanation}</em>` : ''}
+                        </div>
+                    `;
+                });
+                
+                details += '</div></div>';
+            }
+            
+            content.innerHTML = details;
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // Global click handler to hide context menu
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#contextMenu')) {
+                hideContextMenu();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case 'Escape':
+                    hideContextMenu();
+                    closeModal();
+                    break;
+                case 'f':
+                    if (event.ctrlKey || event.metaKey) {
+                        event.preventDefault();
+                        document.getElementById('searchInput').focus();
+                    }
+                    break;
+                case '0':
+                    if (event.ctrlKey || event.metaKey) {
+                        event.preventDefault();
+                        resetZoom();
+                    }
+                    break;
+                case '=':
+                case '+':
+                    if (event.ctrlKey || event.metaKey) {
+                        event.preventDefault();
+                        zoomIn();
+                    }
+                    break;
+                case '-':
+                    if (event.ctrlKey || event.metaKey) {
+                        event.preventDefault();
+                        zoomOut();
+                    }
+                    break;
+            }
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            const container = d3.select("#graph");
+            const rect = container.node().getBoundingClientRect();
+            
+            svg.attr("width", rect.width)
+               .attr("height", rect.height)
+               .attr("viewBox", [0, 0, rect.width, rect.height]);
+               
+            // Update simulation center
+            simulation.force("center", d3.forceCenter(rect.width / 2, rect.height / 2));
+            simulation.alpha(0.3).restart();
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initGraph);
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Semantic RAG Knowledge Graph</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 25px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-320px);
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-sidebar:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .controls {
+            margin-bottom: 25px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .control-group input, .control-group select, .control-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .control-group input:focus, .control-group select:focus, .control-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        .btn.success {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .btn.danger {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-results {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-result-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .search-result-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+        }
+
+        .toolbar {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .zoom-controls {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(15px);
+            min-width: 200px;
+        }
+
+        .legend h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            pointer-events: none;
+            font-size: 13px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            max-width: 300px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 8px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            min-width: 180px;
+        }
+
+        .context-menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .context-menu-item:hover {
+            background: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-header h3 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .performance-info {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .analysis-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-panel h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .relationship-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .rel-similarity { background: #e3f2fd; color: #1976d2; }
+        .rel-ai { background: #f3e5f5; color: #7b1fa2; }
+        .rel-field { background: #e8f5e8; color: #388e3c; }
+        .rel-file { background: #fff3e0; color: #f57c00; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: absolute;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .toolbar {
+                top: 15px;
+                right: 15px;
+                flex-direction: column;
+            }
+            
+            .legend {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+            }
+        }
+
+        /* Graph styles */
+        .node {
+            cursor: pointer;
+            stroke-width: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            stroke-width: 5px;
+        }
+
+        .node.highlighted {
+            stroke-width: 6px;
+            filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.8));
+        }
+
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.7;
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .link.highlighted {
+            stroke: #ff6b6b;
+            stroke-width: 4px;
+            stroke-opacity: 1;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.6));
+        }
+
+        .link.ai-relationship {
+            stroke: #9c27b0;
+            stroke-dasharray: 5,5;
+        }
+
+        .link.similarity-relationship {
+            stroke: #2196f3;
+        }
+
+        .link.field-relationship {
+            stroke: #4caf50;
+            stroke-width: 3px;
+        }
+
+        .node-label {
+            text-anchor: middle;
+            font-size: 11px;
+            font-weight: 600;
+            fill: #333;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .cluster {
+            fill: none;
+            stroke: #999;
+            stroke-width: 2px;
+            stroke-dasharray: 10,5;
+            opacity: 0.4;
+            rx: 15;
+            ry: 15;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+        <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+        
+        <div class="sidebar" id="sidebar">
+            <h2 style="margin-bottom: 25px; color: #333; text-align: center;">🧠 Knowledge Graph</h2>
+            
+            <div class="stats">
+                <h3>📊 Graph Statistics</h3>
+                <div class="stat-item">
+                    <span>Nodes:</span>
+                    <span class="stat-value" id="nodeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Edges:</span>
+                    <span class="stat-value" id="edgeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Clusters:</span>
+                    <span class="stat-value" id="clusterCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Density:</span>
+                    <span class="stat-value" id="graphDensity">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span>AI Relationships:</span>
+                    <span class="stat-value" id="aiRelCount">0</span>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <div class="control-group">
+                    <label>🔍 Search Nodes</label>
+                    <input type="text" id="searchInput" placeholder="Search by content, type, or file..." onkeyup="searchNodes()">
+                </div>
+                <div class="search-results" id="searchResults" style="display: none;"></div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>🎯 Layout Algorithm</label>
+                    <select id="layoutSelect" onchange="updateLayout()">
+                        <option value="force">Force-Directed</option>
+                        <option value="hierarchical">Hierarchical</option>
+                        <option value="circular">Circular</option>
+                        <option value="grid">Grid</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>🔗 Relationship Filter</label>
+                    <select id="relationshipFilter" onchange="filterRelationships()">
+                        <option value="all">All Relationships</option>
+                        <option value="similarity">Similarity Only</option>
+                        <option value="ai">AI-Identified Only</option>
+                        <option value="field">Field-Based Only</option>
+                        <option value="file">File-Based Only</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>📏 Node Size: <span id="nodeSizeValue">8</span></label>
+                    <input type="range" id="nodeSizeSlider" min="4" max="20" value="8" oninput="updateNodeSize()">
+                </div>
+
+                <div class="control-group">
+                    <label>🔍 Zoom Level: <span id="zoomValue">100%</span></label>
+                    <input type="range" id="zoomSlider" min="10" max="500" value="100" oninput="updateZoom()">
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                    <button class="btn success" onclick="centerGraph()">📍 Center</button>
+                    <button class="btn secondary" onclick="resetFilters()">🔄 Reset</button>
+                    <button class="btn" onclick="exportGraph()">💾 Export</button>
+                    <button class="btn danger" onclick="showAnalysis()">📈 Analysis</button>
+                </div>
+            </div>
+
+            <div class="analysis-panel">
+                <h4>🤖 AI Insights</h4>
+                <div id="aiInsights">
+                    <p style="color: #666; font-style: italic;">Loading AI analysis...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()">+</button>
+                    <button class="zoom-btn" onclick="zoomOut()">−</button>
+                    <button class="zoom-btn" onclick="resetZoom()">⌂</button>
+                </div>
+            </div>
+
+            <svg id="graphSvg" width="100%" height="100%"></svg>
+
+            <div class="legend">
+                <h4>🎨 Node Types</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2196f3;"></div>
+                    <span>CSV Rows</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4caf50;"></div>
+                    <span>PDF Chunks</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff9800;"></div>
+                    <span>Python Files</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9c27b0;"></div>
+                    <span>Fields</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f44336;"></div>
+                    <span>Summary Nodes</span>
+                </div>
+                
+                <h4 style="margin-top: 15px;">🔗 Edge Types</h4>
+                <div class="legend-item">
+                    <div style="width: 18px; height: 3px; background: #2196f3;"></div>
+                    <span>Similarity</span>
+                </div>
+                <div class="legend-item">
+                    <div style="width: 18px; height: 3px; background: #9c27b0; border-top: 2px dashed #9c27b0;"></div>
+                    <span>AI-Identified</span>
+                </div>
+                <div class="legend-item">
+                    <div style="width: 18px; height: 3px; background: #4caf50;"></div>
+                    <span>Field-Based</span>
+                </div>
+            </div>
+
+            <div class="performance-info" id="performanceInfo">
+                Rendering: 0ms | Nodes: 0 | FPS: 60
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for detailed analysis -->
+    <div class="modal" id="analysisModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 Graph Analysis</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <div style="text-align: center; padding: 20px;">
+                    <div class="loading-spinner" style="width: 40px; height: 40px; margin: 0 auto;"></div>
+                    <p style="margin-top: 15px;">Analyzing graph structure...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="nodeDetails()">
+            📝 View Details
+        </div>
+        <div class="context-menu-item" onclick="highlightConnections()">
+            🔗 Show Connections
+        </div>
+        <div class="context-menu-item" onclick="findSimilar()">
+            🎯 Find Similar
+        </div>
+        <div class="context-menu-item" onclick="exportNode()">
+            💾 Export Data
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Enhanced Knowledge Graph with D3.js
+        class AdvancedKnowledgeGraph {
+            constructor() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.svg = d3.select('#graphSvg');
+                this.g = this.svg.append('g');
+                this.zoom = d3.zoom();
+                this.simulation = null;
+                this.nodes = [];
+                this.links = [];
+                this.selectedNode = null;
+                this.filteredTypes = new Set();
+                
+                this.setupZoom();
+                this.loadData();
+                
+                // Performance monitoring
+                this.fps = 60;
+                this.frameCount = 0;
+                this.lastTime = performance.now();
+                this.monitorPerformance();
+            }
+
+            setupZoom() {
+                this.zoom
+                    .scaleExtent([0.1, 10])
+                    .on('zoom', (event) => {
+                        this.g.attr('transform', event.transform);
+                        document.getElementById('zoomValue').textContent = 
+                            Math.round(event.transform.k * 100) + '%';
+                    });
+                
+                this.svg.call(this.zoom);
+            }
+
+            async loadData() {
+                try {
+                    // Load relationship graph data
+                    const response = await fetch('exports/relationship_graph.json');
+                    const data = await response.json();
+                    
+                    this.processData(data);
+                    this.createVisualization();
+                    this.updateStatistics();
+                    this.generateAIInsights();
+                    
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.showError('Failed to load graph data');
+                } finally {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+            }
+
+            processData(data) {
+                // Process nodes
+                this.nodes = data.nodes.map(node => ({
+                    id: node.id,
+                    type: node.node_type || 'unknown',
+                    label: this.getNodeLabel(node),
+                    size: this.getNodeSize(node),
+                    color: this.getNodeColor(node.node_type),
+                    ...node
+                }));
+
+                // Process edges
+                this.links = data.edges.map(edge => ({
+                    source: edge.source,
+                    target: edge.target,
+                    type: edge.relationship_type || 'unknown',
+                    weight: edge.weight || 1,
+                    ...edge
+                }));
+
+                console.log(`Loaded ${this.nodes.length} nodes and ${this.links.length} links`);
+            }
+
+            getNodeLabel(node) {
+                if (node.node_type === 'csv_row') {
+                    return `Row ${node._row_number || '?'}`;
+                } else if (node.node_type === 'pdf_chunk') {
+                    return `PDF ${node.chunk_index || '?'}`;
+                } else if (node.node_type === 'python') {
+                    return 'Python';
+                } else if (node.node_type === 'field') {
+                    return node.field_name || 'Field';
+                }
+                return node.id.substring(0, 10);
+            }
+
+            getNodeSize(node) {
+                const baseSize = 8;
+                if (node.node_type === 'csv_summary' || node.node_type === 'pdf') {
+                    return baseSize * 1.8;
+                } else if (node.node_type === 'field') {
+                    return baseSize * 1.3;
+                }
+                return baseSize;
+            }
+
+            getNodeColor(type) {
+                const colorMap = {
+                    'csv_row': '#2196f3',
+                    'csv_summary': '#1976d2',
+                    'pdf_chunk': '#4caf50',
+                    'pdf': '#388e3c',
+                    'python': '#ff9800',
+                    'field': '#9c27b0',
+                    'source_file': '#f44336'
+                };
+                return colorMap[type] || '#757575';
+            }
+
+            createVisualization() {
+                // Create simulation
+                this.simulation = d3.forceSimulation(this.nodes)
+                    .force('link', d3.forceLink(this.links).id(d => d.id).distance(80))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+                    .force('collision', d3.forceCollide().radius(d => d.size + 5));
+
+                // Create links
+                this.linkElements = this.g.append('g')
+                    .attr('class', 'links')
+                    .selectAll('line')
+                    .data(this.links)
+                    .enter().append('line')
+                    .attr('class', d => `link ${d.type}-relationship`)
+                    .attr('stroke-width', d => Math.sqrt(d.weight) * 2);
+
+                // Create nodes
+                this.nodeElements = this.g.append('g')
+                    .attr('class', 'nodes')
+                    .selectAll('circle')
+                    .data(this.nodes)
+                    .enter().append('circle')
+                    .attr('class', 'node')
+                    .attr('r', d => d.size)
+                    .attr('fill', d => d.color)
+                    .attr('stroke', '#fff')
+                    .call(this.createDragBehavior())
+                    .on('click', (event, d) => this.handleNodeClick(event, d))
+                    .on('contextmenu', (event, d) => this.showContextMenu(event, d))
+                    .on('mouseover', (event, d) => this.showTooltip(event, d))
+                    .on('mouseout', () => this.hideTooltip());
+
+                // Create labels
+                this.labelElements = this.g.append('g')
+                    .attr('class', 'labels')
+                    .selectAll('text')
+                    .data(this.nodes)
+                    .enter().append('text')
+                    .attr('class', 'node-label')
+                    .text(d => d.label)
+                    .attr('dy', d => d.size + 15);
+
+                // Update positions
+                this.simulation.on('tick', () => {
+                    this.linkElements
+                        .attr('x1', d => d.source.x)
+                        .attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x)
+                        .attr('y2', d => d.target.y);
+
+                    this.nodeElements
+                        .attr('cx', d => d.x)
+                        .attr('cy', d => d.y);
+
+                    this.labelElements
+                        .attr('x', d => d.x)
+                        .attr('y', d => d.y);
+                    
+                    this.frameCount++;
+                });
+            }
+
+            createDragBehavior() {
+                return d3.drag()
+                    .on('start', (event, d) => {
+                        if (!event.active) this.simulation.alphaTarget(0.3).restart();
+                        d.fx = d.x;
+                        d.fy = d.y;
+                    })
+                    .on('drag', (event, d) => {
+                        d.fx = event.x;
+                        d.fy = event.y;
+                    })
+                    .on('end', (event, d) => {
+                        if (!event.active) this.simulation.alphaTarget(0);
+                        d.fx = null;
+                        d.fy = null;
+                    });
+            }
+
+            handleNodeClick(event, node) {
+                // Highlight node and connections
+                this.selectedNode = node;
+                this.highlightNodeConnections(node);
+                
+                // Update side panel with node details
+                this.showNodeDetails(node);
+            }
+
+            highlightNodeConnections(node) {
+                // Reset all highlights
+                this.nodeElements.classed('highlighted', false);
+                this.linkElements.classed('highlighted', false);
+
+                // Highlight selected node
+                this.nodeElements
+                    .filter(d => d.id === node.id)
+                    .classed('highlighted', true);
+
+                // Highlight connected links and nodes
+                const connectedNodes = new Set();
+                this.linkElements
+                    .filter(d => d.source.id === node.id || d.target.id === node.id)
+                    .classed('highlighted', true)
+                    .each(d => {
+                        connectedNodes.add(d.source.id);
+                        connectedNodes.add(d.target.id);
+                    });
+
+                this.nodeElements
+                    .filter(d => connectedNodes.has(d.id))
+                    .classed('highlighted', true);
+            }
+
+            showTooltip(event, node) {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.style.opacity = '1';
+                tooltip.style.left = (event.pageX + 10) + 'px';
+                tooltip.style.top = (event.pageY - 10) + 'px';
+                
+                tooltip.innerHTML = `
+                    <strong>${node.label}</strong><br>
+                    Type: ${node.type}<br>
+                    ${node.source_file ? `File: ${node.source_file.split('/').pop()}<br>` : ''}
+                    ${node.content_length ? `Length: ${node.content_length} chars<br>` : ''}
+                    Connections: ${this.getNodeConnections(node.id).length}
+                `;
+            }
+
+            hideTooltip() {
+                document.getElementById('tooltip').style.opacity = '0';
+            }
+
+            getNodeConnections(nodeId) {
+                return this.links.filter(link => 
+                    link.source.id === nodeId || link.target.id === nodeId
+                );
+            }
+
+            updateStatistics() {
+                document.getElementById('nodeCount').textContent = this.nodes.length;
+                document.getElementById('edgeCount').textContent = this.links.length;
+                
+                const density = this.links.length / (this.nodes.length * (this.nodes.length - 1) / 2);
+                document.getElementById('graphDensity').textContent = (density * 100).toFixed(1) + '%';
+                
+                const aiRelationships = this.links.filter(link => link.type === 'ai_identified').length;
+                document.getElementById('aiRelCount').textContent = aiRelationships;
+            }
+
+            generateAIInsights() {
+                const insights = this.analyzeGraphStructure();
+                const insightsContainer = document.getElementById('aiInsights');
+                
+                insightsContainer.innerHTML = `
+                    <div class="relationship-type rel-similarity">
+                        Similarity Relationships: ${insights.similarityCount}
+                    </div>
+                    <div class="relationship-type rel-ai">
+                        AI-Identified: ${insights.aiCount}
+                    </div>
+                    <div class="relationship-type rel-field">
+                        Field-Based: ${insights.fieldCount}
+                    </div>
+                    <div class="relationship-type rel-file">
+                        File-Based: ${insights.fileCount}
+                    </div>
+                    <br>
+                    <p style="font-size: 12px; color: #666;">
+                        <strong>Key Insight:</strong> ${insights.keyInsight}
+                    </p>
+                `;
+            }
+
+            analyzeGraphStructure() {
+                const similarityCount = this.links.filter(l => l.type === 'content_similarity').length;
+                const aiCount = this.links.filter(l => l.type === 'ai_identified').length;
+                const fieldCount = this.links.filter(l => l.type === 'field_of' || l.type === 'shared_field').length;
+                const fileCount = this.links.filter(l => l.type === 'source_of').length;
+
+                let keyInsight = "Graph shows balanced relationship types.";
+                
+                if (similarityCount > aiCount * 2) {
+                    keyInsight = "Strong semantic clustering detected through content similarity.";
+                } else if (aiCount > 10) {
+                    keyInsight = "AI has identified significant conceptual relationships.";
+                } else if (fieldCount > similarityCount) {
+                    keyInsight = "Data structure relationships dominate the graph.";
+                }
+
+                return { similarityCount, aiCount, fieldCount, fileCount, keyInsight };
+            }
+
+            monitorPerformance() {
+                setInterval(() => {
+                    const now = performance.now();
+                    const delta = now - this.lastTime;
+                    this.fps = Math.round(1000 / (delta / this.frameCount)) || 60;
+                    
+                    document.getElementById('performanceInfo').innerHTML = `
+                        Rendering: ${Math.round(delta)}ms | Nodes: ${this.nodes.length} | FPS: ${this.fps}
+                    `;
+                    
+                    this.frameCount = 0;
+                    this.lastTime = now;
+                }, 1000);
+            }
+
+            showError(message) {
+                console.error(message);
+                // Show error UI
+            }
+        }
+
+        // Global functions for UI interactions
+        let graph;
+
+        window.addEventListener('load', () => {
+            graph = new AdvancedKnowledgeGraph();
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function searchNodes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const results = document.getElementById('searchResults');
+            
+            if (query.length < 2) {
+                results.style.display = 'none';
+                return;
+            }
+
+            const matches = graph.nodes.filter(node => 
+                node.label.toLowerCase().includes(query) ||
+                node.type.toLowerCase().includes(query) ||
+                (node.source_file && node.source_file.toLowerCase().includes(query))
+            ).slice(0, 10);
+
+            if (matches.length > 0) {
+                results.innerHTML = matches.map(node => `
+                    <div class="search-result-item" onclick="focusNode('${node.id}')">
+                        <strong>${node.label}</strong><br>
+                        <small>${node.type} • ${node.source_file ? node.source_file.split('/').pop() : 'No file'}</small>
+                    </div>
+                `).join('');
+                results.style.display = 'block';
+            } else {
+                results.style.display = 'none';
+            }
+        }
+
+        function focusNode(nodeId) {
+            const node = graph.nodes.find(n => n.id === nodeId);
+            if (node) {
+                // Center on node
+                const transform = d3.zoomIdentity
+                    .translate(graph.width / 2 - node.x, graph.height / 2 - node.y)
+                    .scale(1.5);
+                
+                graph.svg.transition()
+                    .duration(750)
+                    .call(graph.zoom.transform, transform);
+                
+                // Highlight node
+                graph.handleNodeClick(null, node);
+            }
+            document.getElementById('searchResults').style.display = 'none';
+        }
+
+        function updateLayout() {
+            const layout = document.getElementById('layoutSelect').value;
+            // Implement different layout algorithms
+            console.log('Updating layout to:', layout);
+        }
+
+        function filterRelationships() {
+            const filter = document.getElementById('relationshipFilter').value;
+            // Implement relationship filtering
+            console.log('Filtering relationships:', filter);
+        }
+
+        function updateNodeSize() {
+            const size = document.getElementById('nodeSizeSlider').value;
+            document.getElementById('nodeSizeValue').textContent = size;
+            // Update node sizes
+        }
+
+        function updateZoom() {
+            const zoom = document.getElementById('zoomSlider').value / 100;
+            graph.svg.transition()
+                .duration(300)
+                .call(graph.zoom.scaleTo, zoom);
+        }
+
+        function zoomIn() {
+            graph.svg.transition().call(graph.zoom.scaleBy, 1.2);
+        }
+
+        function zoomOut() {
+            graph.svg.transition().call(graph.zoom.scaleBy, 0.8);
+        }
+
+        function resetZoom() {
+            graph.svg.transition()
+                .duration(750)
+                .call(graph.zoom.transform, d3.zoomIdentity);
+        }
+
+        function centerGraph() {
+            resetZoom();
+        }
+
+        function resetFilters() {
+            // Reset all filters and highlights
+            document.getElementById('searchInput').value = '';
+            document.getElementById('layoutSelect').value = 'force';
+            document.getElementById('relationshipFilter').value = 'all';
+            searchNodes();
+        }
+
+        function exportGraph() {
+            // Export graph data
+            const data = {
+                nodes: graph.nodes,
+                links: graph.links
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], 
+                { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'knowledge_graph_export.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function showAnalysis() {
+            document.getElementById('analysisModal').classList.add('show');
+            // Load detailed analysis
+        }
+
+        function closeModal() {
+            document.getElementById('analysisModal').classList.remove('show');
+        }
+
+        // Context menu functions
+        function nodeDetails() {
+            console.log('Showing node details');
+        }
+
+        function highlightConnections() {
+            console.log('Highlighting connections');
+        }
+
+        function findSimilar() {
+            console.log('Finding similar nodes');
+        }
+
+        function exportNode() {
+            console.log('Exporting node data');
+        }
+
+        function showContextMenu(event, node) {
+            event.preventDefault();
+            const menu = document.getElementById('contextMenu');
+            menu.style.display = 'block';
+            menu.style.left = event.pageX + 'px';
+            menu.style.top = event.pageY + 'px';
+            
+            // Store selected node for context menu actions
+            window.selectedContextNode = node;
+        }
+
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', () => {
+            document.getElementById('contextMenu').style.display = 'none';
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (graph) {
+                graph.width = window.innerWidth;
+                graph.height = window.innerHeight;
+                graph.svg.attr('width', graph.width).attr('height', graph.height);
+                graph.simulation.force('center', d3.forceCenter(graph.width / 2, graph.height / 2));
+            }
+        });
+    </script>
+</body>
+</html>

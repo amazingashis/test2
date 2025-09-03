@@ -269,6 +269,33 @@ Provide your analysis in JSON format."""
                 return None
         
         return None
+
+    def analyze_relationships(self, analysis_prompt: str, max_tokens: int = 2000) -> Optional[str]:
+        """
+        Analyze relationships between multiple documents using AI.
+        
+        Args:
+            analysis_prompt (str): Prompt containing documents and analysis instructions
+            max_tokens (int): Maximum tokens for response
+            
+        Returns:
+            Optional[str]: AI analysis response or None if failed
+        """
+        system_prompt = """You are an expert data analyst specializing in healthcare claims data and semantic relationships. 
+        You excel at identifying meaningful connections, data flows, and conceptual relationships between documents.
+        Always return valid JSON responses in the exact format requested."""
+        
+        try:
+            response = self.generate_response(
+                analysis_prompt,
+                max_tokens=max_tokens,
+                system_prompt=system_prompt,
+                temperature=0.3  # Lower temperature for more consistent JSON output
+            )
+            return response
+        except Exception as e:
+            logger.error(f"Error in AI relationship analysis: {str(e)}")
+            return None
     
     def generate_mapping(self, source_fields: List[str], target_schema: str) -> Optional[Dict[str, str]]:
         """
