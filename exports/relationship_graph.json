@@ -564,10 +564,238 @@
       "num_pages": 22
     },
     {
+      "id": "pdf_1_struct_0",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 66,
+      "type": "column_detail",
+      "column_name": "PE_CD",
+      "description": "Claim Bill Facility Type Code 64 64 1 X(01)",
+      "page": 6,
+      "line_number": 7,
+      "raw_text": "PE_CD Claim Bill Facility Type Code  64 64 1 X(01)"
+    },
+    {
+      "id": "pdf_1_struct_1",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 66,
+      "type": "column_detail",
+      "column_name": "N_CD",
+      "description": "Claim Bill Classification Code 65 65 1 X(01)",
+      "page": 6,
+      "line_number": 27,
+      "raw_text": "N_CD  Claim Bill Classification Code 65 65 1 X(01)"
+    },
+    {
+      "id": "pdf_1_struct_2",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 63,
+      "type": "column_detail",
+      "column_name": "ST_CD",
+      "description": "Federal Information Processing Standards",
+      "page": 8,
+      "line_number": 7,
+      "raw_text": "ST_CD  Federal Information Processing Standards"
+    },
+    {
+      "id": "pdf_1_struct_3",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 73,
+      "type": "column_detail",
+      "column_name": "PE_CD",
+      "description": "Claim Outpatient Service Type Code 108 108 1 X(01)",
+      "page": 9,
+      "line_number": 7,
+      "raw_text": "PE_CD Claim Outpatient Service Type Code  108 108 1 X(01)"
+    },
+    {
+      "id": "pdf_1_struct_4",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 98,
+      "type": "column_detail",
+      "column_name": "E_CD",
+      "description": "Claim Adjustment Type Code 149 150 2 X(02) Indicates whether the claim is an",
+      "page": 11,
+      "line_number": 7,
+      "raw_text": "E_CD  Claim Adjustment Type Code  149 150 2 X(02)  Indicates whether the claim is an"
+    },
+    {
+      "id": "pdf_1_struct_5",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 113,
+      "type": "column_detail",
+      "column_name": "HICN_NUM",
+      "description": "Beneficiary Equitable BIC HICN Number 171 181 11 X(11) Legacy Beneficiary Equitable BIC",
+      "page": 12,
+      "line_number": 7,
+      "raw_text": "HICN_NUM  Beneficiary Equitable BIC HICN Number  171 181 11 X(11)  Legacy Beneficiary  Equitable BIC"
+    },
+    {
+      "id": "pdf_1_struct_6",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 68,
+      "type": "column_detail",
+      "column_name": "_IND",
+      "description": "ICD Version Indicator 188 188 1 X(1) 9 = ICD-9",
+      "page": 14,
+      "line_number": 7,
+      "raw_text": "_IND  ICD Version Indicator  188 188 1 X(1) 9 = ICD-9"
+    },
+    {
+      "id": "pdf_1_struct_7",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 43,
+      "type": "column_detail",
+      "column_name": "L_TOT_CHRG_AMT",
+      "description": "Total Claim",
+      "page": 14,
+      "line_number": 12,
+      "raw_text": "L_TOT_CHRG_AMT  Total Claim"
+    },
+    {
+      "id": "pdf_1_struct_8",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 33,
+      "type": "column_detail",
+      "column_name": "RPRTNT_AMT",
+      "description": "Claim",
+      "page": 16,
+      "line_number": 7,
+      "raw_text": "RPRTNT_AMT  Claim"
+    },
+    {
+      "id": "pdf_1_struct_9",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 32,
+      "type": "column_detail",
+      "column_name": "OSCAR_NUM",
+      "description": "Claim",
+      "page": 17,
+      "line_number": 7,
+      "raw_text": "OSCAR_NUM  Claim"
+    },
+    {
+      "id": "pdf_1_struct_10",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 36,
+      "type": "column_detail",
+      "column_name": "REACH",
+      "description": ", KCC, VTAPM,",
+      "page": 17,
+      "line_number": 15,
+      "raw_text": "REACH , KCC, VTAPM,"
+    },
+    {
+      "id": "pdf_1_struct_11",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 30,
+      "type": "column_detail",
+      "column_name": "NPI_NUM",
+      "description": "Claim",
+      "page": 18,
+      "line_number": 7,
+      "raw_text": "NPI_NUM  Claim"
+    },
+    {
+      "id": "pdf_1_struct_12",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 36,
+      "type": "column_detail",
+      "column_name": "REACH",
+      "description": ", KCC, VTAPM,",
+      "page": 18,
+      "line_number": 13,
+      "raw_text": "REACH , KCC, VTAPM,"
+    },
+    {
+      "id": "pdf_1_struct_13",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 32,
+      "type": "column_detail",
+      "column_name": "R_NPI_NUM",
+      "description": "Claim",
+      "page": 19,
+      "line_number": 7,
+      "raw_text": "R_NPI_NUM  Claim"
+    },
+    {
+      "id": "pdf_1_struct_14",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 36,
+      "type": "column_detail",
+      "column_name": "REACH",
+      "description": ", KCC, VTAPM,",
+      "page": 19,
+      "line_number": 13,
+      "raw_text": "REACH , KCC, VTAPM,"
+    },
+    {
+      "id": "pdf_1_struct_15",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 32,
+      "type": "column_detail",
+      "column_name": "R_NPI_NUM",
+      "description": "Claim",
+      "page": 20,
+      "line_number": 7,
+      "raw_text": "R_NPI_NUM  Claim"
+    },
+    {
+      "id": "pdf_1_struct_16",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 36,
+      "type": "column_detail",
+      "column_name": "REACH",
+      "description": ", KCC, VTAPM,",
+      "page": 20,
+      "line_number": 13,
+      "raw_text": "REACH , KCC, VTAPM,"
+    },
+    {
+      "id": "pdf_1_struct_17",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 37,
+      "type": "column_detail",
+      "column_name": "_NPI_NUM",
+      "description": "Claim Other",
+      "page": 21,
+      "line_number": 7,
+      "raw_text": "_NPI_NUM  Claim Other"
+    },
+    {
+      "id": "pdf_1_struct_18",
+      "node_type": "pdf_column_detail",
+      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
+      "content_length": 36,
+      "type": "column_detail",
+      "column_name": "REACH",
+      "description": ", KCC, VTAPM,",
+      "page": 21,
+      "line_number": 13,
+      "raw_text": "REACH , KCC, VTAPM,"
+    },
+    {
       "id": "pdf_1_chunk_0",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1494,
+      "content_length": 1994,
       "title": "",
       "author": "",
       "subject": "",
@@ -582,7 +810,7 @@
       "id": "pdf_1_chunk_1",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1489,
+      "content_length": 1997,
       "title": "",
       "author": "",
       "subject": "",
@@ -597,7 +825,7 @@
       "id": "pdf_1_chunk_2",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1498,
+      "content_length": 1999,
       "title": "",
       "author": "",
       "subject": "",
@@ -612,7 +840,7 @@
       "id": "pdf_1_chunk_3",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1493,
+      "content_length": 1998,
       "title": "",
       "author": "",
       "subject": "",
@@ -627,7 +855,7 @@
       "id": "pdf_1_chunk_4",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1494,
+      "content_length": 1992,
       "title": "",
       "author": "",
       "subject": "",
@@ -642,7 +870,7 @@
       "id": "pdf_1_chunk_5",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1499,
+      "content_length": 1995,
       "title": "",
       "author": "",
       "subject": "",
@@ -657,7 +885,7 @@
       "id": "pdf_1_chunk_6",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1498,
+      "content_length": 1987,
       "title": "",
       "author": "",
       "subject": "",
@@ -672,7 +900,7 @@
       "id": "pdf_1_chunk_7",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1486,
+      "content_length": 1998,
       "title": "",
       "author": "",
       "subject": "",
@@ -687,7 +915,7 @@
       "id": "pdf_1_chunk_8",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1495,
+      "content_length": 1997,
       "title": "",
       "author": "",
       "subject": "",
@@ -702,7 +930,7 @@
       "id": "pdf_1_chunk_9",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1499,
+      "content_length": 1997,
       "title": "",
       "author": "",
       "subject": "",
@@ -717,7 +945,7 @@
       "id": "pdf_1_chunk_10",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1492,
+      "content_length": 1990,
       "title": "",
       "author": "",
       "subject": "",
@@ -732,7 +960,7 @@
       "id": "pdf_1_chunk_11",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1495,
+      "content_length": 1993,
       "title": "",
       "author": "",
       "subject": "",
@@ -747,7 +975,7 @@
       "id": "pdf_1_chunk_12",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1491,
+      "content_length": 1995,
       "title": "",
       "author": "",
       "subject": "",
@@ -762,7 +990,7 @@
       "id": "pdf_1_chunk_13",
       "node_type": "pdf_chunk",
       "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1497,
+      "content_length": 559,
       "title": "",
       "author": "",
       "subject": "",
@@ -772,66 +1000,6 @@
       "modification_date": "D:20250902052704Z",
       "num_pages": 22,
       "chunk_index": 13
-    },
-    {
-      "id": "pdf_1_chunk_14",
-      "node_type": "pdf_chunk",
-      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1499,
-      "title": "",
-      "author": "",
-      "subject": "",
-      "creator": "",
-      "producer": "iLovePDF",
-      "creation_date": "",
-      "modification_date": "D:20250902052704Z",
-      "num_pages": 22,
-      "chunk_index": 14
-    },
-    {
-      "id": "pdf_1_chunk_15",
-      "node_type": "pdf_chunk",
-      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1479,
-      "title": "",
-      "author": "",
-      "subject": "",
-      "creator": "",
-      "producer": "iLovePDF",
-      "creation_date": "",
-      "modification_date": "D:20250902052704Z",
-      "num_pages": 22,
-      "chunk_index": 15
-    },
-    {
-      "id": "pdf_1_chunk_16",
-      "node_type": "pdf_chunk",
-      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 1491,
-      "title": "",
-      "author": "",
-      "subject": "",
-      "creator": "",
-      "producer": "iLovePDF",
-      "creation_date": "",
-      "modification_date": "D:20250902052704Z",
-      "num_pages": 22,
-      "chunk_index": 16
-    },
-    {
-      "id": "pdf_1_chunk_17",
-      "node_type": "pdf_chunk",
-      "source_file": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "content_length": 996,
-      "title": "",
-      "author": "",
-      "subject": "",
-      "creator": "",
-      "producer": "iLovePDF",
-      "creation_date": "",
-      "modification_date": "D:20250902052704Z",
-      "num_pages": 22,
-      "chunk_index": 17
     },
     {
       "id": "python_2",
@@ -1014,21 +1182,135 @@
       ]
     },
     {
-      "id": "source_-2050424514019319887",
+      "id": "source_-7901835789007481593",
       "node_type": "source_file",
       "file_path": "files/claim_data/cms/facebook/claims_mapping document.csv",
       "document_count": 26
     },
     {
-      "id": "source_7930650231727324460",
+      "id": "source_7189333850486367594",
       "node_type": "source_file",
       "file_path": "files/claim_data/cms/facebook/CCLF IP V36-64-85.pdf",
-      "document_count": 19
+      "document_count": 34
     }
   ],
   "edges": [
     {
       "source": "pdf_1",
+      "target": "pdf_1_struct_0",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_1",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_2",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_3",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_4",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_5",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_6",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_7",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_8",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_9",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_10",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_11",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_12",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_13",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_14",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_15",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_16",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_17",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_struct_18",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
       "target": "pdf_1_chunk_0",
       "relationship_type": "contains",
       "weight": 1.0
@@ -1112,296 +1394,362 @@
       "weight": 1.0
     },
     {
-      "source": "pdf_1",
-      "target": "pdf_1_chunk_14",
-      "relationship_type": "contains",
-      "weight": 1.0
-    },
-    {
-      "source": "pdf_1",
-      "target": "pdf_1_chunk_15",
-      "relationship_type": "contains",
-      "weight": 1.0
-    },
-    {
-      "source": "pdf_1",
-      "target": "pdf_1_chunk_16",
-      "relationship_type": "contains",
-      "weight": 1.0
-    },
-    {
-      "source": "pdf_1",
-      "target": "pdf_1_chunk_17",
-      "relationship_type": "contains",
-      "weight": 1.0
-    },
-    {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_0",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_1",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_2",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_3",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_4",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_5",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_6",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_7",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_8",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_9",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_10",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_11",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_12",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_13",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_14",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_15",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_16",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_17",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_18",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_19",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_20",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_21",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_22",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_23",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0_row_24",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_-2050424514019319887",
+      "source": "source_-7901835789007481593",
       "target": "csv_0",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_0",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_1",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_2",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_3",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_4",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_5",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_6",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_7",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_8",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_9",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_10",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_11",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_12",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_13",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_14",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_15",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_16",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_17",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
+      "target": "pdf_1_struct_18",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_0",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_1",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_2",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_3",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_4",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_5",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_6",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_7",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_8",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_9",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_10",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_11",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_12",
       "relationship_type": "source_of",
       "weight": 1.0
     },
     {
-      "source": "source_7930650231727324460",
+      "source": "source_7189333850486367594",
       "target": "pdf_1_chunk_13",
-      "relationship_type": "source_of",
-      "weight": 1.0
-    },
-    {
-      "source": "source_7930650231727324460",
-      "target": "pdf_1_chunk_14",
-      "relationship_type": "source_of",
-      "weight": 1.0
-    },
-    {
-      "source": "source_7930650231727324460",
-      "target": "pdf_1_chunk_15",
-      "relationship_type": "source_of",
-      "weight": 1.0
-    },
-    {
-      "source": "source_7930650231727324460",
-      "target": "pdf_1_chunk_16",
-      "relationship_type": "source_of",
-      "weight": 1.0
-    },
-    {
-      "source": "source_7930650231727324460",
-      "target": "pdf_1_chunk_17",
       "relationship_type": "source_of",
       "weight": 1.0
     }
