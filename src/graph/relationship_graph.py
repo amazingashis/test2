@@ -323,8 +323,7 @@ class RelationshipGraph:
         ))
         
         fig.update_layout(
-            title='Semantic RAG Relationship Graph',
-            titlefont_size=16,
+            title=dict(text='Semantic RAG Relationship Graph', x=0.5, font=dict(size=16)),
             showlegend=False,
             hovermode='closest',
             margin=dict(b=20,l=5,r=5,t=40),
@@ -457,15 +456,15 @@ class RelationshipGraph:
                 # Load nodes
                 for node_data in data['nodes']:
                     node_id = node_data.pop('id')
-                    node_type = node_data.get('node_type', 'unknown')
+                    node_type = node_data.pop('node_type', 'unknown')  # Use pop instead of get
                     self.add_node(node_id, node_type, **node_data)
                 
                 # Load edges
                 for edge_data in data['edges']:
                     source = edge_data.pop('source')
                     target = edge_data.pop('target')
-                    relationship_type = edge_data.get('relationship_type', 'unknown')
-                    weight = edge_data.get('weight', 1.0)
+                    relationship_type = edge_data.pop('relationship_type', 'unknown')  # Use pop
+                    weight = edge_data.pop('weight', 1.0)  # Use pop
                     self.add_relationship(source, target, relationship_type, weight, **edge_data)
                 
                 self.metadata = data.get('metadata', {})
