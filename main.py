@@ -27,6 +27,11 @@ import json
 from datetime import datetime
 import logging
 from dotenv import load_dotenv
+
+# Setup clean logging first
+from logging_config import setup_clean_logging
+setup_clean_logging()
+
 load_dotenv()
 
 # Add src to path
@@ -129,7 +134,9 @@ def process_files_command(semantic_rag, files_directory, generate_embeddings=Tru
                 print(f"   - Nodes: {stats['num_nodes']}")
                 print(f"   - Edges: {stats['num_edges']}")
                 print(f"   - Density: {stats['density']:.3f}")
-                print(f"   - Content relationships: {graph_results['content_relationships']}")
+                print(f"   - Semantic relationships: {graph_results['semantic_relationships']}")
+                print(f"   - Mapping relationships: {graph_results['mapping_relationships']}")
+                print(f"   - Field relationships: {graph_results['field_relationships']}")
             else:
                 print("❌ Graph building failed")
         

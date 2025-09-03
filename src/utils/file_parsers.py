@@ -224,7 +224,7 @@ class FileParser:
             return {
                 'text': text,
                 'metadata': metadata,
-                'chunks': FileParser._chunk_text(text, chunk_size=2000, overlap=400)
+                'chunks': FileParser._chunk_text(text, chunk_size=1500, overlap=300)
             }
             
         except Exception as e:

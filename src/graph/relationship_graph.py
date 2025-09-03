@@ -37,6 +37,39 @@ class RelationshipGraph:
         
         logger.debug(f"Added node: {node_id} (type: {node_type})")
     
+    def add_relationship(self, source_node: str, target_node: str, 
+                        relationship_type: str, weight: float = 1.0, **attributes) -> None:
+        """
+        Add a relationship between two nodes.
+        
+        Args:
+            source_node (str): Source node ID
+            target_node (str): Target node ID
+            relationship_type (str): Type of relationship
+            weight (float): Relationship weight/strength
+            **attributes: Additional relationship attributes
+        """
+        # Ensure both nodes exist in the graph
+        if source_node not in self.graph.nodes:
+            logger.warning(f"Source node {source_node} not found, adding it")
+            self.add_node(source_node, 'unknown')
+            
+        if target_node not in self.graph.nodes:
+            logger.warning(f"Target node {target_node} not found, adding it")
+            self.add_node(target_node, 'unknown')
+        
+        # Add the edge with attributes
+        edge_attributes = {
+            'relationship_type': relationship_type,
+            'weight': weight,
+            **attributes
+        }
+        
+        self.graph.add_edge(source_node, target_node, **edge_attributes)
+        self.edge_types[(source_node, target_node)] = relationship_type
+        
+        logger.debug(f"Added relationship: {source_node} --[{relationship_type}]--> {target_node} (weight: {weight})")
+    
     def add_data_mapping_relationship(self, source_node: str, target_node: str, 
                                      mapping_info: Dict[str, Any]) -> None:
         """

@@ -500,9 +500,11 @@ class SemanticRAG:
             logger.warning("No texts found for embedding generation")
             return {"success": False, "message": "No texts to process"}
         
-        # Generate embeddings
+        print("🔮 Generating embeddings...")
+        
+        # Generate embeddings with progress indicator
         embeddings = self.embedding_generator.get_batch_embeddings(
-            texts, batch_size=batch_size, use_local=use_local
+            texts, batch_size=batch_size, use_local=use_local, show_progress=True
         )
         
         # Store embeddings in vector database
@@ -620,7 +622,7 @@ class SemanticRAG:
         Returns:
             List[Dict[str, Any]]: AI-identified relationships
         """
-        logger.info("Performing AI-powered relationship analysis")
+        # logger.info("Performing AI-powered relationship analysis")  # Reduced verbosity
         ai_relationships = []
         
         try:
@@ -656,7 +658,7 @@ class SemanticRAG:
         except Exception as e:
             logger.error(f"AI relationship analysis failed: {e}")
             
-        logger.info(f"AI identified {len(ai_relationships)} advanced relationships")
+        print(f"✅ AI identified {len(ai_relationships)} advanced relationships")
         return ai_relationships
     
     async def _analyze_relationship_batch(self, batch: List[tuple]) -> List[Dict[str, Any]]:
@@ -749,9 +751,11 @@ class SemanticRAG:
         Returns:
             Dict[str, Any]: Graph building results
         """
+        print("🕸️  Building relationship graph...")
         logger.info("Building relationship graph with enhanced mapping support")
         
         # Enhanced relationship analysis using Meta Llama 3-3 70B
+        print("🧠 Performing AI-powered relationship analysis...")
         try:
             asyncio.run(self._analyze_semantic_relationships())
         except Exception as e:
@@ -763,8 +767,15 @@ class SemanticRAG:
         semantic_relationships = 0
         field_relationships = 0
         
+        print("📊 Adding documents as graph nodes...")
         # Add documents as nodes
-        for doc_id, doc_data in self.processed_documents.items():
+        total_docs = len(self.processed_documents)
+        for i, (doc_id, doc_data) in enumerate(self.processed_documents.items()):
+            # Progress indicator for large datasets
+            if total_docs > 50 and i % max(1, total_docs // 10) == 0:
+                progress = (i / total_docs) * 100
+                print(f"\r🔄 Processing nodes: {progress:.0f}% ({i}/{total_docs})", end="", flush=True)
+            
             # Prepare node attributes, avoiding conflicts
             node_attrs = {
                 'node_type': doc_data['type'],
@@ -779,6 +790,9 @@ class SemanticRAG:
                     node_attrs[key] = value
             
             self.relationship_graph.add_node(doc_id, **node_attrs)
+        
+        if total_docs > 50:
+            print()  # New line after progress
         
         # Handle data mapping relationships (already created during document processing)
         mapping_docs = [

@@ -45,6 +45,44 @@ class EmbeddingGenerator:
         """
         return self._get_databricks_embedding(text)
     
+    def _get_databricks_embedding_silent(self, text: str) -> Optional[List[float]]:
+        """
+        Get embedding using Databricks BGE API without verbose logging.
+        
+        Args:
+            text (str): Text to embed
+            
+        Returns:
+            Optional[List[float]]: Embedding vector or None if failed
+        """
+        if not self.api_key:
+            return None
+            
+        try:
+            response = requests.post(
+                self.endpoint_url,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "input": text,
+                    "model": "bge-large-en-v1.5"
+                },
+                timeout=30
+            )
+            response.raise_for_status()
+            
+            result = response.json()
+            if 'data' in result and result['data']:
+                embedding = result['data'][0].get('embedding')
+                return embedding if embedding else None
+            else:
+                return None
+                
+        except Exception:
+            return None
+    
     def _get_databricks_embedding(self, text: str) -> Optional[List[float]]:
         """
         Get embedding using Databricks BGE API.
@@ -94,7 +132,7 @@ class EmbeddingGenerator:
             logger.error(f"Error parsing Databricks BGE API response: {e}")
             return None
     
-    def get_batch_embeddings(self, texts: List[str], batch_size: int = 32, use_local: bool = False) -> List[Optional[List[float]]]:
+    def get_batch_embeddings(self, texts: List[str], batch_size: int = 32, use_local: bool = False, show_progress: bool = True) -> List[Optional[List[float]]]:
         """
         Generate embeddings for multiple texts.
         
@@ -102,18 +140,30 @@ class EmbeddingGenerator:
             texts (List[str]): List of texts to embed
             batch_size (int): Number of texts to process at once (ignored - processing individually)
             use_local (bool): Ignored - only Databricks API is used
+            show_progress (bool): Whether to show progress percentage
             
         Returns:
             List[Optional[List[float]]]: List of embedding vectors
         """
         embeddings = []
+        total_texts = len(texts)
         
         # Process individually for API calls
-        for text in texts:
-            emb = self.get_embedding(text, use_local=False)
+        for i, text in enumerate(texts):
+            emb = self._get_databricks_embedding_silent(text) if show_progress else self.get_embedding(text, use_local=False)
             embeddings.append(emb)
+            
+            # Show progress every 10% or for small datasets every few items
+            if show_progress and total_texts > 0:
+                progress = ((i + 1) / total_texts) * 100
+                if progress % 10 < (100 / total_texts) or i == total_texts - 1:
+                    print(f"\r🔄 Generating embeddings: {progress:.1f}% ({i + 1}/{total_texts})", end="", flush=True)
         
-        logger.info(f"Generated {len([e for e in embeddings if e is not None])} embeddings out of {len(texts)} texts")
+        if show_progress:
+            print()  # New line after progress
+        
+        successful_embeddings = len([e for e in embeddings if e is not None])
+        logger.info(f"Generated {successful_embeddings} embeddings out of {total_texts} texts")
         return embeddings
     
     def calculate_similarity(self, embedding1: List[float], embedding2: List[float]) -> float:
