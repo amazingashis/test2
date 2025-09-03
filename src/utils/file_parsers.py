@@ -50,7 +50,7 @@ class DataMappingParser:
                         normalized_columns[field_clean] = 'target_table'
                     elif any(term in field_lower for term in ['target column', 'target_column', 'target field', 'target_field', 'field', 'tgt_column']):
                         normalized_columns[field_clean] = 'target_field'
-                    elif any(term in field_lower for term in ['transformation', 'mapping rule', 'mapping_rule', 'transform', 'rule']):
+                    elif any(term in field_lower for term in ['transformation', 'mapping rule', 'mapping_rule', 'transform', 'rule', 'mappping']):
                         normalized_columns[field_clean] = 'transformation_rule'
                     elif any(term in field_lower for term in ['type', 'data type', 'data_type', 'field_type']):
                         normalized_columns[field_clean] = 'data_type'
@@ -60,6 +60,10 @@ class DataMappingParser:
                         normalized_columns[field_clean] = field_clean.lower().replace(' ', '_')
                 
                 for i, row in enumerate(reader):
+                    # Skip empty rows
+                    if not any(value.strip() for value in row.values() if value):
+                        continue
+                        
                     # Clean and normalize row data
                     cleaned_row = {}
                     normalized_row = {}
@@ -122,16 +126,27 @@ class FileParser:
         # First, check if this is a data mapping CSV
         try:
             with open(file_path, newline='', encoding='utf-8') as csvfile:
-                sample = csvfile.read(1024)
-                csvfile.seek(0)
+                # Read first few lines to check for mapping indicators
+                lines = []
+                for _ in range(5):  # Check first 5 lines
+                    try:
+                        line = csvfile.readline()
+                        if line:
+                            lines.append(line.lower())
+                        else:
+                            break
+                    except:
+                        break
                 
-                # Check for mapping-related column names
+                # Check for mapping-related column names in any of the first lines
+                all_content = ' '.join(lines)
                 mapping_indicators = [
                     'source table', 'target table', 'source column', 'target field',
-                    'mapping', 'transformation', 'source_table', 'target_field'
+                    'mapping', 'transformation', 'source_table', 'target_field',
+                    'field', 'mappping rules'  # Handle typo in your data
                 ]
                 
-                if any(indicator in sample.lower() for indicator in mapping_indicators):
+                if any(indicator in all_content for indicator in mapping_indicators):
                     logger.info(f"Detected data mapping CSV: {file_path}")
                     return DataMappingParser.parse_mapping_csv(file_path)
         except Exception:
