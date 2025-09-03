@@ -49,6 +49,31 @@ class VectorDBClient:
             logger.error(f"Failed to create collection: {str(e)}")
             raise
     
+    def _sanitize_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Sanitize metadata to ensure all values are ChromaDB-compatible types.
+        
+        Args:
+            metadata (Dict[str, Any]): Original metadata
+            
+        Returns:
+            Dict[str, Any]: Sanitized metadata with only str, int, float, bool, or None values
+        """
+        sanitized = {}
+        for key, value in metadata.items():
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                sanitized[key] = value
+            elif isinstance(value, list):
+                # Convert lists to comma-separated strings
+                sanitized[key] = ", ".join(str(item) for item in value)
+            elif isinstance(value, dict):
+                # Convert dicts to JSON strings
+                sanitized[key] = str(value)
+            else:
+                # Convert other types to strings
+                sanitized[key] = str(value)
+        return sanitized
+    
     def add_embedding(self, doc_id: str, embedding: List[float], 
                      document: str, metadata: Dict[str, Any] = None) -> bool:
         """
@@ -66,6 +91,9 @@ class VectorDBClient:
         try:
             if metadata is None:
                 metadata = {}
+            
+            # Sanitize metadata before adding
+            metadata = self._sanitize_metadata(metadata)
             
             # Add timestamp
             metadata['timestamp'] = datetime.now().isoformat()
@@ -108,8 +136,10 @@ class VectorDBClient:
         
         # Add timestamps and doc lengths
         for i, (doc, metadata) in enumerate(zip(documents, metadatas)):
+            metadata = self._sanitize_metadata(metadata)
             metadata['timestamp'] = datetime.now().isoformat()
             metadata['doc_length'] = len(doc)
+            metadatas[i] = metadata
         
         try:
             # Filter out None embeddings
