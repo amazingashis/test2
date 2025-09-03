@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import asyncio
 from typing import List, Dict, Any, Optional, Tuple
 import logging
 from datetime import datetime
@@ -23,34 +24,268 @@ logger = logging.getLogger(__name__)
 class SemanticRAG:
     """Main Semantic RAG system with relationship graphs and vector database"""
     
-    def __init__(self, collection_name: str = "semantic_rag", 
-                 persist_directory: str = "./chroma_db",
-                 databricks_api_key: str = None):
+    def add_document(self, content: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Initialize Semantic RAG system.
+        Add a document to the semantic RAG system.
         
         Args:
-            collection_name (str): Name for vector database collection
-            persist_directory (str): Directory to persist vector database
-            databricks_api_key (str, optional): Databricks API key
+            content (str): Document content
+            metadata (Dict[str, Any]): Document metadata
+            
+        Returns:
+            Dict[str, Any]: Processing result
         """
-        self.collection_name = collection_name
-        self.persist_directory = persist_directory
+        try:
+            # Generate unique document ID
+            doc_id = f"doc_{len(self.processed_documents)}"
+            
+            # Check if this is a data mapping row
+            if metadata.get('_mapping_type') == 'data_mapping':
+                return self._process_mapping_document(doc_id, content, metadata)
+            
+            # Regular document processing
+            return self._process_regular_document(doc_id, content, metadata)
+            
+        except Exception as e:
+            logger.error(f"Error adding document: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def _process_mapping_document(self, doc_id: str, content: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Process a data mapping document with enhanced relationship detection"""
+        try:
+            # Store the document
+            self.processed_documents[doc_id] = {
+                'type': 'data_mapping',
+                'content': content,
+                'metadata': metadata
+            }
+            
+            # Add to vector database
+            self.vector_db.add_documents([content], [metadata], [doc_id])
+            
+            # Add node to relationship graph
+            self.relationship_graph.add_node(
+                doc_id, 
+                'data_mapping',
+                **metadata
+            )
+            
+            # Create data mapping relationships if mapping info is available
+            mapping_info = metadata.get('_mapping_relationship')
+            if mapping_info:
+                # Create source and target nodes if they don't exist
+                source_id = f"source_{mapping_info['source'].replace('.', '_')}"
+                target_id = f"target_{mapping_info['target'].replace('.', '_')}"
+                
+                # Add source node
+                self.relationship_graph.add_node(
+                    source_id,
+                    'source_field',
+                    table_column=mapping_info['source'],
+                    field_type='source',
+                    data_type=mapping_info.get('data_type', ''),
+                    description=mapping_info.get('description', '')
+                )
+                
+                # Add target node
+                self.relationship_graph.add_node(
+                    target_id,
+                    'target_field', 
+                    field_name=mapping_info['target'],
+                    field_type='target',
+                    data_type=mapping_info.get('data_type', ''),
+                    description=mapping_info.get('description', '')
+                )
+                
+                # Add data mapping relationship
+                self.relationship_graph.add_data_mapping_relationship(
+                    source_id, target_id, mapping_info
+                )
+                
+                # Connect mapping document to source and target
+                self.relationship_graph.add_relationship(
+                    doc_id, source_id, 'defines_source', weight=1.0
+                )
+                self.relationship_graph.add_relationship(
+                    doc_id, target_id, 'defines_target', weight=1.0
+                )
+            
+            return {
+                "success": True,
+                "document_id": doc_id,
+                "type": "data_mapping",
+                "mapping_created": bool(mapping_info)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error processing mapping document: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def _process_regular_document(self, doc_id: str, content: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Process a regular document"""
+        try:
+            # Store the document
+            self.processed_documents[doc_id] = {
+                'type': 'document',
+                'content': content,
+                'metadata': metadata
+            }
+            
+            # Add to vector database
+            self.vector_db.add_documents([content], [metadata], [doc_id])
+            
+            # Add node to relationship graph
+            self.relationship_graph.add_node(
+                doc_id,
+                metadata.get('node_type', 'document'),
+                **metadata
+            )
+            
+            return {
+                "success": True,
+                "document_id": doc_id,
+                "type": "document"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error processing regular document: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def query_mappings(self, query: str, source_table: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Query data mappings with enhanced context.
         
-        # Initialize components
-        self.file_parser = FileParser()
-        self.embedding_generator = EmbeddingGenerator()
-        self.semantic_matcher = SemanticMatcher(self.embedding_generator)
-        self.relationship_graph = RelationshipGraph()
-        self.vector_db = VectorDBClient(collection_name, persist_directory)
-        self.model_orchestrator = ModelOrchestrator(databricks_api_key)
+        Args:
+            query (str): Query about data mappings
+            source_table (str, optional): Filter by source table
+            
+        Returns:
+            Dict[str, Any]: Query results with mapping context
+        """
+        try:
+            # Get mapping relationships
+            mappings = self.relationship_graph.get_mapping_relationships(source_table=source_table)
+            
+            # Perform vector search for mapping-related documents
+            search_results = self.vector_db.search(query, top_k=10)
+            
+            # Filter for mapping documents
+            mapping_docs = [
+                doc for doc in search_results 
+                if doc.get('metadata', {}).get('_mapping_type') == 'data_mapping'
+            ]
+            
+            # Generate answer using model orchestrator with mapping context
+            mapping_context = []
+            for mapping in mappings[:5]:  # Top 5 mappings
+                mapping_context.append(
+                    f"Mapping: {mapping['source_table']}.{mapping['source_column']} → "
+                    f"{mapping['target_field']} "
+                    f"(Transformation: {mapping['transformation_rule']})"
+                )
+            
+            context = "\n".join([doc.get('content', '') for doc in mapping_docs[:3]])
+            if mapping_context:
+                context += "\n\nData Mappings:\n" + "\n".join(mapping_context)
+            
+            answer = self.model_orchestrator.answer_question(query, context)
+            
+            return {
+                "answer": answer,
+                "mappings": mappings,
+                "mapping_docs": mapping_docs,
+                "context_used": bool(context)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error querying mappings: {e}")
+            return {"error": str(e)}
+    
+    def get_field_lineage(self, field_name: str) -> Dict[str, Any]:
+        """
+        Get complete lineage for a field including mappings and relationships.
         
-        # Data storage
-        self.processed_documents = {}
-        self.field_mappings = {}
-        self.relationships = []
+        Args:
+            field_name (str): Name of the field to trace
+            
+        Returns:
+            Dict[str, Any]: Complete field lineage information
+        """
+        try:
+            # Get lineage from relationship graph
+            lineage = self.relationship_graph.get_field_lineage(field_name)
+            
+            # Search for related documents
+            search_results = self.vector_db.search(f"field {field_name}", top_k=5)
+            
+            # Get mapping relationships involving this field
+            all_mappings = self.relationship_graph.get_mapping_relationships()
+            field_mappings = [
+                mapping for mapping in all_mappings
+                if field_name.lower() in mapping['target_field'].lower() or
+                   field_name.lower() in mapping['source_column'].lower()
+            ]
+            
+            return {
+                "field_name": field_name,
+                "lineage": lineage,
+                "related_documents": search_results,
+                "mappings": field_mappings,
+                "total_upstream": len(lineage['upstream']),
+                "total_downstream": len(lineage['downstream'])
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting field lineage: {e}")
+            return {"error": str(e)}
+    
+    def _analyze_relationships_with_ai(self) -> Dict[str, Any]:
+        """
+        Analyze relationships using AI to provide insights about data mapping patterns.
         
-        logger.info("Semantic RAG system initialized")
+        Returns:
+            Dict[str, Any]: AI insights about relationships
+        """
+        try:
+            if not self.model_orchestrator:
+                return {"status": "no_ai_available"}
+            
+            # Get mapping relationships for analysis
+            mappings = self.relationship_graph.get_mapping_relationships()
+            
+            if not mappings:
+                return {"status": "no_mappings_found"}
+            
+            # Prepare context for AI analysis
+            mapping_summary = []
+            for mapping in mappings[:10]:  # Analyze top 10 mappings
+                mapping_summary.append(
+                    f"Source: {mapping['source_table']}.{mapping['source_column']} → "
+                    f"Target: {mapping['target_field']} "
+                    f"(Rule: {mapping['transformation_rule']})"
+                )
+            
+            context = "Data Mapping Analysis:\n" + "\n".join(mapping_summary)
+            
+            # Ask AI for insights
+            query = """Analyze these data mappings and provide insights about:
+            1. Common transformation patterns
+            2. Data quality concerns
+            3. Potential mapping inconsistencies
+            4. Recommendations for data lineage improvement"""
+            
+            ai_response = self.model_orchestrator.answer_question(query, context)
+            
+            return {
+                "status": "success",
+                "insights": ai_response,
+                "mappings_analyzed": len(mapping_summary),
+                "total_mappings": len(mappings)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in AI relationship analysis: {e}")
+            return {"status": "error", "error": str(e)}
     
     def process_files(self, root_directory: str) -> Dict[str, Any]:
         """
@@ -469,7 +704,7 @@ class SemanticRAG:
     
     def build_relationship_graph(self, similarity_threshold: float = 0.7) -> Dict[str, Any]:
         """
-        Build relationship graph based on semantic similarities and content analysis.
+        Build relationship graph with enhanced data mapping support.
         
         Args:
             similarity_threshold (float): Threshold for similarity relationships
@@ -477,14 +712,19 @@ class SemanticRAG:
         Returns:
             Dict[str, Any]: Graph building results
         """
-        logger.info("Building relationship graph")
+        logger.info("Building relationship graph with enhanced mapping support")
         
         # Enhanced relationship analysis using Meta Llama 3-3 70B
-        import asyncio
         try:
             asyncio.run(self._analyze_semantic_relationships())
         except Exception as e:
             logger.warning(f"AI relationship analysis failed, continuing with basic analysis: {e}")
+        
+        # Statistics tracking
+        total_relationships = 0
+        mapping_relationships = 0
+        semantic_relationships = 0
+        field_relationships = 0
         
         # Add documents as nodes
         for doc_id, doc_data in self.processed_documents.items():
@@ -503,28 +743,47 @@ class SemanticRAG:
             
             self.relationship_graph.add_node(doc_id, **node_attrs)
         
-        # Find semantic similarities
-        doc_list = list(self.processed_documents.values())
-        content_relationships = self.semantic_matcher.find_content_relationships(
-            doc_list, similarity_threshold
-        )
+        # Handle data mapping relationships (already created during document processing)
+        mapping_docs = [
+            (doc_id, doc_data) for doc_id, doc_data in self.processed_documents.items()
+            if doc_data.get('type') == 'data_mapping'
+        ]
         
-        # Add similarity relationships to graph
-        for rel in content_relationships:
-            doc1_id = list(self.processed_documents.keys())[rel['doc1_id']]
-            doc2_id = list(self.processed_documents.keys())[rel['doc2_id']]
-            
-            self.relationship_graph.add_relationship(
-                doc1_id, doc2_id,
-                relationship_type='semantic_similarity',
-                weight=rel['similarity'],
-                similarity_score=rel['similarity']
+        if mapping_docs:
+            # Count existing mapping relationships
+            all_mappings = self.relationship_graph.get_mapping_relationships()
+            mapping_relationships = len(all_mappings)
+            logger.info(f"Found {len(mapping_docs)} mapping documents with {mapping_relationships} mapping relationships")
+        
+        # Find semantic similarities for regular documents
+        regular_docs = [
+            (doc_id, doc_data) for doc_id, doc_data in self.processed_documents.items()
+            if doc_data.get('type') not in ['data_mapping']
+        ]
+        
+        if len(regular_docs) > 1:
+            doc_list = [doc_data for _, doc_data in regular_docs]
+            content_relationships = self.semantic_matcher.find_content_relationships(
+                doc_list, similarity_threshold
             )
+            
+            # Add similarity relationships to graph
+            for rel in content_relationships:
+                doc1_id = list(dict(regular_docs).keys())[rel['doc1_id']]
+                doc2_id = list(dict(regular_docs).keys())[rel['doc2_id']]
+                
+                self.relationship_graph.add_relationship(
+                    doc1_id, doc2_id,
+                    relationship_type='semantic_similarity',
+                    weight=rel['similarity'],
+                    similarity_score=rel['similarity']
+                )
+                semantic_relationships += 1
         
-        # Find field similarities for CSV documents
+        # Find field similarities for CSV documents (not mapping CSVs)
         csv_documents = [
             (doc_id, doc_data) for doc_id, doc_data in self.processed_documents.items()
-            if doc_data['type'] in ['csv_row', 'csv_summary']
+            if doc_data['type'] in ['csv_row', 'csv_summary'] and doc_data.get('type') != 'data_mapping'
         ]
         
         if csv_documents:
@@ -575,6 +834,7 @@ class SemanticRAG:
                             weight=sim['similarity'],
                             similarity_score=sim['similarity']
                         )
+                        field_relationships += 1
         
         # Add hierarchical relationships (chunks to parent documents)
         for doc_id, doc_data in self.processed_documents.items():
@@ -633,6 +893,9 @@ class SemanticRAG:
         # Optimize the graph
         self.optimize_graph()
         
+        # Calculate total relationships
+        total_relationships = mapping_relationships + semantic_relationships + field_relationships
+        
         # Get graph statistics
         graph_stats = self.relationship_graph.get_statistics()
         
@@ -648,20 +911,15 @@ class SemanticRAG:
         results = {
             "success": True,
             "graph_statistics": graph_stats,
-            "content_relationships": len(content_relationships),
+            "total_relationships": total_relationships,
+            "mapping_relationships": mapping_relationships,
+            "semantic_relationships": semantic_relationships,
+            "field_relationships": field_relationships,
             "similarity_threshold": similarity_threshold
         }
         
-        # Auto-save graph after building
-        try:
-            os.makedirs("exports", exist_ok=True)
-            graph_file = "exports/relationship_graph.json"
-            self.relationship_graph.save_graph(graph_file, format='json')
-            logger.info(f"Graph automatically saved to {graph_file}")
-        except Exception as e:
-            logger.warning(f"Failed to auto-save graph: {e}")
-        
         logger.info(f"Relationship graph built: {graph_stats['num_nodes']} nodes, {graph_stats['num_edges']} edges")
+        logger.info(f"Relationships breakdown: {mapping_relationships} mapping, {semantic_relationships} semantic, {field_relationships} field")
         return results
 
     def _analyze_ai_relationships(self, documents_sample: List[Dict]) -> List[Dict[str, Any]]:

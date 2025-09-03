@@ -37,29 +37,140 @@ class RelationshipGraph:
         
         logger.debug(f"Added node: {node_id} (type: {node_type})")
     
-    def add_relationship(self, source: str, target: str, relationship_type: str, 
-                        weight: float = 1.0, **attributes) -> None:
+    def add_data_mapping_relationship(self, source_node: str, target_node: str, 
+                                     mapping_info: Dict[str, Any]) -> None:
         """
-        Add a relationship (edge) between two nodes.
+        Add a data mapping relationship with detailed mapping information.
         
         Args:
-            source (str): Source node ID
-            target (str): Target node ID
-            relationship_type (str): Type of relationship
-            weight (float): Relationship strength/weight
-            **attributes: Additional edge attributes
+            source_node (str): Source node ID (typically source table/field)
+            target_node (str): Target node ID (typically target field)
+            mapping_info (Dict): Mapping details including transformation rules
         """
-        self.graph.add_edge(
-            source, target, 
-            relationship_type=relationship_type,
-            weight=weight,
-            **attributes
-        )
+        relationship_type = "data_mapping"
         
-        edge_key = (source, target)
-        self.edge_types[edge_key] = relationship_type
+        # Extract mapping details
+        source_table = mapping_info.get('source_table', '')
+        source_column = mapping_info.get('source_column', '')
+        target_field = mapping_info.get('target_field', '')
+        transformation = mapping_info.get('transformation_rule', '')
+        data_type = mapping_info.get('data_type', '')
+        description = mapping_info.get('description', '')
         
-        logger.debug(f"Added relationship: {source} --[{relationship_type}]--> {target} (weight: {weight})")
+        # Create rich relationship attributes
+        mapping_attributes = {
+            'relationship_type': relationship_type,
+            'weight': 1.0,  # High weight for explicit mappings
+            'source_table': source_table,
+            'source_column': source_column,
+            'target_field': target_field,
+            'transformation_rule': transformation,
+            'data_type': data_type,
+            'description': description,
+            'mapping_source': f"{source_table}.{source_column}" if source_table and source_column else '',
+            'is_direct_mapping': 'direct' in transformation.lower() if transformation else False,
+            'requires_transformation': bool(transformation and 'direct' not in transformation.lower()),
+            'mapping_complexity': self._assess_mapping_complexity(transformation)
+        }
+        
+        self.add_relationship(source_node, target_node, relationship_type, **mapping_attributes)
+        
+        logger.info(f"Added data mapping: {mapping_attributes['mapping_source']} -> {target_field}")
+    
+    def _assess_mapping_complexity(self, transformation: str) -> str:
+        """Assess the complexity of a data transformation rule"""
+        if not transformation:
+            return 'unknown'
+        
+        transformation_lower = transformation.lower()
+        
+        if any(term in transformation_lower for term in ['direct', 'copy', 'as-is', 'no change']):
+            return 'simple'
+        elif any(term in transformation_lower for term in ['lookup', 'join', 'reference']):
+            return 'moderate'
+        elif any(term in transformation_lower for term in ['calculate', 'compute', 'aggregate', 'sum', 'count']):
+            return 'complex'
+        elif any(term in transformation_lower for term in ['custom', 'function', 'procedure', 'script']):
+            return 'very_complex'
+        else:
+            return 'moderate'
+    
+    def get_mapping_relationships(self, source_table: Optional[str] = None, 
+                                target_table: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Get data mapping relationships, optionally filtered by source/target table.
+        
+        Args:
+            source_table (str, optional): Filter by source table
+            target_table (str, optional): Filter by target table
+            
+        Returns:
+            List[Dict]: List of mapping relationship details
+        """
+        mappings = []
+        
+        for source, target, data in self.graph.edges(data=True):
+            if data.get('relationship_type') == 'data_mapping':
+                mapping = {
+                    'source_node': source,
+                    'target_node': target,
+                    'source_table': data.get('source_table', ''),
+                    'source_column': data.get('source_column', ''),
+                    'target_field': data.get('target_field', ''),
+                    'transformation_rule': data.get('transformation_rule', ''),
+                    'data_type': data.get('data_type', ''),
+                    'description': data.get('description', ''),
+                    'mapping_complexity': data.get('mapping_complexity', 'unknown'),
+                    'weight': data.get('weight', 0)
+                }
+                
+                # Apply filters
+                if source_table and mapping['source_table'] != source_table:
+                    continue
+                if target_table and target_table not in mapping['target_field']:
+                    continue
+                
+                mappings.append(mapping)
+        
+        return mappings
+    
+    def get_field_lineage(self, field_name: str) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Get the lineage (upstream and downstream) for a specific field.
+        
+        Args:
+            field_name (str): Name of the field to trace
+            
+        Returns:
+            Dict: Upstream and downstream field relationships
+        """
+        lineage = {
+            'upstream': [],  # Sources that feed into this field
+            'downstream': []  # Fields that use this field as source
+        }
+        
+        for source, target, data in self.graph.edges(data=True):
+            if data.get('relationship_type') == 'data_mapping':
+                target_field = data.get('target_field', '')
+                source_info = data.get('mapping_source', '')
+                
+                # Check if this field is the target
+                if field_name.lower() in target_field.lower():
+                    lineage['upstream'].append({
+                        'source': source_info,
+                        'transformation': data.get('transformation_rule', ''),
+                        'complexity': data.get('mapping_complexity', 'unknown')
+                    })
+                
+                # Check if this field is the source
+                if field_name.lower() in source_info.lower():
+                    lineage['downstream'].append({
+                        'target': target_field,
+                        'transformation': data.get('transformation_rule', ''),
+                        'complexity': data.get('mapping_complexity', 'unknown')
+                    })
+        
+        return lineage
     
     def get_neighbors(self, node_id: str, relationship_type: Optional[str] = None) -> List[str]:
         """

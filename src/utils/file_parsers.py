@@ -11,13 +11,107 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+class DataMappingParser:
+    """Enhanced parser for data mapping CSV files"""
+    
+    @staticmethod
+    def parse_mapping_csv(file_path: str) -> List[Dict[str, Any]]:
+        """
+        Parse data mapping CSV with enhanced relationship detection.
+        
+        Args:
+            file_path (str): Path to mapping CSV file
+            
+        Returns:
+            List[Dict[str, Any]]: List of mapping rows with enhanced metadata
+        """
+        rows = []
+        try:
+            with open(file_path, newline='', encoding='utf-8') as csvfile:
+                # Detect delimiter
+                sample = csvfile.read(1024)
+                csvfile.seek(0)
+                delimiter = ',' if ',' in sample else ';' if ';' in sample else '\t'
+                
+                reader = csv.DictReader(csvfile, delimiter=delimiter)
+                
+                # Normalize column names for common mapping patterns
+                normalized_columns = {}
+                for field in reader.fieldnames or []:
+                    field_clean = field.strip()
+                    field_lower = field_clean.lower()
+                    
+                    # Map various column name patterns to standard names
+                    if any(term in field_lower for term in ['source table', 'source_table', 'src_table']):
+                        normalized_columns[field_clean] = 'source_table'
+                    elif any(term in field_lower for term in ['source column', 'source_column', 'source field', 'source_field', 'src_column']):
+                        normalized_columns[field_clean] = 'source_column'
+                    elif any(term in field_lower for term in ['target table', 'target_table', 'tgt_table', 'destination table']):
+                        normalized_columns[field_clean] = 'target_table'
+                    elif any(term in field_lower for term in ['target column', 'target_column', 'target field', 'target_field', 'field', 'tgt_column']):
+                        normalized_columns[field_clean] = 'target_field'
+                    elif any(term in field_lower for term in ['transformation', 'mapping rule', 'mapping_rule', 'transform', 'rule']):
+                        normalized_columns[field_clean] = 'transformation_rule'
+                    elif any(term in field_lower for term in ['type', 'data type', 'data_type', 'field_type']):
+                        normalized_columns[field_clean] = 'data_type'
+                    elif any(term in field_lower for term in ['description', 'desc', 'comment']):
+                        normalized_columns[field_clean] = 'description'
+                    else:
+                        normalized_columns[field_clean] = field_clean.lower().replace(' ', '_')
+                
+                for i, row in enumerate(reader):
+                    # Clean and normalize row data
+                    cleaned_row = {}
+                    normalized_row = {}
+                    
+                    for key, value in row.items():
+                        if key:
+                            cleaned_key = key.strip()
+                            cleaned_value = value.strip() if value else ''
+                            cleaned_row[cleaned_key] = cleaned_value
+                            
+                            # Add normalized mapping
+                            normalized_key = normalized_columns.get(cleaned_key, cleaned_key.lower().replace(' ', '_'))
+                            normalized_row[normalized_key] = cleaned_value
+                    
+                    # Add metadata
+                    mapping_metadata = {
+                        '_row_number': i + 1,
+                        '_source_file': os.path.basename(file_path),
+                        '_mapping_type': 'data_mapping',
+                        '_has_source_table': bool(normalized_row.get('source_table')),
+                        '_has_target_field': bool(normalized_row.get('target_field')),
+                        '_has_transformation': bool(normalized_row.get('transformation_rule'))
+                    }
+                    
+                    # Create mapping relationship metadata
+                    if normalized_row.get('source_table') and normalized_row.get('target_field'):
+                        mapping_metadata['_mapping_relationship'] = {
+                            'source': f"{normalized_row.get('source_table', '')}.{normalized_row.get('source_column', '')}",
+                            'target': normalized_row.get('target_field', ''),
+                            'transformation': normalized_row.get('transformation_rule', ''),
+                            'data_type': normalized_row.get('data_type', ''),
+                            'description': normalized_row.get('description', '')
+                        }
+                    
+                    # Combine original and normalized data
+                    final_row = {**cleaned_row, **normalized_row, **mapping_metadata}
+                    rows.append(final_row)
+                    
+            logger.info(f"Successfully parsed {len(rows)} mapping rows from {file_path}")
+            return rows
+            
+        except Exception as e:
+            logger.error(f"Error parsing mapping CSV file {file_path}: {str(e)}")
+            return []
+
 class FileParser:
     """Base class for file parsers"""
     
     @staticmethod
     def parse_csv(file_path: str) -> List[Dict[str, Any]]:
         """
-        Parse CSV file row by row and return list of dictionaries.
+        Parse CSV file with automatic detection of mapping structure.
         
         Args:
             file_path (str): Path to CSV file
@@ -25,6 +119,25 @@ class FileParser:
         Returns:
             List[Dict[str, Any]]: List of rows as dictionaries
         """
+        # First, check if this is a data mapping CSV
+        try:
+            with open(file_path, newline='', encoding='utf-8') as csvfile:
+                sample = csvfile.read(1024)
+                csvfile.seek(0)
+                
+                # Check for mapping-related column names
+                mapping_indicators = [
+                    'source table', 'target table', 'source column', 'target field',
+                    'mapping', 'transformation', 'source_table', 'target_field'
+                ]
+                
+                if any(indicator in sample.lower() for indicator in mapping_indicators):
+                    logger.info(f"Detected data mapping CSV: {file_path}")
+                    return DataMappingParser.parse_mapping_csv(file_path)
+        except Exception:
+            pass  # Fall back to regular CSV parsing
+        
+        # Regular CSV parsing
         rows = []
         try:
             with open(file_path, newline='', encoding='utf-8') as csvfile:
