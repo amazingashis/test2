@@ -1,5 +1,6065 @@
 {
-  "nodes": [],
-  "edges": [],
+  "nodes": [
+    {
+      "id": "csv_0_row_0",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 201,
+      "\ufeffSource\u00a0Field": "BENE_ID",
+      "Source\u00a0Description": "Beneficiary\u00a0ID",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "patient_id",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 1,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_1",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 192,
+      "\ufeffSource\u00a0Field": "CLM_ID",
+      "Source\u00a0Description": "Claim\u00a0ID",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "claim_id",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 2,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_2",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 231,
+      "\ufeffSource\u00a0Field": "CLM_FROM_DT",
+      "Source\u00a0Description": "Claim\u00a0From\u00a0Date",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "service_start_date",
+      "Transformation": "Convert\u00a0to\u00a0standard\u00a0date\u00a0format",
+      "_row_number": 3,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_3",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 232,
+      "\ufeffSource\u00a0Field": "CLM_THRU_DT",
+      "Source\u00a0Description": "Claim\u00a0Through\u00a0Date",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "service_end_date",
+      "Transformation": "Convert\u00a0to\u00a0standard\u00a0date\u00a0format",
+      "_row_number": 4,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_4",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 222,
+      "\ufeffSource\u00a0Field": "CLM_PMT_AMT",
+      "Source\u00a0Description": "Claim\u00a0Payment\u00a0Amount",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "paid_amount",
+      "Transformation": "Convert\u00a0to\u00a0decimal(15,2)",
+      "_row_number": 5,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_5",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 205,
+      "\ufeffSource\u00a0Field": "PRVDR_NUM",
+      "Source\u00a0Description": "Provider\u00a0Number",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "provider_id",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 6,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_6",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 228,
+      "\ufeffSource\u00a0Field": "ATT_PHYSN_NPI",
+      "Source\u00a0Description": "Attending\u00a0Physician\u00a0NPI",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "attending_provider_npi",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 7,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_7",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 227,
+      "\ufeffSource\u00a0Field": "OP_PHYSN_NPI",
+      "Source\u00a0Description": "Operating\u00a0Physician\u00a0NPI",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "operating_provider_npi",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 8,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_8",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 220,
+      "\ufeffSource\u00a0Field": "OTH_PHYSN_NPI",
+      "Source\u00a0Description": "Other\u00a0Physician\u00a0NPI",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "other_provider_npi",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 9,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_9",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 245,
+      "\ufeffSource\u00a0Field": "NCH_BENE_PTB_DDCTBL_AMT",
+      "Source\u00a0Description": "Part\u00a0B\u00a0Deductible\u00a0Amount",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "deductible_amount",
+      "Transformation": "Convert\u00a0to\u00a0decimal(15,2)",
+      "_row_number": 10,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_10",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 249,
+      "\ufeffSource\u00a0Field": "NCH_BENE_PTB_COINSRNC_AMT",
+      "Source\u00a0Description": "Part\u00a0B\u00a0Coinsurance\u00a0Amount",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "coinsurance_amount",
+      "Transformation": "Convert\u00a0to\u00a0decimal(15,2)",
+      "_row_number": 11,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_11",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 241,
+      "\ufeffSource\u00a0Field": "CLM_TOT_CHRG_AMT",
+      "Source\u00a0Description": "Claim\u00a0Total\u00a0Charge\u00a0Amount",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "total_charge_amount",
+      "Transformation": "Convert\u00a0to\u00a0decimal(15,2)",
+      "_row_number": 12,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_12",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 234,
+      "\ufeffSource\u00a0Field": "CLM_ADMSN_DT",
+      "Source\u00a0Description": "Claim\u00a0Admission\u00a0Date",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "admission_date",
+      "Transformation": "Convert\u00a0to\u00a0standard\u00a0date\u00a0format",
+      "_row_number": 13,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_13",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 239,
+      "\ufeffSource\u00a0Field": "CLM_IP_ADMSN_TYPE_CD",
+      "Source\u00a0Description": "Inpatient\u00a0Admission\u00a0Type\u00a0Code",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "admission_type_code",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 14,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_14",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 241,
+      "\ufeffSource\u00a0Field": "CLM_UTLZTN_DAY_CNT",
+      "Source\u00a0Description": "Claim\u00a0Utilization\u00a0Day\u00a0Count",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "utilization_day_count",
+      "Transformation": "Convert\u00a0to\u00a0integer",
+      "_row_number": 15,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_15",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 241,
+      "\ufeffSource\u00a0Field": "NCH_PTNT_STATUS_IND_CD",
+      "Source\u00a0Description": "Patient\u00a0Status\u00a0Indicator\u00a0Code",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "patient_status_code",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 16,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_16",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 220,
+      "\ufeffSource\u00a0Field": "CLM_DISP_CD",
+      "Source\u00a0Description": "Claim\u00a0Disposition\u00a0Code",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "disposition_code",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 17,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_17",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 243,
+      "\ufeffSource\u00a0Field": "PRNCPAL_DGNS_CD",
+      "Source\u00a0Description": "Principal\u00a0Diagnosis\u00a0Code",
+      "Target\u00a0Table": "stg_claim_diagnosis",
+      "Target\u00a0Field": "diagnosis_code",
+      "Transformation": "Direct\u00a0mapping,\u00a0set\u00a0as\u00a0primary",
+      "_row_number": 18,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_18",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 264,
+      "\ufeffSource\u00a0Field": "PRNCPAL_DGNS_VRSN_CD",
+      "Source\u00a0Description": "Principal\u00a0Diagnosis\u00a0Version\u00a0Code",
+      "Target\u00a0Table": "stg_claim_diagnosis",
+      "Target\u00a0Field": "diagnosis_code_version",
+      "Transformation": "Direct\u00a0mapping,\u00a0set\u00a0as\u00a0primary",
+      "_row_number": 19,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_19",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 258,
+      "\ufeffSource\u00a0Field": "ICD_DGNS_CD1-ICD_DGNS_CD25",
+      "Source\u00a0Description": "Diagnosis\u00a0Codes\u00a01-25",
+      "Target\u00a0Table": "stg_claim_diagnosis",
+      "Target\u00a0Field": "diagnosis_code",
+      "Transformation": "Multiple\u00a0rows,\u00a0with\u00a0diagnosis_sequence",
+      "_row_number": 20,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_20",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 245,
+      "\ufeffSource\u00a0Field": "ICD_DGNS_VRSN_CD1-CD25",
+      "Source\u00a0Description": "Diagnosis\u00a0Version\u00a0Codes\u00a01-25",
+      "Target\u00a0Table": "stg_claim_diagnosis",
+      "Target\u00a0Field": "diagnosis_code_version",
+      "Transformation": "Multiple\u00a0rows",
+      "_row_number": 21,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_21",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 261,
+      "\ufeffSource\u00a0Field": "ICD_PRCDR_CD1-ICD_PRCDR_CD25",
+      "Source\u00a0Description": "Procedure\u00a0Codes\u00a01-25",
+      "Target\u00a0Table": "stg_claim_procedures",
+      "Target\u00a0Field": "procedure_code",
+      "Transformation": "Multiple\u00a0rows,\u00a0with\u00a0procedure_sequence",
+      "_row_number": 22,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_22",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 247,
+      "\ufeffSource\u00a0Field": "ICD_PRCDR_VRSN_CD1-CD25",
+      "Source\u00a0Description": "Procedure\u00a0Version\u00a0Codes\u00a01-25",
+      "Target\u00a0Table": "stg_claim_procedures",
+      "Target\u00a0Field": "procedure_code_version",
+      "Transformation": "Multiple\u00a0rows",
+      "_row_number": 23,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_23",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 246,
+      "\ufeffSource\u00a0Field": "PRCDR_DT1-PRCDR_DT25",
+      "Source\u00a0Description": "Procedure\u00a0Dates\u00a01-25",
+      "Target\u00a0Table": "stg_claim_procedures",
+      "Target\u00a0Field": "procedure_date",
+      "Transformation": "Convert\u00a0to\u00a0standard\u00a0date\u00a0format",
+      "_row_number": 24,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0_row_24",
+      "node_type": "csv_row",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 254,
+      "\ufeffSource\u00a0Field": "CLM_SRVC_CLSFCTN_TYPE_CD",
+      "Source\u00a0Description": "Service\u00a0Classification\u00a0Type\u00a0Code",
+      "Target\u00a0Table": "stg_claim_header",
+      "Target\u00a0Field": "service_classification_code",
+      "Transformation": "Direct\u00a0mapping",
+      "_row_number": 25,
+      "_source_file": "claims_mapping document.csv"
+    },
+    {
+      "id": "csv_0",
+      "node_type": "csv_summary",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "content_length": 135,
+      "num_rows": 25,
+      "fields": [
+        "\ufeffSource\u00a0Field",
+        "Source\u00a0Description",
+        "Target\u00a0Table",
+        "Target\u00a0Field",
+        "Transformation",
+        "_row_number",
+        "_source_file"
+      ]
+    },
+    {
+      "id": "pdf_1",
+      "node_type": "pdf",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 21299,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22
+    },
+    {
+      "id": "pdf_1_chunk_0",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 995,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 0
+    },
+    {
+      "id": "pdf_1_chunk_1",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 995,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 1
+    },
+    {
+      "id": "pdf_1_chunk_2",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 2
+    },
+    {
+      "id": "pdf_1_chunk_3",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 3
+    },
+    {
+      "id": "pdf_1_chunk_4",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 4
+    },
+    {
+      "id": "pdf_1_chunk_5",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 5
+    },
+    {
+      "id": "pdf_1_chunk_6",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 6
+    },
+    {
+      "id": "pdf_1_chunk_7",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 993,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 7
+    },
+    {
+      "id": "pdf_1_chunk_8",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 8
+    },
+    {
+      "id": "pdf_1_chunk_9",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 996,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 9
+    },
+    {
+      "id": "pdf_1_chunk_10",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 991,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 10
+    },
+    {
+      "id": "pdf_1_chunk_11",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 998,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 11
+    },
+    {
+      "id": "pdf_1_chunk_12",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 996,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 12
+    },
+    {
+      "id": "pdf_1_chunk_13",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 13
+    },
+    {
+      "id": "pdf_1_chunk_14",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 997,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 14
+    },
+    {
+      "id": "pdf_1_chunk_15",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 15
+    },
+    {
+      "id": "pdf_1_chunk_16",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 996,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 16
+    },
+    {
+      "id": "pdf_1_chunk_17",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 982,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 17
+    },
+    {
+      "id": "pdf_1_chunk_18",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 18
+    },
+    {
+      "id": "pdf_1_chunk_19",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 997,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 19
+    },
+    {
+      "id": "pdf_1_chunk_20",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 20
+    },
+    {
+      "id": "pdf_1_chunk_21",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 997,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 21
+    },
+    {
+      "id": "pdf_1_chunk_22",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 22
+    },
+    {
+      "id": "pdf_1_chunk_23",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 999,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 23
+    },
+    {
+      "id": "pdf_1_chunk_24",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 998,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 24
+    },
+    {
+      "id": "pdf_1_chunk_25",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 994,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 25
+    },
+    {
+      "id": "pdf_1_chunk_26",
+      "node_type": "pdf_chunk",
+      "source_file": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "content_length": 602,
+      "title": "",
+      "author": "",
+      "subject": "",
+      "creator": "",
+      "producer": "iLovePDF",
+      "creation_date": "",
+      "modification_date": "D:20250902052704Z",
+      "num_pages": 22,
+      "chunk_index": 26
+    },
+    {
+      "id": "python_2",
+      "node_type": "python",
+      "source_file": "files/claim_data\\cms\\facebook\\mappign_code.py",
+      "content_length": 9465,
+      "functions": [
+        {
+          "name": "generate_uuid",
+          "line_number": 20,
+          "args": [],
+          "docstring": ""
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "module": "pyspark.sql",
+          "name": "SparkSession",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "col",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "lit",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "to_date",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "current_timestamp",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "current_date",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "expr",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.functions",
+          "name": "udf",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.types",
+          "name": "StringType",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.types",
+          "name": "DecimalType",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.types",
+          "name": "IntegerType",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.types",
+          "name": "DateType",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "pyspark.sql.types",
+          "name": "TimestampType",
+          "alias": null,
+          "type": "from_import"
+        },
+        {
+          "module": "uuid",
+          "alias": null,
+          "type": "import"
+        },
+        {
+          "module": "datetime",
+          "name": "datetime",
+          "alias": null,
+          "type": "from_import"
+        }
+      ],
+      "variables": [
+        {
+          "name": "input_path",
+          "line_number": 13
+        },
+        {
+          "name": "output_path",
+          "line_number": 14
+        },
+        {
+          "name": "file_date",
+          "line_number": 15
+        },
+        {
+          "name": "run_date",
+          "line_number": 16
+        },
+        {
+          "name": "df_file1",
+          "line_number": 30
+        },
+        {
+          "name": "claim_header_sql",
+          "line_number": 51
+        },
+        {
+          "name": "claim_header_df",
+          "line_number": 80
+        },
+        {
+          "name": "principal_diag_sql",
+          "line_number": 102
+        },
+        {
+          "name": "principal_diag_df",
+          "line_number": 117
+        },
+        {
+          "name": "secondary_diag_queries",
+          "line_number": 120
+        },
+        {
+          "name": "secondary_diag_sql",
+          "line_number": 138
+        },
+        {
+          "name": "secondary_diag_df",
+          "line_number": 139
+        },
+        {
+          "name": "all_diag_df",
+          "line_number": 142
+        },
+        {
+          "name": "proc_queries",
+          "line_number": 164
+        },
+        {
+          "name": "proc_sql",
+          "line_number": 181
+        },
+        {
+          "name": "proc_df",
+          "line_number": 182
+        },
+        {
+          "name": "claim_lines_sql",
+          "line_number": 203
+        },
+        {
+          "name": "claim_lines_df",
+          "line_number": 270
+        }
+      ]
+    },
+    {
+      "id": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Source\u00a0Description",
+      "node_type": "field",
+      "field_name": "Source\u00a0Description",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv"
+    },
+    {
+      "id": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_\ufeffSource\u00a0Field",
+      "node_type": "field",
+      "field_name": "\ufeffSource\u00a0Field",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv"
+    },
+    {
+      "id": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv__source_file",
+      "node_type": "field",
+      "field_name": "_source_file",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv"
+    },
+    {
+      "id": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Target\u00a0Field",
+      "node_type": "field",
+      "field_name": "Target\u00a0Field",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv"
+    },
+    {
+      "id": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Target\u00a0Table",
+      "node_type": "field",
+      "field_name": "Target\u00a0Table",
+      "source_file": "files/claim_data\\cms\\facebook\\claims_mapping document.csv"
+    },
+    {
+      "id": "source_7107128128994190645",
+      "node_type": "source_file",
+      "file_path": "files/claim_data\\cms\\facebook\\claims_mapping document.csv",
+      "document_count": 26
+    },
+    {
+      "id": "source_6947214349497359950",
+      "node_type": "source_file",
+      "file_path": "files/claim_data\\cms\\facebook\\CCLF IP V36-64-85.pdf",
+      "document_count": 28
+    }
+  ],
+  "edges": [
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_1",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8940486189217709,
+      "similarity_score": 0.8940486189217709
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7931416876196241,
+      "similarity_score": 0.7931416876196241
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_3",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7965274698122988,
+      "similarity_score": 0.7965274698122988
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7958750608927867,
+      "similarity_score": 0.7958750608927867
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.883863372558431,
+      "similarity_score": 0.883863372558431
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8179589758438722,
+      "similarity_score": 0.8179589758438722
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.825854031519917,
+      "similarity_score": 0.825854031519917
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8210065146613574,
+      "similarity_score": 0.8210065146613574
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8278949258317532,
+      "similarity_score": 0.8278949258317532
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7887260653140148,
+      "similarity_score": 0.7887260653140148
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7757580841608808,
+      "similarity_score": 0.7757580841608808
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.796241980904437,
+      "similarity_score": 0.796241980904437
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8222016495010745,
+      "similarity_score": 0.8222016495010745
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7960519642725774,
+      "similarity_score": 0.7960519642725774
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8658297734428102,
+      "similarity_score": 0.8658297734428102
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8414000807219914,
+      "similarity_score": 0.8414000807219914
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8176726271329914,
+      "similarity_score": 0.8176726271329914
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8251529591613723,
+      "similarity_score": 0.8251529591613723
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8303077761478809,
+      "similarity_score": 0.8303077761478809
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8311186595394694,
+      "similarity_score": 0.8311186595394694
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8337118715518183,
+      "similarity_score": 0.8337118715518183
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8311285678039944,
+      "similarity_score": 0.8311285678039944
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7859369890700887,
+      "similarity_score": 0.7859369890700887
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8370965379325963,
+      "similarity_score": 0.8370965379325963
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7206792052254355,
+      "similarity_score": 0.7206792052254355
+    },
+    {
+      "source": "csv_0_row_0",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7016122076092791,
+      "similarity_score": 0.7016122076092791
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8629303707256285,
+      "similarity_score": 0.8629303707256285
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_3",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8617921151233519,
+      "similarity_score": 0.8617921151233519
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8506896152226435,
+      "similarity_score": 0.8506896152226435
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8716838064424726,
+      "similarity_score": 0.8716838064424726
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7961599785611906,
+      "similarity_score": 0.7961599785611906
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7891880423771701,
+      "similarity_score": 0.7891880423771701
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7978615316128649,
+      "similarity_score": 0.7978615316128649
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8164755066251196,
+      "similarity_score": 0.8164755066251196
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7742620093649937,
+      "similarity_score": 0.7742620093649937
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8326517480376068,
+      "similarity_score": 0.8326517480376068
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8524836728313712,
+      "similarity_score": 0.8524836728313712
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8585586997890226,
+      "similarity_score": 0.8585586997890226
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8545270348341655,
+      "similarity_score": 0.8545270348341655
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8338961564761354,
+      "similarity_score": 0.8338961564761354
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9182215234446842,
+      "similarity_score": 0.9182215234446842
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.809255656675029,
+      "similarity_score": 0.809255656675029
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8069216383842948,
+      "similarity_score": 0.8069216383842948
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8092577846740372,
+      "similarity_score": 0.8092577846740372
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8112492080811152,
+      "similarity_score": 0.8112492080811152
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8170553486249716,
+      "similarity_score": 0.8170553486249716
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8185208980641008,
+      "similarity_score": 0.8185208980641008
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7871814875453397,
+      "similarity_score": 0.7871814875453397
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8914586669452982,
+      "similarity_score": 0.8914586669452982
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.728808934612328,
+      "similarity_score": 0.728808934612328
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7151828870842803,
+      "similarity_score": 0.7151828870842803
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7192759338817545,
+      "similarity_score": 0.7192759338817545
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7229500890008318,
+      "similarity_score": 0.7229500890008318
+    },
+    {
+      "source": "csv_0_row_1",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7157206747640126,
+      "similarity_score": 0.7157206747640126
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_3",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.94871123944338,
+      "similarity_score": 0.94871123944338
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8227253105620779,
+      "similarity_score": 0.8227253105620779
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8046581637700008,
+      "similarity_score": 0.8046581637700008
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7286027202902698,
+      "similarity_score": 0.7286027202902698
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.728436093042776,
+      "similarity_score": 0.728436093042776
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7250722499777298,
+      "similarity_score": 0.7250722499777298
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.807150731460445,
+      "similarity_score": 0.807150731460445
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7649304060694941,
+      "similarity_score": 0.7649304060694941
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8160590624209275,
+      "similarity_score": 0.8160590624209275
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9003035526295967,
+      "similarity_score": 0.9003035526295967
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7840550916993598,
+      "similarity_score": 0.7840550916993598
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8489334161598945,
+      "similarity_score": 0.8489334161598945
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7871242860468882,
+      "similarity_score": 0.7871242860468882
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.842078404942619,
+      "similarity_score": 0.842078404942619
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7589210699841787,
+      "similarity_score": 0.7589210699841787
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7643390203525856,
+      "similarity_score": 0.7643390203525856
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7635510640637324,
+      "similarity_score": 0.7635510640637324
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7673415833649686,
+      "similarity_score": 0.7673415833649686
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7761715736818258,
+      "similarity_score": 0.7761715736818258
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7761803297011745,
+      "similarity_score": 0.7761803297011745
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8653329737873272,
+      "similarity_score": 0.8653329737873272
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8469072342261856,
+      "similarity_score": 0.8469072342261856
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7248540797386526,
+      "similarity_score": 0.7248540797386526
+    },
+    {
+      "source": "csv_0_row_2",
+      "target": "python_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7149264518125281,
+      "similarity_score": 0.7149264518125281
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8280670169994171,
+      "similarity_score": 0.8280670169994171
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8076515015050967,
+      "similarity_score": 0.8076515015050967
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7297546772813697,
+      "similarity_score": 0.7297546772813697
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7295055026969839,
+      "similarity_score": 0.7295055026969839
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7316572813518993,
+      "similarity_score": 0.7316572813518993
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8062537845848011,
+      "similarity_score": 0.8062537845848011
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7681300577409306,
+      "similarity_score": 0.7681300577409306
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.81281226882805,
+      "similarity_score": 0.81281226882805
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8928409102914359,
+      "similarity_score": 0.8928409102914359
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7863550820116031,
+      "similarity_score": 0.7863550820116031
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8513486858457672,
+      "similarity_score": 0.8513486858457672
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7972926015761941,
+      "similarity_score": 0.7972926015761941
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8424902842591029,
+      "similarity_score": 0.8424902842591029
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7551896171153849,
+      "similarity_score": 0.7551896171153849
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7616839683840592,
+      "similarity_score": 0.7616839683840592
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7513507072710466,
+      "similarity_score": 0.7513507072710466
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7640850628577253,
+      "similarity_score": 0.7640850628577253
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.777441016373938,
+      "similarity_score": 0.777441016373938
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7814717941352747,
+      "similarity_score": 0.7814717941352747
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8659814117025051,
+      "similarity_score": 0.8659814117025051
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8411646099278539,
+      "similarity_score": 0.8411646099278539
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7052856849790294,
+      "similarity_score": 0.7052856849790294
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7226791619160008,
+      "similarity_score": 0.7226791619160008
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7133029712492103,
+      "similarity_score": 0.7133029712492103
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7408767814151624,
+      "similarity_score": 0.7408767814151624
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7121910033708699,
+      "similarity_score": 0.7121910033708699
+    },
+    {
+      "source": "csv_0_row_3",
+      "target": "python_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7129473920660299,
+      "similarity_score": 0.7129473920660299
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7981309801025714,
+      "similarity_score": 0.7981309801025714
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7599728294704651,
+      "similarity_score": 0.7599728294704651
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7500906637842633,
+      "similarity_score": 0.7500906637842633
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7457439862782703,
+      "similarity_score": 0.7457439862782703
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8992543975680496,
+      "similarity_score": 0.8992543975680496
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8752605720638431,
+      "similarity_score": 0.8752605720638431
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9264995826924249,
+      "similarity_score": 0.9264995826924249
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8270553710937856,
+      "similarity_score": 0.8270553710937856
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8004749083901351,
+      "similarity_score": 0.8004749083901351
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8408254389072733,
+      "similarity_score": 0.8408254389072733
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7815147444995301,
+      "similarity_score": 0.7815147444995301
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8382205338763131,
+      "similarity_score": 0.8382205338763131
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7707252945752208,
+      "similarity_score": 0.7707252945752208
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7615766824658359,
+      "similarity_score": 0.7615766824658359
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7612565804025371,
+      "similarity_score": 0.7612565804025371
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7567399639889484,
+      "similarity_score": 0.7567399639889484
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.772574367560424,
+      "similarity_score": 0.772574367560424
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7694509719980468,
+      "similarity_score": 0.7694509719980468
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7774859807202487,
+      "similarity_score": 0.7774859807202487
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8184383145067672,
+      "similarity_score": 0.8184383145067672
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7152041493792358,
+      "similarity_score": 0.7152041493792358
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7219282299761215,
+      "similarity_score": 0.7219282299761215
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7293096464615884,
+      "similarity_score": 0.7293096464615884
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7595751885073545,
+      "similarity_score": 0.7595751885073545
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7336732949500852,
+      "similarity_score": 0.7336732949500852
+    },
+    {
+      "source": "csv_0_row_4",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7000881257715557,
+      "similarity_score": 0.7000881257715557
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8226912756954995,
+      "similarity_score": 0.8226912756954995
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8174897534497634,
+      "similarity_score": 0.8174897534497634
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8192697348664458,
+      "similarity_score": 0.8192697348664458
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.813851035114553,
+      "similarity_score": 0.813851035114553
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7662911425912955,
+      "similarity_score": 0.7662911425912955
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7722781984531064,
+      "similarity_score": 0.7722781984531064
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7983485116265907,
+      "similarity_score": 0.7983485116265907
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.819011379744284,
+      "similarity_score": 0.819011379744284
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8137881972012476,
+      "similarity_score": 0.8137881972012476
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8497001677552275,
+      "similarity_score": 0.8497001677552275
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8457747714515025,
+      "similarity_score": 0.8457747714515025
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8517325913444582,
+      "similarity_score": 0.8517325913444582
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8609675308447039,
+      "similarity_score": 0.8609675308447039
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8078519740043969,
+      "similarity_score": 0.8078519740043969
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8331410749807668,
+      "similarity_score": 0.8331410749807668
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8437969981972021,
+      "similarity_score": 0.8437969981972021
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.85823922236369,
+      "similarity_score": 0.85823922236369
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.829569219242934,
+      "similarity_score": 0.829569219242934
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8531491824599253,
+      "similarity_score": 0.8531491824599253
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7614129797003014,
+      "similarity_score": 0.7614129797003014
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7201192969276323,
+      "similarity_score": 0.7201192969276323
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7073236798165047,
+      "similarity_score": 0.7073236798165047
+    },
+    {
+      "source": "csv_0_row_5",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7131401187360923,
+      "similarity_score": 0.7131401187360923
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9089952696347475,
+      "similarity_score": 0.9089952696347475
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9096033157816757,
+      "similarity_score": 0.9096033157816757
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7789388809411348,
+      "similarity_score": 0.7789388809411348
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7562837458163341,
+      "similarity_score": 0.7562837458163341
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7592612667125684,
+      "similarity_score": 0.7592612667125684
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7626261747564536,
+      "similarity_score": 0.7626261747564536
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8101324975719197,
+      "similarity_score": 0.8101324975719197
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7600460818475837,
+      "similarity_score": 0.7600460818475837
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8130119081673709,
+      "similarity_score": 0.8130119081673709
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7754723098702097,
+      "similarity_score": 0.7754723098702097
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8161809050748156,
+      "similarity_score": 0.8161809050748156
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8157917380561849,
+      "similarity_score": 0.8157917380561849
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7737761462338655,
+      "similarity_score": 0.7737761462338655
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7699968497767617,
+      "similarity_score": 0.7699968497767617
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7613912072570138,
+      "similarity_score": 0.7613912072570138
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7656005636131759,
+      "similarity_score": 0.7656005636131759
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.712620356670612,
+      "similarity_score": 0.712620356670612
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7755916028150529,
+      "similarity_score": 0.7755916028150529
+    },
+    {
+      "source": "csv_0_row_6",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.706701079277746,
+      "similarity_score": 0.706701079277746
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9243757450253987,
+      "similarity_score": 0.9243757450253987
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7779707443279091,
+      "similarity_score": 0.7779707443279091
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7498135986568014,
+      "similarity_score": 0.7498135986568014
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7338768238429837,
+      "similarity_score": 0.7338768238429837
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7347904643224342,
+      "similarity_score": 0.7347904643224342
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7863565001487195,
+      "similarity_score": 0.7863565001487195
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7559765984961674,
+      "similarity_score": 0.7559765984961674
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8194648734305456,
+      "similarity_score": 0.8194648734305456
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7811433801884744,
+      "similarity_score": 0.7811433801884744
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8087378939686661,
+      "similarity_score": 0.8087378939686661
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8169509279449351,
+      "similarity_score": 0.8169509279449351
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.770514402039017,
+      "similarity_score": 0.770514402039017
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7766422303082849,
+      "similarity_score": 0.7766422303082849
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7758854587062525,
+      "similarity_score": 0.7758854587062525
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7906918405150087,
+      "similarity_score": 0.7906918405150087
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7371122683573887,
+      "similarity_score": 0.7371122683573887
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7797396860312913,
+      "similarity_score": 0.7797396860312913
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7328736410797245,
+      "similarity_score": 0.7328736410797245
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7037268482509978,
+      "similarity_score": 0.7037268482509978
+    },
+    {
+      "source": "csv_0_row_7",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7054506060831371,
+      "similarity_score": 0.7054506060831371
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7686803372739985,
+      "similarity_score": 0.7686803372739985
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.749330450321124,
+      "similarity_score": 0.749330450321124
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7376553338214884,
+      "similarity_score": 0.7376553338214884
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7377420199628758,
+      "similarity_score": 0.7377420199628758
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.782454951413358,
+      "similarity_score": 0.782454951413358
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7438531669427313,
+      "similarity_score": 0.7438531669427313
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8184582146639079,
+      "similarity_score": 0.8184582146639079
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7790552777158807,
+      "similarity_score": 0.7790552777158807
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7980172627257296,
+      "similarity_score": 0.7980172627257296
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7988987060442873,
+      "similarity_score": 0.7988987060442873
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7659073786268379,
+      "similarity_score": 0.7659073786268379
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7642581427315949,
+      "similarity_score": 0.7642581427315949
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7660431582972873,
+      "similarity_score": 0.7660431582972873
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7733975609392165,
+      "similarity_score": 0.7733975609392165
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7214098609993341,
+      "similarity_score": 0.7214098609993341
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7729211278600316,
+      "similarity_score": 0.7729211278600316
+    },
+    {
+      "source": "csv_0_row_8",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7340079355938496,
+      "similarity_score": 0.7340079355938496
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9065428091956652,
+      "similarity_score": 0.9065428091956652
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8875729591718016,
+      "similarity_score": 0.8875729591718016
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8087270178686542,
+      "similarity_score": 0.8087270178686542
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7811636007822619,
+      "similarity_score": 0.7811636007822619
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8230401144896303,
+      "similarity_score": 0.8230401144896303
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8070724093674178,
+      "similarity_score": 0.8070724093674178
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8082704856495087,
+      "similarity_score": 0.8082704856495087
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7884307369217589,
+      "similarity_score": 0.7884307369217589
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7830625826020944,
+      "similarity_score": 0.7830625826020944
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7888589490398031,
+      "similarity_score": 0.7888589490398031
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7843006345022555,
+      "similarity_score": 0.7843006345022555
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7873851988306324,
+      "similarity_score": 0.7873851988306324
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7804824179199409,
+      "similarity_score": 0.7804824179199409
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7890256898466124,
+      "similarity_score": 0.7890256898466124
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7946594616429343,
+      "similarity_score": 0.7946594616429343
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7019133383519087,
+      "similarity_score": 0.7019133383519087
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7185898018495819,
+      "similarity_score": 0.7185898018495819
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7288318561248115,
+      "similarity_score": 0.7288318561248115
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7219971117460523,
+      "similarity_score": 0.7219971117460523
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7426752442371152,
+      "similarity_score": 0.7426752442371152
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7397840941953902,
+      "similarity_score": 0.7397840941953902
+    },
+    {
+      "source": "csv_0_row_9",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7144333059734236,
+      "similarity_score": 0.7144333059734236
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8551211182372896,
+      "similarity_score": 0.8551211182372896
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7678968648014903,
+      "similarity_score": 0.7678968648014903
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7680009046616333,
+      "similarity_score": 0.7680009046616333
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7877451549724981,
+      "similarity_score": 0.7877451549724981
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7957201575041881,
+      "similarity_score": 0.7957201575041881
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7631024727085476,
+      "similarity_score": 0.7631024727085476
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7654892823922669,
+      "similarity_score": 0.7654892823922669
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.764704108966269,
+      "similarity_score": 0.764704108966269
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.757418054248273,
+      "similarity_score": 0.757418054248273
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7572819932899112,
+      "similarity_score": 0.7572819932899112
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7637278916143915,
+      "similarity_score": 0.7637278916143915
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.762461957801809,
+      "similarity_score": 0.762461957801809
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7447338404324215,
+      "similarity_score": 0.7447338404324215
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7873686743806482,
+      "similarity_score": 0.7873686743806482
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7025895279179738,
+      "similarity_score": 0.7025895279179738
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7182468025510284,
+      "similarity_score": 0.7182468025510284
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7284864505239148,
+      "similarity_score": 0.7284864505239148
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7068968652601805,
+      "similarity_score": 0.7068968652601805
+    },
+    {
+      "source": "csv_0_row_10",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7110846820357142,
+      "similarity_score": 0.7110846820357142
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8226409810217981,
+      "similarity_score": 0.8226409810217981
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8016216922272149,
+      "similarity_score": 0.8016216922272149
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8383478605155547,
+      "similarity_score": 0.8383478605155547
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7893997412390564,
+      "similarity_score": 0.7893997412390564
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8275678957261335,
+      "similarity_score": 0.8275678957261335
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7563402332929111,
+      "similarity_score": 0.7563402332929111
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7527929538719167,
+      "similarity_score": 0.7527929538719167
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7628860981211758,
+      "similarity_score": 0.7628860981211758
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7569334103353064,
+      "similarity_score": 0.7569334103353064
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7623636634751279,
+      "similarity_score": 0.7623636634751279
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7564820882287779,
+      "similarity_score": 0.7564820882287779
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.750483282044791,
+      "similarity_score": 0.750483282044791
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8105817467219381,
+      "similarity_score": 0.8105817467219381
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7020745525097261,
+      "similarity_score": 0.7020745525097261
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7168082453696832,
+      "similarity_score": 0.7168082453696832
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7717964032965049,
+      "similarity_score": 0.7717964032965049
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.768584480244864,
+      "similarity_score": 0.768584480244864
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7463286006085984,
+      "similarity_score": 0.7463286006085984
+    },
+    {
+      "source": "csv_0_row_11",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7358273011344235,
+      "similarity_score": 0.7358273011344235
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8801505128689739,
+      "similarity_score": 0.8801505128689739
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.844054375627671,
+      "similarity_score": 0.844054375627671
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8047338464274167,
+      "similarity_score": 0.8047338464274167
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.848480131022472,
+      "similarity_score": 0.848480131022472
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7731088162103482,
+      "similarity_score": 0.7731088162103482
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7819154915249438,
+      "similarity_score": 0.7819154915249438
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.773592340891164,
+      "similarity_score": 0.773592340891164
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7870196984615722,
+      "similarity_score": 0.7870196984615722
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7791897747354045,
+      "similarity_score": 0.7791897747354045
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7889165872920781,
+      "similarity_score": 0.7889165872920781
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8508354288635516,
+      "similarity_score": 0.8508354288635516
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8254559773585982,
+      "similarity_score": 0.8254559773585982
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7031590156213637,
+      "similarity_score": 0.7031590156213637
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7333784392210784,
+      "similarity_score": 0.7333784392210784
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7034565275452859,
+      "similarity_score": 0.7034565275452859
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7140089632720175,
+      "similarity_score": 0.7140089632720175
+    },
+    {
+      "source": "csv_0_row_12",
+      "target": "python_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7034141278112421,
+      "similarity_score": 0.7034141278112421
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7980559950697079,
+      "similarity_score": 0.7980559950697079
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8606353840371127,
+      "similarity_score": 0.8606353840371127
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8882800270777781,
+      "similarity_score": 0.8882800270777781
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8241609082977388,
+      "similarity_score": 0.8241609082977388
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8269091554987125,
+      "similarity_score": 0.8269091554987125
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8192002890310377,
+      "similarity_score": 0.8192002890310377
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8229771951612761,
+      "similarity_score": 0.8229771951612761
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8227500086996398,
+      "similarity_score": 0.8227500086996398
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8269667819914446,
+      "similarity_score": 0.8269667819914446
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7452712964824755,
+      "similarity_score": 0.7452712964824755
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8922629648530527,
+      "similarity_score": 0.8922629648530527
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7288933151975795,
+      "similarity_score": 0.7288933151975795
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.704852854239856,
+      "similarity_score": 0.704852854239856
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7048015417939643,
+      "similarity_score": 0.7048015417939643
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7135989644997424,
+      "similarity_score": 0.7135989644997424
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7078750421708138,
+      "similarity_score": 0.7078750421708138
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7175899877285643,
+      "similarity_score": 0.7175899877285643
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7402897557306551,
+      "similarity_score": 0.7402897557306551
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7514702561841994,
+      "similarity_score": 0.7514702561841994
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7126075725088968,
+      "similarity_score": 0.7126075725088968
+    },
+    {
+      "source": "csv_0_row_13",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7161918733023473,
+      "similarity_score": 0.7161918733023473
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8059896299987686,
+      "similarity_score": 0.8059896299987686
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8230367494083369,
+      "similarity_score": 0.8230367494083369
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7597017430336127,
+      "similarity_score": 0.7597017430336127
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7661063843659496,
+      "similarity_score": 0.7661063843659496
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7529886006593516,
+      "similarity_score": 0.7529886006593516
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7672972804442254,
+      "similarity_score": 0.7672972804442254
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7688602676189666,
+      "similarity_score": 0.7688602676189666
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7724985471115381,
+      "similarity_score": 0.7724985471115381
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8113879699655271,
+      "similarity_score": 0.8113879699655271
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8088418444018804,
+      "similarity_score": 0.8088418444018804
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7153367429051463,
+      "similarity_score": 0.7153367429051463
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7138527503909474,
+      "similarity_score": 0.7138527503909474
+    },
+    {
+      "source": "csv_0_row_14",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7071131610584058,
+      "similarity_score": 0.7071131610584058
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8587670966984156,
+      "similarity_score": 0.8587670966984156
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8549767321279097,
+      "similarity_score": 0.8549767321279097
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8611096164269726,
+      "similarity_score": 0.8611096164269726
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8506618981764476,
+      "similarity_score": 0.8506618981764476
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8559376752945336,
+      "similarity_score": 0.8559376752945336
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8591954285556466,
+      "similarity_score": 0.8591954285556466
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8571071071366102,
+      "similarity_score": 0.8571071071366102
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7877693333861704,
+      "similarity_score": 0.7877693333861704
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8673047146567875,
+      "similarity_score": 0.8673047146567875
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7018201333166931,
+      "similarity_score": 0.7018201333166931
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7165384894458727,
+      "similarity_score": 0.7165384894458727
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7475218135316133,
+      "similarity_score": 0.7475218135316133
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.727569269393431,
+      "similarity_score": 0.727569269393431
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7143672489186167,
+      "similarity_score": 0.7143672489186167
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7243546417020252,
+      "similarity_score": 0.7243546417020252
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7638480664248758,
+      "similarity_score": 0.7638480664248758
+    },
+    {
+      "source": "csv_0_row_15",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7069747694041889,
+      "similarity_score": 0.7069747694041889
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8424382128488398,
+      "similarity_score": 0.8424382128488398
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8428912056085259,
+      "similarity_score": 0.8428912056085259
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8282695479145863,
+      "similarity_score": 0.8282695479145863
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8370748063405866,
+      "similarity_score": 0.8370748063405866
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8268264592557438,
+      "similarity_score": 0.8268264592557438
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8359028132218386,
+      "similarity_score": 0.8359028132218386
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.771993888810899,
+      "similarity_score": 0.771993888810899
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9164467101042094,
+      "similarity_score": 0.9164467101042094
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7236994444663398,
+      "similarity_score": 0.7236994444663398
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7064330845942931,
+      "similarity_score": 0.7064330845942931
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7292804705780676,
+      "similarity_score": 0.7292804705780676
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7176132826124532,
+      "similarity_score": 0.7176132826124532
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7551453873312763,
+      "similarity_score": 0.7551453873312763
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7094148504113044,
+      "similarity_score": 0.7094148504113044
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7031159193859238,
+      "similarity_score": 0.7031159193859238
+    },
+    {
+      "source": "csv_0_row_16",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7022655517665525,
+      "similarity_score": 0.7022655517665525
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.973373679743006,
+      "similarity_score": 0.973373679743006
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8941852971954768,
+      "similarity_score": 0.8941852971954768
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8779599356603054,
+      "similarity_score": 0.8779599356603054
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8452300516298102,
+      "similarity_score": 0.8452300516298102
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8382923936133957,
+      "similarity_score": 0.8382923936133957
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.786836872100188,
+      "similarity_score": 0.786836872100188
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8378876402180855,
+      "similarity_score": 0.8378876402180855
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7029259468223369,
+      "similarity_score": 0.7029259468223369
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.703532888907509,
+      "similarity_score": 0.703532888907509
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7181861432539296,
+      "similarity_score": 0.7181861432539296
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7077056994238151,
+      "similarity_score": 0.7077056994238151
+    },
+    {
+      "source": "csv_0_row_17",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7029353547722599,
+      "similarity_score": 0.7029353547722599
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8839013658106805,
+      "similarity_score": 0.8839013658106805
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.912380316727241,
+      "similarity_score": 0.912380316727241
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8441149184048372,
+      "similarity_score": 0.8441149184048372
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8767945350093308,
+      "similarity_score": 0.8767945350093308
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7897705897573536,
+      "similarity_score": 0.7897705897573536
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8484522584573962,
+      "similarity_score": 0.8484522584573962
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7155686858110335,
+      "similarity_score": 0.7155686858110335
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7177636936234943,
+      "similarity_score": 0.7177636936234943
+    },
+    {
+      "source": "csv_0_row_18",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7003546619832631,
+      "similarity_score": 0.7003546619832631
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0_row_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9674515195000692,
+      "similarity_score": 0.9674515195000692
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9090590242006897,
+      "similarity_score": 0.9090590242006897
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8893332909706403,
+      "similarity_score": 0.8893332909706403
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7930108790325364,
+      "similarity_score": 0.7930108790325364
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8550235761039836,
+      "similarity_score": 0.8550235761039836
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7266030786026921,
+      "similarity_score": 0.7266030786026921
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7237607734938184,
+      "similarity_score": 0.7237607734938184
+    },
+    {
+      "source": "csv_0_row_19",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7209519231419752,
+      "similarity_score": 0.7209519231419752
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "csv_0_row_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9027045453340559,
+      "similarity_score": 0.9027045453340559
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9361847734039013,
+      "similarity_score": 0.9361847734039013
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8077709644861766,
+      "similarity_score": 0.8077709644861766
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.866789916425865,
+      "similarity_score": 0.866789916425865
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.73848488090697,
+      "similarity_score": 0.73848488090697
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7023680823396068,
+      "similarity_score": 0.7023680823396068
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7246120606852893,
+      "similarity_score": 0.7246120606852893
+    },
+    {
+      "source": "csv_0_row_20",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7172740588082831,
+      "similarity_score": 0.7172740588082831
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "csv_0_row_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9674410095917874,
+      "similarity_score": 0.9674410095917874
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8938254353567516,
+      "similarity_score": 0.8938254353567516
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8572583020694607,
+      "similarity_score": 0.8572583020694607
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7465966097388865,
+      "similarity_score": 0.7465966097388865
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7136126571735992,
+      "similarity_score": 0.7136126571735992
+    },
+    {
+      "source": "csv_0_row_21",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7288039938356596,
+      "similarity_score": 0.7288039938356596
+    },
+    {
+      "source": "csv_0_row_22",
+      "target": "csv_0_row_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.886891669229153,
+      "similarity_score": 0.886891669229153
+    },
+    {
+      "source": "csv_0_row_22",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8649338473715118,
+      "similarity_score": 0.8649338473715118
+    },
+    {
+      "source": "csv_0_row_22",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7499582507835001,
+      "similarity_score": 0.7499582507835001
+    },
+    {
+      "source": "csv_0_row_22",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7205381430177307,
+      "similarity_score": 0.7205381430177307
+    },
+    {
+      "source": "csv_0_row_22",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7183032847596689,
+      "similarity_score": 0.7183032847596689
+    },
+    {
+      "source": "csv_0_row_23",
+      "target": "csv_0_row_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7747653629172044,
+      "similarity_score": 0.7747653629172044
+    },
+    {
+      "source": "csv_0_row_23",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7392604061374982,
+      "similarity_score": 0.7392604061374982
+    },
+    {
+      "source": "csv_0_row_23",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7149655088357991,
+      "similarity_score": 0.7149655088357991
+    },
+    {
+      "source": "csv_0_row_23",
+      "target": "python_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7051649929008789,
+      "similarity_score": 0.7051649929008789
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "csv_0",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7271914814980922,
+      "similarity_score": 0.7271914814980922
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7191841236584592,
+      "similarity_score": 0.7191841236584592
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7023399302693826,
+      "similarity_score": 0.7023399302693826
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7091934575387372,
+      "similarity_score": 0.7091934575387372
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7262002311039079,
+      "similarity_score": 0.7262002311039079
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7419943499543319,
+      "similarity_score": 0.7419943499543319
+    },
+    {
+      "source": "csv_0_row_24",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7063198265258968,
+      "similarity_score": 0.7063198265258968
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_0",
+      "relationship_type": "contains",
+      "weight": 1.0,
+      "similarity_score": 0.9332349718490844
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_1",
+      "relationship_type": "contains",
+      "weight": 1.0,
+      "similarity_score": 0.8573906542425863
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_2",
+      "relationship_type": "contains",
+      "weight": 1.0,
+      "similarity_score": 0.7137575373225568
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "contains",
+      "weight": 1.0,
+      "similarity_score": 0.7140882865568765
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "contains",
+      "weight": 1.0,
+      "similarity_score": 0.7360782989382134
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_3",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_4",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_5",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "contains",
+      "weight": 1.0
+    },
+    {
+      "source": "pdf_1_chunk_0",
+      "target": "pdf_1_chunk_1",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.726439625588274,
+      "similarity_score": 0.726439625588274
+    },
+    {
+      "source": "pdf_1_chunk_1",
+      "target": "pdf_1_chunk_2",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7830436829233408,
+      "similarity_score": 0.7830436829233408
+    },
+    {
+      "source": "pdf_1_chunk_1",
+      "target": "pdf_1_chunk_3",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7366300580792898,
+      "similarity_score": 0.7366300580792898
+    },
+    {
+      "source": "pdf_1_chunk_1",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7037319057118641,
+      "similarity_score": 0.7037319057118641
+    },
+    {
+      "source": "pdf_1_chunk_1",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7378706630497687,
+      "similarity_score": 0.7378706630497687
+    },
+    {
+      "source": "pdf_1_chunk_1",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7272111099091917,
+      "similarity_score": 0.7272111099091917
+    },
+    {
+      "source": "pdf_1_chunk_2",
+      "target": "pdf_1_chunk_3",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7958353241156186,
+      "similarity_score": 0.7958353241156186
+    },
+    {
+      "source": "pdf_1_chunk_2",
+      "target": "pdf_1_chunk_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7183695843034716,
+      "similarity_score": 0.7183695843034716
+    },
+    {
+      "source": "pdf_1_chunk_2",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7173072696076284,
+      "similarity_score": 0.7173072696076284
+    },
+    {
+      "source": "pdf_1_chunk_2",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7048993796495773,
+      "similarity_score": 0.7048993796495773
+    },
+    {
+      "source": "pdf_1_chunk_2",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7312773264868877,
+      "similarity_score": 0.7312773264868877
+    },
+    {
+      "source": "pdf_1_chunk_3",
+      "target": "pdf_1_chunk_4",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.838372226505949,
+      "similarity_score": 0.838372226505949
+    },
+    {
+      "source": "pdf_1_chunk_3",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7041147139582273,
+      "similarity_score": 0.7041147139582273
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_5",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7451310968423941,
+      "similarity_score": 0.7451310968423941
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7395993616658509,
+      "similarity_score": 0.7395993616658509
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7409985178253019,
+      "similarity_score": 0.7409985178253019
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7071535006627905,
+      "similarity_score": 0.7071535006627905
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7008654362307909,
+      "similarity_score": 0.7008654362307909
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7118682789845868,
+      "similarity_score": 0.7118682789845868
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7304285879304279,
+      "similarity_score": 0.7304285879304279
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7424560340915418,
+      "similarity_score": 0.7424560340915418
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.733978938135999,
+      "similarity_score": 0.733978938135999
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.728294763105974,
+      "similarity_score": 0.728294763105974
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7183415691509656,
+      "similarity_score": 0.7183415691509656
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7855366507561081,
+      "similarity_score": 0.7855366507561081
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7885479475473094,
+      "similarity_score": 0.7885479475473094
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7543625981564833,
+      "similarity_score": 0.7543625981564833
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7204243557612326,
+      "similarity_score": 0.7204243557612326
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7696521829572477,
+      "similarity_score": 0.7696521829572477
+    },
+    {
+      "source": "pdf_1_chunk_4",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7214540835448184,
+      "similarity_score": 0.7214540835448184
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7928835599994196,
+      "similarity_score": 0.7928835599994196
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7679823555872248,
+      "similarity_score": 0.7679823555872248
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7121624205065533,
+      "similarity_score": 0.7121624205065533
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7381581355081412,
+      "similarity_score": 0.7381581355081412
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7650087918441676,
+      "similarity_score": 0.7650087918441676
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7161065429797221,
+      "similarity_score": 0.7161065429797221
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7756721717161272,
+      "similarity_score": 0.7756721717161272
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8700353128393462,
+      "similarity_score": 0.8700353128393462
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7492781434085524,
+      "similarity_score": 0.7492781434085524
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7429642143000426,
+      "similarity_score": 0.7429642143000426
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7199935558517789,
+      "similarity_score": 0.7199935558517789
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7520757530082303,
+      "similarity_score": 0.7520757530082303
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7282994700808081,
+      "similarity_score": 0.7282994700808081
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7288632070833294,
+      "similarity_score": 0.7288632070833294
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7711499918131608,
+      "similarity_score": 0.7711499918131608
+    },
+    {
+      "source": "pdf_1_chunk_5",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7501707905766493,
+      "similarity_score": 0.7501707905766493
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9150468029654187,
+      "similarity_score": 0.9150468029654187
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7799021814349355,
+      "similarity_score": 0.7799021814349355
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7926563826021235,
+      "similarity_score": 0.7926563826021235
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7927627358151652,
+      "similarity_score": 0.7927627358151652
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8228138188169057,
+      "similarity_score": 0.8228138188169057
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.735969086714774,
+      "similarity_score": 0.735969086714774
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8242104268513514,
+      "similarity_score": 0.8242104268513514
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7941268098414196,
+      "similarity_score": 0.7941268098414196
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8220859632924913,
+      "similarity_score": 0.8220859632924913
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8527082800838645,
+      "similarity_score": 0.8527082800838645
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7508706531440905,
+      "similarity_score": 0.7508706531440905
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7857393795271945,
+      "similarity_score": 0.7857393795271945
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7676558529461666,
+      "similarity_score": 0.7676558529461666
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7514160437674829,
+      "similarity_score": 0.7514160437674829
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7224632817251606,
+      "similarity_score": 0.7224632817251606
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7173422713012877,
+      "similarity_score": 0.7173422713012877
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7878265217457722,
+      "similarity_score": 0.7878265217457722
+    },
+    {
+      "source": "pdf_1_chunk_6",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7759830477601953,
+      "similarity_score": 0.7759830477601953
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8280454897551035,
+      "similarity_score": 0.8280454897551035
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7653455646680597,
+      "similarity_score": 0.7653455646680597
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7907193661073741,
+      "similarity_score": 0.7907193661073741
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7890103534279455,
+      "similarity_score": 0.7890103534279455
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7511627343305269,
+      "similarity_score": 0.7511627343305269
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.723053973187444,
+      "similarity_score": 0.723053973187444
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8151237936104385,
+      "similarity_score": 0.8151237936104385
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7818972447121225,
+      "similarity_score": 0.7818972447121225
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8254948353795378,
+      "similarity_score": 0.8254948353795378
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8312169941183911,
+      "similarity_score": 0.8312169941183911
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.771723090376498,
+      "similarity_score": 0.771723090376498
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7855325730917934,
+      "similarity_score": 0.7855325730917934
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7572405882740012,
+      "similarity_score": 0.7572405882740012
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7603113449891465,
+      "similarity_score": 0.7603113449891465
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7463492075335487,
+      "similarity_score": 0.7463492075335487
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7382097732565016,
+      "similarity_score": 0.7382097732565016
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7089027790237786,
+      "similarity_score": 0.7089027790237786
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7941453333626921,
+      "similarity_score": 0.7941453333626921
+    },
+    {
+      "source": "pdf_1_chunk_7",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.761437465424337,
+      "similarity_score": 0.761437465424337
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8054095069323771,
+      "similarity_score": 0.8054095069323771
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7796672883437422,
+      "similarity_score": 0.7796672883437422
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8104352238574509,
+      "similarity_score": 0.8104352238574509
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7387376701732288,
+      "similarity_score": 0.7387376701732288
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7221962042924607,
+      "similarity_score": 0.7221962042924607
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7150028107202155,
+      "similarity_score": 0.7150028107202155
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7408947729866533,
+      "similarity_score": 0.7408947729866533
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8339016313703868,
+      "similarity_score": 0.8339016313703868
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7875582790186706,
+      "similarity_score": 0.7875582790186706
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.74192716383162,
+      "similarity_score": 0.74192716383162
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7517429877968559,
+      "similarity_score": 0.7517429877968559
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.725035954985036,
+      "similarity_score": 0.725035954985036
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7381616520528279,
+      "similarity_score": 0.7381616520528279
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7090191211041149,
+      "similarity_score": 0.7090191211041149
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.714764421606823,
+      "similarity_score": 0.714764421606823
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7432870588491507,
+      "similarity_score": 0.7432870588491507
+    },
+    {
+      "source": "pdf_1_chunk_8",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7351347651345223,
+      "similarity_score": 0.7351347651345223
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.852187947645269,
+      "similarity_score": 0.852187947645269
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.791867558188857,
+      "similarity_score": 0.791867558188857
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7195412081564195,
+      "similarity_score": 0.7195412081564195
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7146589976149829,
+      "similarity_score": 0.7146589976149829
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7424533266299163,
+      "similarity_score": 0.7424533266299163
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7224168387706469,
+      "similarity_score": 0.7224168387706469
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.778434923368338,
+      "similarity_score": 0.778434923368338
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8054515709890115,
+      "similarity_score": 0.8054515709890115
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7361337601280412,
+      "similarity_score": 0.7361337601280412
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7213162886307535,
+      "similarity_score": 0.7213162886307535
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7213865069786083,
+      "similarity_score": 0.7213865069786083
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.732526175451017,
+      "similarity_score": 0.732526175451017
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7121761920189817,
+      "similarity_score": 0.7121761920189817
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7025327403631749,
+      "similarity_score": 0.7025327403631749
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7556747410037539,
+      "similarity_score": 0.7556747410037539
+    },
+    {
+      "source": "pdf_1_chunk_9",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7262935326883884,
+      "similarity_score": 0.7262935326883884
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8748747916502568,
+      "similarity_score": 0.8748747916502568
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7517043333553486,
+      "similarity_score": 0.7517043333553486
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7501720451796742,
+      "similarity_score": 0.7501720451796742
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7765820404100348,
+      "similarity_score": 0.7765820404100348
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7615254274325965,
+      "similarity_score": 0.7615254274325965
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8216703810580952,
+      "similarity_score": 0.8216703810580952
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7937756681483981,
+      "similarity_score": 0.7937756681483981
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7177619581037504,
+      "similarity_score": 0.7177619581037504
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7217533057078256,
+      "similarity_score": 0.7217533057078256
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7180695918114027,
+      "similarity_score": 0.7180695918114027
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7299961435158393,
+      "similarity_score": 0.7299961435158393
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7316723044834628,
+      "similarity_score": 0.7316723044834628
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7432804570734252,
+      "similarity_score": 0.7432804570734252
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7165709086837815,
+      "similarity_score": 0.7165709086837815
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7840267657660113,
+      "similarity_score": 0.7840267657660113
+    },
+    {
+      "source": "pdf_1_chunk_10",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7313828980433353,
+      "similarity_score": 0.7313828980433353
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7732273827676234,
+      "similarity_score": 0.7732273827676234
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.700277960729605,
+      "similarity_score": 0.700277960729605
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7385829200588887,
+      "similarity_score": 0.7385829200588887
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7585659923583404,
+      "similarity_score": 0.7585659923583404
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8423797884514632,
+      "similarity_score": 0.8423797884514632
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8176643484160013,
+      "similarity_score": 0.8176643484160013
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7318389146486372,
+      "similarity_score": 0.7318389146486372
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7428676867166161,
+      "similarity_score": 0.7428676867166161
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7147491554141551,
+      "similarity_score": 0.7147491554141551
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7040050179901335,
+      "similarity_score": 0.7040050179901335
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7445633464645178,
+      "similarity_score": 0.7445633464645178
+    },
+    {
+      "source": "pdf_1_chunk_11",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.722938120786634,
+      "similarity_score": 0.722938120786634
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7653019344432234,
+      "similarity_score": 0.7653019344432234
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7403025757192235,
+      "similarity_score": 0.7403025757192235
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7288602017264674,
+      "similarity_score": 0.7288602017264674
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7746900371863877,
+      "similarity_score": 0.7746900371863877
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.744476741062667,
+      "similarity_score": 0.744476741062667
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7048864911519723,
+      "similarity_score": 0.7048864911519723
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7249017649836876,
+      "similarity_score": 0.7249017649836876
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7056816529951248,
+      "similarity_score": 0.7056816529951248
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7319997344200039,
+      "similarity_score": 0.7319997344200039
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7300730463029395,
+      "similarity_score": 0.7300730463029395
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7404554608382502,
+      "similarity_score": 0.7404554608382502
+    },
+    {
+      "source": "pdf_1_chunk_12",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.769343031379369,
+      "similarity_score": 0.769343031379369
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7439039271740986,
+      "similarity_score": 0.7439039271740986
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7172447825606492,
+      "similarity_score": 0.7172447825606492
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7261263595657813,
+      "similarity_score": 0.7261263595657813
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7349769929975443,
+      "similarity_score": 0.7349769929975443
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8076749351882443,
+      "similarity_score": 0.8076749351882443
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.863360543187179,
+      "similarity_score": 0.863360543187179
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8621768482998449,
+      "similarity_score": 0.8621768482998449
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8518748017321054,
+      "similarity_score": 0.8518748017321054
+    },
+    {
+      "source": "pdf_1_chunk_13",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7421501481478815,
+      "similarity_score": 0.7421501481478815
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8021916162789025,
+      "similarity_score": 0.8021916162789025
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7987472887059591,
+      "similarity_score": 0.7987472887059591
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.845306121111895,
+      "similarity_score": 0.845306121111895
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7662030596908936,
+      "similarity_score": 0.7662030596908936
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8266877334440124,
+      "similarity_score": 0.8266877334440124
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7431547676344857,
+      "similarity_score": 0.7431547676344857
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7632408247300707,
+      "similarity_score": 0.7632408247300707
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7479882992560725,
+      "similarity_score": 0.7479882992560725
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7453178907596913,
+      "similarity_score": 0.7453178907596913
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.738092410566411,
+      "similarity_score": 0.738092410566411
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8354840994757582,
+      "similarity_score": 0.8354840994757582
+    },
+    {
+      "source": "pdf_1_chunk_14",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8072793338765056,
+      "similarity_score": 0.8072793338765056
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8028564215744506,
+      "similarity_score": 0.8028564215744506
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.781416855211552,
+      "similarity_score": 0.781416855211552
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7135795203743788,
+      "similarity_score": 0.7135795203743788
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7586397276728859,
+      "similarity_score": 0.7586397276728859
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.712032297913962,
+      "similarity_score": 0.712032297913962
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7647810560871436,
+      "similarity_score": 0.7647810560871436
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7342308815839955,
+      "similarity_score": 0.7342308815839955
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.725822191858514,
+      "similarity_score": 0.725822191858514
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7087377444311641,
+      "similarity_score": 0.7087377444311641
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7760161479117663,
+      "similarity_score": 0.7760161479117663
+    },
+    {
+      "source": "pdf_1_chunk_15",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7443369871383803,
+      "similarity_score": 0.7443369871383803
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.854793137493348,
+      "similarity_score": 0.854793137493348
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7567992022018075,
+      "similarity_score": 0.7567992022018075
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7912088358999173,
+      "similarity_score": 0.7912088358999173
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7499780349307166,
+      "similarity_score": 0.7499780349307166
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7699583541004132,
+      "similarity_score": 0.7699583541004132
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.722583105700698,
+      "similarity_score": 0.722583105700698
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7193359841664486,
+      "similarity_score": 0.7193359841664486
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7862268766752464,
+      "similarity_score": 0.7862268766752464
+    },
+    {
+      "source": "pdf_1_chunk_16",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7723512527401273,
+      "similarity_score": 0.7723512527401273
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8073213984982006,
+      "similarity_score": 0.8073213984982006
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8194387244303092,
+      "similarity_score": 0.8194387244303092
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7785251585040218,
+      "similarity_score": 0.7785251585040218
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7660051142639598,
+      "similarity_score": 0.7660051142639598
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7230480963245279,
+      "similarity_score": 0.7230480963245279
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7070948973094873,
+      "similarity_score": 0.7070948973094873
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7944834335731377,
+      "similarity_score": 0.7944834335731377
+    },
+    {
+      "source": "pdf_1_chunk_17",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7910451595694468,
+      "similarity_score": 0.7910451595694468
+    },
+    {
+      "source": "pdf_1_chunk_18",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9025723817914159,
+      "similarity_score": 0.9025723817914159
+    },
+    {
+      "source": "pdf_1_chunk_18",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7828696086746009,
+      "similarity_score": 0.7828696086746009
+    },
+    {
+      "source": "pdf_1_chunk_18",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7437857100299986,
+      "similarity_score": 0.7437857100299986
+    },
+    {
+      "source": "pdf_1_chunk_18",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7633569647708263,
+      "similarity_score": 0.7633569647708263
+    },
+    {
+      "source": "pdf_1_chunk_18",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7384781109824449,
+      "similarity_score": 0.7384781109824449
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8588291165545536,
+      "similarity_score": 0.8588291165545536
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8166100979014604,
+      "similarity_score": 0.8166100979014604
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7547567499916774,
+      "similarity_score": 0.7547567499916774
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7554749991015093,
+      "similarity_score": 0.7554749991015093
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7436482896572316,
+      "similarity_score": 0.7436482896572316
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8285489237418989,
+      "similarity_score": 0.8285489237418989
+    },
+    {
+      "source": "pdf_1_chunk_19",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7842004564508888,
+      "similarity_score": 0.7842004564508888
+    },
+    {
+      "source": "pdf_1_chunk_20",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8023958335111813,
+      "similarity_score": 0.8023958335111813
+    },
+    {
+      "source": "pdf_1_chunk_20",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7098904740825195,
+      "similarity_score": 0.7098904740825195
+    },
+    {
+      "source": "pdf_1_chunk_20",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7122467943000367,
+      "similarity_score": 0.7122467943000367
+    },
+    {
+      "source": "pdf_1_chunk_20",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7380888372607195,
+      "similarity_score": 0.7380888372607195
+    },
+    {
+      "source": "pdf_1_chunk_20",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.724130138362181,
+      "similarity_score": 0.724130138362181
+    },
+    {
+      "source": "pdf_1_chunk_21",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8525416164077699,
+      "similarity_score": 0.8525416164077699
+    },
+    {
+      "source": "pdf_1_chunk_21",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8078027608636025,
+      "similarity_score": 0.8078027608636025
+    },
+    {
+      "source": "pdf_1_chunk_21",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.763341248624309,
+      "similarity_score": 0.763341248624309
+    },
+    {
+      "source": "pdf_1_chunk_21",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.817081137029835,
+      "similarity_score": 0.817081137029835
+    },
+    {
+      "source": "pdf_1_chunk_21",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7726746758803087,
+      "similarity_score": 0.7726746758803087
+    },
+    {
+      "source": "pdf_1_chunk_22",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9339335116881505,
+      "similarity_score": 0.9339335116881505
+    },
+    {
+      "source": "pdf_1_chunk_22",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8796011918708341,
+      "similarity_score": 0.8796011918708341
+    },
+    {
+      "source": "pdf_1_chunk_22",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8928969328091756,
+      "similarity_score": 0.8928969328091756
+    },
+    {
+      "source": "pdf_1_chunk_22",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7563903264940789,
+      "similarity_score": 0.7563903264940789
+    },
+    {
+      "source": "pdf_1_chunk_23",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9374624075854838,
+      "similarity_score": 0.9374624075854838
+    },
+    {
+      "source": "pdf_1_chunk_23",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.9028189248827628,
+      "similarity_score": 0.9028189248827628
+    },
+    {
+      "source": "pdf_1_chunk_23",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.770341492598484,
+      "similarity_score": 0.770341492598484
+    },
+    {
+      "source": "pdf_1_chunk_24",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8903176113711452,
+      "similarity_score": 0.8903176113711452
+    },
+    {
+      "source": "pdf_1_chunk_24",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.7301041984849429,
+      "similarity_score": 0.7301041984849429
+    },
+    {
+      "source": "pdf_1_chunk_25",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "semantic_similarity",
+      "weight": 0.8653073083063129,
+      "similarity_score": 0.8653073083063129
+    },
+    {
+      "source": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Source\u00a0Description",
+      "target": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_\ufeffSource\u00a0Field",
+      "relationship_type": "field_similarity",
+      "weight": 0.8207896567796725,
+      "similarity_score": 0.8207896567796725
+    },
+    {
+      "source": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Source\u00a0Description",
+      "target": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv__source_file",
+      "relationship_type": "field_similarity",
+      "weight": 0.7320845424801407,
+      "similarity_score": 0.7320845424801407
+    },
+    {
+      "source": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_\ufeffSource\u00a0Field",
+      "target": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Target\u00a0Field",
+      "relationship_type": "field_similarity",
+      "weight": 0.7137414292184314,
+      "similarity_score": 0.7137414292184314
+    },
+    {
+      "source": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_\ufeffSource\u00a0Field",
+      "target": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv__source_file",
+      "relationship_type": "field_similarity",
+      "weight": 0.7638815267069391,
+      "similarity_score": 0.7638815267069391
+    },
+    {
+      "source": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Target\u00a0Field",
+      "target": "field_files/claim_data\\cms\\facebook\\claims_mapping document.csv_Target\u00a0Table",
+      "relationship_type": "field_similarity",
+      "weight": 0.7404746828477019,
+      "similarity_score": 0.7404746828477019
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_0",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_1",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_2",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_3",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_4",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_5",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_6",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_7",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_8",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_9",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_10",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_11",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_12",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_13",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_14",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_15",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_16",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_17",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_18",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_19",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_20",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_21",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_22",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_23",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0_row_24",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_7107128128994190645",
+      "target": "csv_0",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_0",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_1",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_2",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_3",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_4",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_5",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_6",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_7",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_8",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_9",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_10",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_11",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_12",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_13",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_14",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_15",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_16",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_17",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_18",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_19",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_20",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_21",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_22",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_23",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_24",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_25",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    },
+    {
+      "source": "source_6947214349497359950",
+      "target": "pdf_1_chunk_26",
+      "relationship_type": "source_of",
+      "weight": 1.0
+    }
+  ],
   "metadata": {}
 }

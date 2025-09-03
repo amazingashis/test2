@@ -414,6 +414,15 @@ class SemanticRAG:
             "similarity_threshold": similarity_threshold
         }
         
+        # Auto-save graph after building
+        try:
+            os.makedirs("exports", exist_ok=True)
+            graph_file = "exports/relationship_graph.json"
+            self.relationship_graph.save_graph(graph_file, format='json')
+            logger.info(f"Graph automatically saved to {graph_file}")
+        except Exception as e:
+            logger.warning(f"Failed to auto-save graph: {e}")
+        
         logger.info(f"Relationship graph built: {graph_stats['num_nodes']} nodes, {graph_stats['num_edges']} edges")
         return results
     

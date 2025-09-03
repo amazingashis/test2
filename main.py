@@ -216,6 +216,35 @@ def visualize_command(semantic_rag, output_file, interactive=True):
     try:
         print(f"\n📊 Creating graph visualization: {output_file}")
         
+        # Check if current graph has data
+        current_nodes = semantic_rag.relationship_graph.graph.number_of_nodes()
+        current_edges = semantic_rag.relationship_graph.graph.number_of_edges()
+        
+        if current_nodes == 0:
+            # Try to load existing graph data first
+            graph_file = "exports/relationship_graph.json"
+            if os.path.exists(graph_file):
+                print(f"📈 Loading existing graph data from {graph_file}")
+                semantic_rag.relationship_graph.load_graph(graph_file)
+                current_nodes = semantic_rag.relationship_graph.graph.number_of_nodes()
+                current_edges = semantic_rag.relationship_graph.graph.number_of_edges()
+                logger.info(f"Loaded graph with {current_nodes} nodes and {current_edges} edges")
+            
+            # If still empty, inform user to run processing
+            if current_nodes == 0:
+                print("⚠️  No graph data available for visualization.")
+                print("📝 Please run the full processing pipeline first:")
+                print("   python main.py --process-files files/")
+                print("")
+                print("This will:")
+                print("  • Process your files (CSV, PDF, Python)")
+                print("  • Generate embeddings via Databricks BGE")
+                print("  • Build relationship graphs")
+                print("  • Save graph data for visualization")
+                return
+        else:
+            print(f"📈 Using current graph data: {current_nodes} nodes, {current_edges} edges")
+        
         semantic_rag.visualize_graph(
             output_file=output_file,
             interactive=interactive

@@ -490,18 +490,24 @@ class RelationshipGraph:
         Returns:
             Dict[str, Any]: Dictionary containing graph statistics
         """
+        num_nodes = self.graph.number_of_nodes()
+        num_edges = self.graph.number_of_edges()
+        
         stats = {
-            'num_nodes': self.graph.number_of_nodes(),
-            'num_edges': self.graph.number_of_edges(),
-            'is_connected': nx.is_weakly_connected(self.graph),
-            'density': nx.density(self.graph),
+            'num_nodes': num_nodes,
+            'num_edges': num_edges,
             'node_types': dict(Counter(self.node_types.values())),
             'edge_types': dict(Counter(self.edge_types.values()))
         }
         
-        if stats['num_nodes'] > 0:
-            stats['average_degree'] = sum(dict(self.graph.degree()).values()) / stats['num_nodes']
+        # Only calculate connectivity and density for non-empty graphs
+        if num_nodes > 0:
+            stats['is_connected'] = nx.is_weakly_connected(self.graph)
+            stats['density'] = nx.density(self.graph)
+            stats['average_degree'] = sum(dict(self.graph.degree()).values()) / num_nodes
         else:
+            stats['is_connected'] = False
+            stats['density'] = 0.0
             stats['average_degree'] = 0
         
         return stats
