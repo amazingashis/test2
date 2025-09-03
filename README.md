@@ -28,22 +28,36 @@ Semantic RAG System
 
 ## Installation
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd semantic-rag
-   ```
+### � Setup Instructions
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd semantic-rag
 
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# 2. Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3. **Set up API key**:
-   ```bash
-   export DATABRICKS_API_KEY=your_databricks_key
-   # Or create a .env file with your key
-   ```
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Create necessary directories
+mkdir -p data/chroma_db data/demo_chroma_db exports logs files
+
+# 5. Setup configuration
+cp config_enhanced.env .env
+# Edit .env with your API credentials
+```
+
+### 🔑 API Configuration
+Edit the `.env` file with your Databricks credentials:
+```bash
+DATABRICKS_WORKSPACE_URL=your_workspace_url
+DATABRICKS_TOKEN=your_token
+BGE_EMBEDDING_ENDPOINT=databricks-bge-large-en
+LLAMA_RELATIONSHIP_ENDPOINT=databricks-meta-llama-3-3-70b-instruct
+CLAUDE_QA_ENDPOINT=databricks-claude-3-5-sonnet
+```
 
 ## Configuration
 
