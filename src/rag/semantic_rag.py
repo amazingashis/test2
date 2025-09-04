@@ -412,16 +412,39 @@ class SemanticRAG:
                     'chunks': pdf_data['chunks']
                 }
                 
-                # Process PDF chunks as separate documents for better granularity
-                for i, chunk in enumerate(pdf_data['chunks']):
-                    chunk_doc_id = f"{doc_id}_chunk_{i}"
-                    self.processed_documents[chunk_doc_id] = {
-                        'type': 'pdf_chunk',
-                        'source_file': pdf_file,
-                        'content': chunk,
-                        'metadata': {**pdf_data['metadata'], 'chunk_index': i},
-                        'parent_document': doc_id
-                    }
+                # Process enhanced PDF chunks as separate documents for better granularity
+                enhanced_chunks = pdf_data.get('enhanced_chunks', [])
+                if enhanced_chunks:
+                    for enhanced_chunk in enhanced_chunks:
+                        chunk_doc_id = f"{doc_id}_chunk_{enhanced_chunk['chunk_id']}"
+                        self.processed_documents[chunk_doc_id] = {
+                            'type': 'pdf_chunk',
+                            'source_file': pdf_file,
+                            'content': enhanced_chunk['text'],
+                            'metadata': {
+                                **pdf_data['metadata'],
+                                'chunk_index': enhanced_chunk['chunk_id'],
+                                'content_type': enhanced_chunk['content_type'],
+                                'description': enhanced_chunk['description'],
+                                'key_terms': enhanced_chunk['key_terms'],
+                                'pages': enhanced_chunk['pages'],
+                                'has_table_data': enhanced_chunk['has_table_data'],
+                                'has_codes': enhanced_chunk['has_codes'],
+                                'functional_areas': enhanced_chunk['functional_areas']
+                            },
+                            'parent_document': doc_id
+                        }
+                else:
+                    # Fallback to basic chunks if enhanced chunks not available
+                    for i, chunk in enumerate(pdf_data['chunks']):
+                        chunk_doc_id = f"{doc_id}_chunk_{i}"
+                        self.processed_documents[chunk_doc_id] = {
+                            'type': 'pdf_chunk',
+                            'source_file': pdf_file,
+                            'content': chunk,
+                            'metadata': {**pdf_data['metadata'], 'chunk_index': i},
+                            'parent_document': doc_id
+                        }
                 
                 processing_results["processed_documents"][doc_id] = {
                     'type': 'pdf',
@@ -819,16 +842,23 @@ class SemanticRAG:
                 doc_list, similarity_threshold
             )
             
-            # Add similarity relationships to graph
+            # Add similarity relationships to graph with enhanced descriptions
             for rel in content_relationships:
                 doc1_id = list(dict(regular_docs).keys())[rel['doc1_id']]
                 doc2_id = list(dict(regular_docs).keys())[rel['doc2_id']]
+                
+                # Create meaningful relationship description
+                doc1_data = self.processed_documents[doc1_id]
+                doc2_data = self.processed_documents[doc2_id]
+                relationship_desc = self._create_relationship_description(doc1_data, doc2_data, rel['similarity'])
                 
                 self.relationship_graph.add_relationship(
                     doc1_id, doc2_id,
                     relationship_type='semantic_similarity',
                     weight=rel['similarity'],
-                    similarity_score=rel['similarity']
+                    similarity_score=rel['similarity'],
+                    description=relationship_desc,
+                    content_summary=self._create_content_summary(doc1_data, doc2_data)
                 )
                 semantic_relationships += 1
         
@@ -1372,3 +1402,118 @@ Focus on meaningful, actionable relationships for healthcare claims data process
             output_file=output_file,
             interactive=interactive
         )
+    
+    def _create_relationship_description(self, doc1_data: Dict[str, Any], doc2_data: Dict[str, Any], similarity: float) -> str:
+        """
+        Create meaningful description for document relationships.
+        
+        Args:
+            doc1_data (Dict[str, Any]): First document data
+            doc2_data (Dict[str, Any]): Second document data
+            similarity (float): Similarity score
+            
+        Returns:
+            str: Meaningful relationship description
+        """
+        doc1_type = doc1_data.get('type', 'document')
+        doc2_type = doc2_data.get('type', 'document')
+        
+        # Get meaningful content descriptions
+        doc1_desc = self._get_document_description(doc1_data)
+        doc2_desc = self._get_document_description(doc2_data)
+        
+        # Create relationship description based on similarity strength
+        if similarity > 0.9:
+            strength = "Very high similarity"
+        elif similarity > 0.8:
+            strength = "High similarity"
+        elif similarity > 0.7:
+            strength = "Moderate similarity"
+        else:
+            strength = "Low similarity"
+        
+        description = f"{strength} ({similarity:.3f}) between '{doc1_desc}' and '{doc2_desc}'"
+        
+        # Add specific insights for PDF chunks
+        if doc1_type == 'pdf_chunk' and doc2_type == 'pdf_chunk':
+            doc1_meta = doc1_data.get('metadata', {})
+            doc2_meta = doc2_data.get('metadata', {})
+            
+            # Check for functional area connections
+            fa1 = doc1_meta.get('functional_areas', [])
+            fa2 = doc2_meta.get('functional_areas', [])
+            common_fa = set(fa1) & set(fa2)
+            if common_fa:
+                description += f" | Shared functional areas: {', '.join(common_fa)}"
+            
+            # Check for code/term similarities
+            terms1 = set(doc1_meta.get('key_terms', []))
+            terms2 = set(doc2_meta.get('key_terms', []))
+            common_terms = terms1 & terms2
+            if common_terms:
+                description += f" | Common terms: {', '.join(list(common_terms)[:3])}"
+            
+            # Page information
+            pages1 = doc1_meta.get('pages', [])
+            pages2 = doc2_meta.get('pages', [])
+            if pages1 and pages2:
+                description += f" | Pages: {pages1[0]}-{pages2[0]}"
+        
+        return description
+    
+    def _get_document_description(self, doc_data: Dict[str, Any]) -> str:
+        """
+        Get a meaningful description for a document.
+        
+        Args:
+            doc_data (Dict[str, Any]): Document data
+            
+        Returns:
+            str: Document description
+        """
+        doc_type = doc_data.get('type', 'document')
+        metadata = doc_data.get('metadata', {})
+        
+        if doc_type == 'pdf_chunk':
+            # Use the enhanced description if available
+            if 'description' in metadata:
+                desc = metadata['description']
+                if len(desc) > 80:
+                    desc = desc[:77] + "..."
+                return desc
+            else:
+                # Fallback to content preview
+                content = doc_data.get('content', '')[:50]
+                return f"PDF chunk: {content}..."
+        
+        elif doc_type == 'csv_row':
+            source_file = metadata.get('source_file', 'unknown')
+            row_num = metadata.get('row_number', 'unknown')
+            return f"CSV row {row_num} from {source_file}"
+        
+        elif doc_type == 'data_mapping':
+            mapping_rel = metadata.get('_mapping_relationship', {})
+            source = mapping_rel.get('source', 'unknown')
+            target = mapping_rel.get('target', 'unknown')
+            return f"Mapping: {source} → {target}"
+        
+        else:
+            # Generic description
+            content = doc_data.get('content', '')[:50]
+            return f"{doc_type}: {content}..." if content else doc_type
+    
+    def _create_content_summary(self, doc1_data: Dict[str, Any], doc2_data: Dict[str, Any]) -> str:
+        """
+        Create a summary of the content relationship.
+        
+        Args:
+            doc1_data (Dict[str, Any]): First document data
+            doc2_data (Dict[str, Any]): Second document data
+            
+        Returns:
+            str: Content summary
+        """
+        doc1_content = doc1_data.get('content', '')[:100]
+        doc2_content = doc2_data.get('content', '')[:100]
+        
+        return f"Doc1: {doc1_content}... | Doc2: {doc2_content}..."
