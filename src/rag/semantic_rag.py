@@ -412,26 +412,7 @@ class SemanticRAG:
                     'chunks': pdf_data['chunks']
                 }
                 
-                # Process structured data from PDF (tables, columns, functional areas)
-                structured_count = 0
-                if pdf_data.get('structured_data'):
-                    for struct_item in pdf_data['structured_data']:
-                        struct_doc_id = f"{doc_id}_struct_{structured_count}"
-                        
-                        # Create meaningful content for each structured element
-                        content = self._create_structured_content(struct_item)
-                        
-                        self.processed_documents[struct_doc_id] = {
-                            'type': f"pdf_{struct_item['type']}",
-                            'source_file': pdf_file,
-                            'content': content,
-                            'metadata': struct_item,
-                            'parent_document': doc_id,
-                            'structured_type': struct_item['type']
-                        }
-                        structured_count += 1
-                
-                # Also process chunks as separate documents
+                # Process PDF chunks as separate documents for better granularity
                 for i, chunk in enumerate(pdf_data['chunks']):
                     chunk_doc_id = f"{doc_id}_chunk_{i}"
                     self.processed_documents[chunk_doc_id] = {
@@ -445,8 +426,7 @@ class SemanticRAG:
                 processing_results["processed_documents"][doc_id] = {
                     'type': 'pdf',
                     'pages': pdf_data['metadata'].get('num_pages', 0),
-                    'chunks': len(pdf_data['chunks']),
-                    'structured_elements': structured_count
+                    'chunks': len(pdf_data['chunks'])
                 }
                 
                 document_id += 1
@@ -945,11 +925,6 @@ class SemanticRAG:
                         weight=1.0
                     )
         
-        # Build PDF-specific relationships (tables, columns, functional areas)
-        print("🏗️  Building PDF data relationships...")
-        pdf_relationships = self._build_pdf_relationships()
-        total_relationships += pdf_relationships
-        
         # Enhanced AI relationship analysis with Meta Llama 3-3 70B
         if self.model_orchestrator:
             logger.info("Starting AI-powered relationship analysis...")
@@ -1337,195 +1312,52 @@ Focus on meaningful, actionable relationships for healthcare claims data process
         logger.info(f"System state exported to: {output_dir}")
         return export_paths
     
-    def _create_structured_content(self, struct_item: Dict[str, Any]) -> str:
+    def export_system_state(self, output_directory: str) -> Dict[str, str]:
         """
-        Create meaningful content text from structured PDF elements.
+        Export the complete system state to files.
         
         Args:
-            struct_item (Dict[str, Any]): Structured element from PDF
+            output_directory (str): Directory to export data to
             
         Returns:
-            str: Human-readable content for the structured element
+            Dict[str, str]: Paths to exported files
         """
-        struct_type = struct_item.get('type', '')
+        os.makedirs(output_directory, exist_ok=True)
         
-        if struct_type == 'functional_area':
-            return f"Functional Area: {struct_item.get('name', '')} - {struct_item.get('description', '')}"
+        export_paths = {}
         
-        elif struct_type == 'table_definition':
-            content = f"Table Definition: {struct_item.get('table_name', '')}"
-            if struct_item.get('description'):
-                content += f" - {struct_item['description']}"
-            if struct_item.get('functional_area'):
-                content += f" (Functional Area: {struct_item['functional_area']})"
+        try:
+            # Export processed documents
+            docs_path = os.path.join(output_directory, "processed_documents.json")
+            with open(docs_path, 'w', encoding='utf-8') as f:
+                json.dump(self.processed_documents, f, indent=2, default=str)
+            export_paths['processed_documents'] = docs_path
             
-            # Add column information if available
-            columns = struct_item.get('columns', [])
-            if columns:
-                content += f"\nColumns ({len(columns)}): "
-                content += ", ".join([col.get('column_name', '') for col in columns[:10]])  # First 10 columns
-                if len(columns) > 10:
-                    content += f" and {len(columns) - 10} more"
+            # Export relationship graph
+            graph_path = os.path.join(output_directory, "relationship_graph.json")
+            self.relationship_graph.save_graph(graph_path)
+            export_paths['relationship_graph'] = graph_path
             
-            return content
-        
-        elif struct_type == 'column_definition':
-            content = f"Column: {struct_item.get('column_name', '')}"
-            if struct_item.get('table_name'):
-                content += f" (Table: {struct_item['table_name']})"
-            if struct_item.get('functional_area'):
-                content += f" (Area: {struct_item['functional_area']})"
-            if struct_item.get('description'):
-                content += f" - {struct_item['description']}"
-            return content
-        
-        elif struct_type == 'column_detail':
-            content = f"Column Detail: {struct_item.get('column_name', '')}"
-            if struct_item.get('description'):
-                content += f" - {struct_item['description']}"
-            return content
-        
-        elif struct_type == 'functional_area_section':
-            return f"Section: {struct_item.get('area_code', '')} ({struct_item.get('area_type', '')}) - {struct_item.get('area_description', '')}"
-        
-        else:
-            # Generic handling for unknown types
-            content = f"{struct_type}: "
-            if 'name' in struct_item:
-                content += struct_item['name']
-            elif 'column_name' in struct_item:
-                content += struct_item['column_name']
-            elif 'table_name' in struct_item:
-                content += struct_item['table_name']
+            # Export vector database data
+            if hasattr(self.vector_db, 'get_all_documents'):
+                vector_data = self.vector_db.get_all_documents()
+                vector_path = os.path.join(output_directory, "vector_database.json")
+                with open(vector_path, 'w', encoding='utf-8') as f:
+                    json.dump(vector_data, f, indent=2, default=str)
+                export_paths['vector_database'] = vector_path
             
-            if struct_item.get('description'):
-                content += f" - {struct_item['description']}"
-            elif struct_item.get('raw_text'):
-                content += f" - {struct_item['raw_text'][:200]}"  # First 200 chars
+            # Export system status
+            status = self.get_system_status()
+            status_path = os.path.join(output_directory, "system_status.json")
+            with open(status_path, 'w', encoding='utf-8') as f:
+                json.dump(status, f, indent=2, default=str)
+            export_paths['system_status'] = status_path
             
-            return content
-
-    def _build_pdf_relationships(self) -> int:
-        """
-        Build relationships between PDF structured elements (tables, columns, functional areas).
-        
-        Returns:
-            int: Number of relationships created
-        """
-        relationships_created = 0
-        
-        # Get all PDF structured documents
-        pdf_structures = {
-            doc_id: doc_data for doc_id, doc_data in self.processed_documents.items()
-            if doc_data.get('type', '').startswith('pdf_') and 'structured_type' in doc_data
-        }
-        
-        if not pdf_structures:
-            return 0
-        
-        # Group by structure type and source file
-        functional_areas = {}
-        tables = {}
-        columns = {}
-        
-        for doc_id, doc_data in pdf_structures.items():
-            struct_type = doc_data.get('structured_type', '')
-            source_file = doc_data.get('source_file', '')
-            metadata = doc_data.get('metadata', {})
+            logger.info(f"System state exported to {output_directory}")
             
-            if struct_type == 'functional_area':
-                key = (source_file, metadata.get('name', ''))
-                functional_areas[key] = doc_id
+        except Exception as e:
+            logger.error(f"Error exporting system state: {e}")
             
-            elif struct_type == 'table_definition':
-                key = (source_file, metadata.get('table_name', ''))
-                tables[key] = doc_id
-            
-            elif struct_type in ['column_definition', 'column_detail']:
-                table_name = metadata.get('table_name', '')
-                column_name = metadata.get('column_name', '')
-                key = (source_file, table_name, column_name)
-                columns[key] = doc_id
-        
-        # Build functional area -> table relationships
-        for (source_file, table_name), table_doc_id in tables.items():
-            table_metadata = self.processed_documents[table_doc_id].get('metadata', {})
-            fa_name = table_metadata.get('functional_area', '')
-            
-            if fa_name:
-                fa_key = (source_file, fa_name)
-                if fa_key in functional_areas:
-                    fa_doc_id = functional_areas[fa_key]
-                    self.relationship_graph.add_relationship(
-                        fa_doc_id, table_doc_id,
-                        relationship_type='contains_table',
-                        weight=1.0,
-                        table_name=table_name
-                    )
-                    relationships_created += 1
-        
-        # Build table -> column relationships
-        for (source_file, table_name, column_name), column_doc_id in columns.items():
-            if table_name:
-                table_key = (source_file, table_name)
-                if table_key in tables:
-                    table_doc_id = tables[table_key]
-                    self.relationship_graph.add_relationship(
-                        table_doc_id, column_doc_id,
-                        relationship_type='contains_column',
-                        weight=1.0,
-                        column_name=column_name
-                    )
-                    relationships_created += 1
-        
-        # Build cross-table column relationships (same column names in different tables)
-        column_groups = {}
-        for (source_file, table_name, column_name), column_doc_id in columns.items():
-            if column_name not in column_groups:
-                column_groups[column_name] = []
-            column_groups[column_name].append((column_doc_id, table_name, source_file))
-        
-        for column_name, column_instances in column_groups.items():
-            if len(column_instances) > 1:
-                # Create relationships between columns with the same name
-                for i, (doc_id1, table1, source1) in enumerate(column_instances):
-                    for doc_id2, table2, source2 in column_instances[i+1:]:
-                        self.relationship_graph.add_relationship(
-                            doc_id1, doc_id2,
-                            relationship_type='same_column_name',
-                            weight=0.8,
-                            column_name=column_name,
-                            table1=table1,
-                            table2=table2
-                        )
-                        relationships_created += 1
-        
-        # Build relationships between PDF structures and CSV mapping data
-        csv_mappings = {
-            doc_id: doc_data for doc_id, doc_data in self.processed_documents.items()
-            if doc_data.get('type') == 'data_mapping'
-        }
-        
-        for mapping_id, mapping_data in csv_mappings.items():
-            mapping_metadata = mapping_data.get('metadata', {})
-            target_field = mapping_metadata.get('target_field', '')
-            source_column = mapping_metadata.get('source_column', '')
-            
-            # Find matching PDF columns
-            for (source_file, table_name, column_name), column_doc_id in columns.items():
-                if (column_name.lower() == target_field.lower() or 
-                    column_name.lower() == source_column.lower()):
-                    self.relationship_graph.add_relationship(
-                        mapping_id, column_doc_id,
-                        relationship_type='maps_to_column',
-                        weight=0.9,
-                        mapping_type='field_to_column'
-                    )
-                    relationships_created += 1
-        
-        logger.info(f"Built {relationships_created} PDF-specific relationships")
-        return relationships_created
-
         return export_paths
     
     def visualize_graph(self, output_file: str = None, interactive: bool = True) -> None:
