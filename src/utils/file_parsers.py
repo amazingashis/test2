@@ -199,9 +199,16 @@ class FileParser:
             
             with open(file_path, "rb") as f:
                 reader = PdfReader(f)
+                total_pages = len(reader.pages)
+                logger.info(f"📄 Starting PDF analysis: {total_pages} pages found")
                 
                 # Process each page as a separate chunk
                 for page_num, page in enumerate(reader.pages):
+                    # Show progress for every 5 pages or at key milestones
+                    if page_num % 5 == 0 or page_num == 0 or page_num == total_pages - 1:
+                        progress = ((page_num + 1) / total_pages) * 100
+                        logger.info(f"   🔍 Analyzing page {page_num + 1}/{total_pages} ({progress:.1f}%)")
+                    
                     page_text = page.extract_text() or ""
                     if page_text.strip():
                         # Add page text to full text
@@ -256,6 +263,10 @@ class FileParser:
             
             # Initialize LLM
             llm = MetaLlama370BInstruct()
+            
+            # Show LLM processing indicator (only for first few pages to avoid spam)
+            if page_number <= 3 or page_number % 10 == 0:
+                logger.info(f"   🤖 LLM analyzing page {page_number}...")
             
             # Create analysis prompt for data dictionary content
             system_prompt = """You are an expert data analyst specializing in parsing data dictionary documents. 

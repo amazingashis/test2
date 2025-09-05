@@ -398,8 +398,9 @@ class SemanticRAG:
                 processing_results["errors"].append(error_msg)
         
         # Process PDF files with enhanced structured data extraction
-        for pdf_file in found_files['pdf']:
+        for pdf_idx, pdf_file in enumerate(found_files['pdf'], 1):
             try:
+                logger.info(f"📄 Processing PDF {pdf_idx}/{len(found_files['pdf'])}: {os.path.basename(pdf_file)}")
                 pdf_data = self.file_parser.parse_pdf(pdf_file)
                 doc_id = f"pdf_{document_id}"
                 
@@ -415,7 +416,13 @@ class SemanticRAG:
                 # Process page-based chunks with LLM metadata
                 page_chunks = pdf_data.get('page_chunks', [])
                 if page_chunks:
-                    for page_chunk in page_chunks:
+                    logger.info(f"🔄 Processing {len(page_chunks)} pages with LLM analysis...")
+                    for page_idx, page_chunk in enumerate(page_chunks, 1):
+                        # Show progress every 5 pages or for significant milestones
+                        if page_idx % 5 == 0 or page_idx == 1 or page_idx == len(page_chunks):
+                            progress = (page_idx / len(page_chunks)) * 100
+                            logger.info(f"   📊 Page {page_idx}/{len(page_chunks)} ({progress:.1f}%)")
+                        
                         chunk_doc_id = f"{doc_id}_{page_chunk['chunk_id']}"
                         
                         # Create enhanced content description using LLM metadata
@@ -453,6 +460,10 @@ class SemanticRAG:
                     'pages': pdf_data['metadata'].get('num_pages', 0),
                     'chunks': len(pdf_data['chunks'])
                 }
+                
+                # Log completion for this PDF
+                pages_count = len(page_chunks) if page_chunks else len(pdf_data['chunks'])
+                logger.info(f"   ✅ PDF processing complete: {pages_count} chunks processed")
                 
                 document_id += 1
                 
@@ -496,7 +507,19 @@ class SemanticRAG:
         processing_results["end_time"] = datetime.now().isoformat()
         processing_results["total_documents"] = len(self.processed_documents)
         
-        logger.info(f"File processing completed. {len(self.processed_documents)} documents processed.")
+        # Log detailed completion summary
+        pdf_count = len(found_files['pdf'])
+        csv_count = len(found_files['csv'])
+        py_count = len(found_files['python'])
+        
+        logger.info(f"🎉 File processing completed successfully!")
+        logger.info(f"   📊 Total documents processed: {len(self.processed_documents)}")
+        logger.info(f"   📄 PDF files: {pdf_count} processed")
+        logger.info(f"   📊 CSV files: {csv_count} processed")
+        logger.info(f"   🐍 Python files: {py_count} processed")
+        if processing_results["errors"]:
+            logger.warning(f"   ⚠️ Errors encountered: {len(processing_results['errors'])}")
+        
         return processing_results
     
     def generate_embeddings(self, batch_size: int = 32, use_local: bool = False) -> Dict[str, Any]:
