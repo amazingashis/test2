@@ -412,30 +412,32 @@ class SemanticRAG:
                     'chunks': pdf_data['chunks']
                 }
                 
-                # Process enhanced PDF chunks as separate documents for better granularity
-                enhanced_chunks = pdf_data.get('enhanced_chunks', [])
-                if enhanced_chunks:
-                    for enhanced_chunk in enhanced_chunks:
-                        chunk_doc_id = f"{doc_id}_chunk_{enhanced_chunk['chunk_id']}"
+                # Process page-based chunks with LLM metadata
+                page_chunks = pdf_data.get('page_chunks', [])
+                if page_chunks:
+                    for page_chunk in page_chunks:
+                        chunk_doc_id = f"{doc_id}_{page_chunk['chunk_id']}"
+                        
+                        # Create enhanced content description using LLM metadata
+                        llm_meta = page_chunk.get('llm_metadata', {})
+                        content_description = self._create_content_description_from_llm(llm_meta, page_chunk['text'])
+                        
                         self.processed_documents[chunk_doc_id] = {
-                            'type': 'pdf_chunk',
+                            'type': 'pdf_page',
                             'source_file': pdf_file,
-                            'content': enhanced_chunk['text'],
+                            'content': content_description,  # Enhanced description instead of raw text
+                            'raw_text': page_chunk['text'],  # Keep original text
                             'metadata': {
                                 **pdf_data['metadata'],
-                                'chunk_index': enhanced_chunk['chunk_id'],
-                                'content_type': enhanced_chunk['content_type'],
-                                'description': enhanced_chunk['description'],
-                                'key_terms': enhanced_chunk['key_terms'],
-                                'pages': enhanced_chunk['pages'],
-                                'has_table_data': enhanced_chunk['has_table_data'],
-                                'has_codes': enhanced_chunk['has_codes'],
-                                'functional_areas': enhanced_chunk['functional_areas']
+                                'page_number': page_chunk['page_number'],
+                                'chunk_id': page_chunk['chunk_id'],
+                                **llm_meta  # Include all LLM-generated metadata
                             },
-                            'parent_document': doc_id
+                            'parent_document': doc_id,
+                            'llm_analysis': llm_meta
                         }
                 else:
-                    # Fallback to basic chunks if enhanced chunks not available
+                    # Fallback to basic chunks if page chunks not available
                     for i, chunk in enumerate(pdf_data['chunks']):
                         chunk_doc_id = f"{doc_id}_chunk_{i}"
                         self.processed_documents[chunk_doc_id] = {
@@ -1517,3 +1519,75 @@ Focus on meaningful, actionable relationships for healthcare claims data process
         doc2_content = doc2_data.get('content', '')[:100]
         
         return f"Doc1: {doc1_content}... | Doc2: {doc2_content}..."
+
+    def _create_content_description_from_llm(self, llm_metadata: Dict[str, Any], raw_text: str) -> str:
+        """
+        Create enhanced content description using LLM-generated metadata.
+        
+        Args:
+            llm_metadata (Dict[str, Any]): LLM-generated metadata
+            raw_text (str): Original page text
+            
+        Returns:
+            str: Enhanced content description for better semantic matching
+        """
+        try:
+            content_type = llm_metadata.get('content_type', 'unknown')
+            functional_area = llm_metadata.get('functional_area', '')
+            table_name = llm_metadata.get('table_name', '')
+            summary = llm_metadata.get('summary', '')
+            fields = llm_metadata.get('fields', [])
+            key_concepts = llm_metadata.get('key_concepts', [])
+            
+            # Build enhanced description
+            description_parts = []
+            
+            # Add content type and area info
+            if functional_area:
+                description_parts.append(f"Functional Area: {functional_area}")
+            
+            if table_name:
+                description_parts.append(f"Table: {table_name}")
+            
+            # Add field information
+            if fields:
+                field_names = [field.get('field_name', '') for field in fields[:5]]  # Top 5 fields
+                field_names = [f for f in field_names if f]
+                if field_names:
+                    description_parts.append(f"Fields: {', '.join(field_names)}")
+            
+            # Add key concepts
+            if key_concepts:
+                concepts = key_concepts[:3]  # Top 3 concepts
+                description_parts.append(f"Key concepts: {', '.join(concepts)}")
+            
+            # Add summary if available
+            if summary:
+                description_parts.append(f"Summary: {summary}")
+            
+            # Add field descriptions for better context
+            if fields:
+                field_descriptions = []
+                for field in fields[:3]:  # Top 3 fields with descriptions
+                    if field.get('description'):
+                        field_descriptions.append(f"{field['field_name']}: {field['description']}")
+                if field_descriptions:
+                    description_parts.append(f"Descriptions: {' | '.join(field_descriptions)}")
+            
+            # Combine parts
+            if description_parts:
+                enhanced_description = '. '.join(description_parts)
+                
+                # Add page context for completeness
+                page_num = llm_metadata.get('page_number', '')
+                if page_num:
+                    enhanced_description = f"Page {page_num} - {enhanced_description}"
+                
+                return enhanced_description
+            else:
+                # Fallback to summary or raw text preview
+                return summary or f"Page {llm_metadata.get('page_number', '')}: {raw_text[:200]}..."
+                
+        except Exception as e:
+            logger.warning(f"Error creating content description from LLM metadata: {e}")
+            return f"Page {llm_metadata.get('page_number', '')}: {raw_text[:200]}..."

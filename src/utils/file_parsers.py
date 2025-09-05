@@ -184,50 +184,237 @@ class FileParser:
     @staticmethod
     def parse_pdf(file_path: str) -> Dict[str, Any]:
         """
-        Extract text from PDF and chunk it with enhanced metadata for better relationships.
+        Parse PDF using page-based chunking with LLM-generated metadata.
+        Each page becomes a chunk and is analyzed by LLM for data dictionary content.
         
         Args:
             file_path (str): Path to PDF file
             
         Returns:
-            Dict[str, Any]: Extracted text, chunks with enhanced metadata
+            Dict[str, Any]: Extracted text, page-based chunks with LLM metadata
         """
         try:
             text = ""
-            page_texts = []
+            page_chunks = []
             
             with open(file_path, "rb") as f:
                 reader = PdfReader(f)
                 
-                # Extract text from all pages
+                # Process each page as a separate chunk
                 for page_num, page in enumerate(reader.pages):
                     page_text = page.extract_text() or ""
                     if page_text.strip():
-                        page_texts.append((page_num + 1, page_text))
+                        # Add page text to full text
                         text += f"\n--- Page {page_num + 1} ---\n{page_text}"
+                        
+                        # Create page chunk with LLM analysis
+                        page_chunk = {
+                            'page_number': page_num + 1,
+                            'text': page_text,
+                            'chunk_id': f"page_{page_num + 1}",
+                            'source_file': os.path.basename(file_path),
+                            'llm_metadata': FileParser._analyze_page_with_llm(page_text, page_num + 1)
+                        }
+                        page_chunks.append(page_chunk)
                 
                 # Basic metadata
                 metadata = {
                     'num_pages': len(reader.pages),
-                    'source_file': os.path.basename(file_path)
+                    'source_file': os.path.basename(file_path),
+                    'parsing_method': 'page_based_llm'
                 }
-                
-            # Create enhanced chunks with content analysis
-            chunks_with_metadata = FileParser._create_enhanced_pdf_chunks(text, file_path, page_texts)
-                
-                
-            logger.info(f"Successfully parsed PDF {file_path}: {len(text)} characters, {metadata['num_pages']} pages")
+            
+            logger.info(f"Successfully parsed PDF {file_path}: {len(text)} characters, {len(page_chunks)} page chunks with LLM analysis")
             
             return {
                 'text': text,
                 'metadata': metadata,
-                'chunks': [chunk['text'] for chunk in chunks_with_metadata],
-                'enhanced_chunks': chunks_with_metadata
+                'page_chunks': page_chunks,
+                'chunks': [chunk['text'] for chunk in page_chunks],  # Keep compatibility
+                'enhanced_chunks': page_chunks  # Keep compatibility
             }
             
         except Exception as e:
             logger.error(f"Error parsing PDF file {file_path}: {str(e)}")
-            return {'text': '', 'metadata': {}, 'chunks': [], 'enhanced_chunks': []}
+            return {'text': '', 'metadata': {}, 'page_chunks': [], 'chunks': [], 'enhanced_chunks': []}
+
+    @staticmethod
+    @staticmethod
+    def _analyze_page_with_llm(page_content: str, page_number: int) -> Dict[str, Any]:
+        """
+        Analyze PDF page content using LLM to extract structured metadata.
+        
+        Args:
+            page_content (str): Text content of the PDF page
+            page_number (int): Page number for reference
+            
+        Returns:
+            Dict[str, Any]: LLM-generated metadata with structured information
+        """
+        try:
+            from src.models.databricks_models import MetaLlama370BInstruct
+            
+            # Initialize LLM
+            llm = MetaLlama370BInstruct()
+            
+            # Create analysis prompt for data dictionary content
+            system_prompt = """You are an expert data analyst specializing in parsing data dictionary documents. 
+            Extract structured metadata from PDF pages that typically contain:
+            - Source table names and descriptions
+            - Field definitions with names, data types, and descriptions
+            - Expected values, constraints, or business rules
+            - Functional areas or data domains
+            
+            Return valid JSON with this exact structure:
+            {
+                "content_type": "data_dictionary|documentation|table_definition|field_mapping",
+                "functional_area": "brief functional area name",
+                "table_name": "source table name if present",
+                "fields": [
+                    {
+                        "field_name": "field name",
+                        "data_type": "data type if mentioned",
+                        "description": "field description",
+                        "constraints": "any constraints or expected values"
+                    }
+                ],
+                "relationships": ["list of related tables or systems"],
+                "key_concepts": ["important concepts or terms"],
+                "summary": "brief page summary"
+            }"""
+            
+            user_prompt = f"""Analyze this data dictionary page content and extract structured metadata:
+
+PAGE {page_number} CONTENT:
+{page_content[:2000]}
+
+Extract the metadata as JSON following the specified structure."""
+            
+            # Generate analysis using LLM
+            response = llm.generate_response(
+                prompt=user_prompt,
+                system_prompt=system_prompt,
+                max_tokens=1500,
+                temperature=0.1  # Low temperature for consistent structured output
+            )
+            
+            if response:
+                # Try to parse JSON response
+                import json
+                import re
+                
+                try:
+                    # Extract JSON from response
+                    json_match = re.search(r'\{.*\}', response, re.DOTALL)
+                    if json_match:
+                        llm_metadata = json.loads(json_match.group())
+                        llm_metadata['analysis_method'] = 'llm_powered'
+                        llm_metadata['page_number'] = page_number
+                        return llm_metadata
+                except json.JSONDecodeError:
+                    logger.warning(f"Failed to parse LLM JSON response for page {page_number}")
+            
+        except Exception as e:
+            logger.warning(f"LLM analysis failed for page {page_number}: {str(e)}")
+        
+        # Fallback to basic analysis
+        return FileParser._basic_page_analysis(page_content, page_number, "pdf")
+
+    @staticmethod
+    def _basic_page_analysis(page_text: str, page_num: int, file_path: str) -> Dict[str, Any]:
+        """
+        Fallback analysis when LLM is not available.
+        Basic pattern matching for common data dictionary elements.
+        
+        Args:
+            page_text (str): Text content of the page
+            page_num (int): Page number  
+            file_path (str): Source file path
+            
+        Returns:
+            Dict[str, Any]: Basic metadata extracted using patterns
+        """
+        import re
+        
+        metadata = {
+            'page_number': page_num,
+            'source_file': os.path.basename(file_path),
+            'analysis_method': 'pattern_based',
+            'text_length': len(page_text),
+            'content_type': 'unknown',
+            'functional_area': '',
+            'table_name': '',
+            'fields': [],
+            'relationships': [],
+            'key_concepts': [],
+            'summary': f'Page {page_num} content analysis'
+        }
+        
+        # Detect functional area
+        fa_patterns = [
+            r'Functional\s+Area[:\s]+([A-Z][A-Z_]*)',
+            r'Area[:\s]+([A-Z][A-Z_]*)',
+            r'Domain[:\s]+([A-Z][A-Z_]*)'
+        ]
+        for pattern in fa_patterns:
+            match = re.search(pattern, page_text, re.IGNORECASE)
+            if match:
+                metadata['functional_area'] = match.group(1)
+                break
+        
+        # Detect table names
+        table_patterns = [
+            r'Table[:\s]+([A-Z][A-Z0-9_]*)',
+            r'([A-Z][A-Z0-9_]+_DETAIL)',
+            r'([A-Z][A-Z0-9_]+_DATA)'
+        ]
+        for pattern in table_patterns:
+            match = re.search(pattern, page_text)
+            if match:
+                metadata['table_name'] = match.group(1)
+                break
+        
+        # Extract field names (common patterns)
+        field_patterns = [
+            r'([A-Z][A-Z0-9_]{3,})\s+[A-Z]',  # Uppercase field names
+            r'^([A-Z][A-Z0-9_]+)',  # Line starting with field name
+        ]
+        fields = []
+        for pattern in field_patterns:
+            matches = re.findall(pattern, page_text, re.MULTILINE)
+            for match in matches[:10]:  # Limit to 10 fields per page
+                if len(match) > 3 and '_' in match:
+                    fields.append({
+                        'field_name': match,
+                        'data_type': '',
+                        'description': '',
+                        'constraints': ''
+                    })
+        metadata['fields'] = fields
+        
+        # Extract key concepts
+        concepts = []
+        if metadata['functional_area']:
+            concepts.append(metadata['functional_area'])
+        if metadata['table_name']:
+            concepts.append(metadata['table_name'])
+        for field in fields:
+            concepts.append(field['field_name'])
+        metadata['key_concepts'] = list(set(concepts))
+        
+        # Determine content type
+        if metadata['table_name'] or len(fields) > 0:
+            metadata['content_type'] = 'field_definitions'
+        elif 'Code' in page_text and 'Description' in page_text:
+            metadata['content_type'] = 'code_mappings'
+        elif metadata['functional_area']:
+            metadata['content_type'] = 'table_definition'
+        else:
+            metadata['content_type'] = 'documentation'
+            
+        metadata['summary'] = f"Page {page_num}: {metadata['content_type']} for {metadata['functional_area'] or 'unknown area'}"
+        
+        return metadata
 
 
 
