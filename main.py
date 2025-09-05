@@ -198,6 +198,112 @@ def query_command(semantic_rag, query_text, n_results=5):
         logger.error(f"Error executing query: {str(e)}")
         print(f"❌ Error executing query: {str(e)}")
 
+def build_relationships_command(semantic_rag):
+    """Build relationships between PDF key terms and mapping source columns"""
+    logger.info("Building relationships between PDF key terms and mapping source columns")
+    
+    try:
+        print("\n🔗 Building PDF-to-Mapping Relationships...")
+        print("=" * 50)
+        
+        # Extract PDF chunks with key terms
+        pdf_chunks = []
+        mapping_rows = []
+        
+        for doc_id, doc in semantic_rag.processed_documents.items():
+            if doc.get('type') == 'pdf_page':
+                llm_analysis = doc.get('llm_analysis', {})
+                key_terms = llm_analysis.get('key_concepts', []) or llm_analysis.get('key_terms', [])
+                
+                # Also try to get key terms from metadata
+                if not key_terms:
+                    key_terms = doc.get('metadata', {}).get('key_terms', [])
+                
+                if key_terms:
+                    pdf_chunks.append({
+                        'id': doc_id,
+                        'key_terms': key_terms,
+                        'source_file': doc.get('source_file', 'unknown'),
+                        'page_number': doc.get('metadata', {}).get('page_number', 'unknown')
+                    })
+            
+            elif doc.get('type') == 'csv_row' and doc.get('metadata', {}).get('_mapping_type') == 'data_mapping':
+                source_column = (doc.get('metadata', {}).get('source_column') or 
+                               doc.get('metadata', {}).get('Source Column'))
+                if source_column:
+                    mapping_rows.append({
+                        'id': doc_id,
+                        'source_column': source_column,
+                        'source_table': doc.get('metadata', {}).get('source_table', ''),
+                        'target_field': doc.get('metadata', {}).get('target_field', ''),
+                        'source_file': doc.get('source_file', 'unknown')
+                    })
+        
+        print(f"📄 Found {len(pdf_chunks)} PDF chunks with key terms")
+        print(f"📊 Found {len(mapping_rows)} mapping rows with source columns")
+        
+        if not pdf_chunks:
+            print("⚠️  No PDF chunks with key terms found. Make sure files have been processed.")
+            return
+        
+        if not mapping_rows:
+            print("⚠️  No mapping rows found. Make sure CSV files have been processed.")
+            return
+        
+        # Build relationships using the new method
+        relationships_built = 0
+        
+        for pdf_chunk in pdf_chunks:
+            key_terms = pdf_chunk.get('key_terms', [])
+            pdf_id = pdf_chunk.get('id')
+            
+            for mapping_row in mapping_rows:
+                source_col = mapping_row.get('source_column')
+                mapping_id = mapping_row.get('id')
+                
+                if not source_col or not pdf_id or not mapping_id:
+                    continue
+                
+                # Check for exact match (case-insensitive)
+                for term in key_terms:
+                    if term and source_col and term.strip().lower() == source_col.strip().lower():
+                        # High confidence (exact match)
+                        semantic_rag.relationship_graph.add_relationship(
+                            mapping_id, pdf_id,
+                            relationship_type='field_to_pdf_keyterm',
+                            weight=1.0,
+                            source_column=source_col,
+                            source_table=mapping_row.get('source_table', ''),
+                            target_field=mapping_row.get('target_field', ''),
+                            matched_term=term,
+                            confidence=1.0,
+                            description=f"Mapping source column '{source_col}' matches PDF key term '{term}'"
+                        )
+                        relationships_built += 1
+                        print(f"   ✅ {source_col} ↔ {pdf_chunk.get('source_file', 'unknown')} (page {pdf_chunk.get('page_number', 'unknown')})")
+                        break  # Only create one relationship per mapping-PDF pair
+        
+        print(f"\n🎉 Relationship building completed!")
+        print(f"   📈 Built {relationships_built} high-confidence relationships")
+        print(f"   🔗 Total nodes in graph: {semantic_rag.relationship_graph.graph.number_of_nodes()}")
+        print(f"   🔗 Total edges in graph: {semantic_rag.relationship_graph.graph.number_of_edges()}")
+        
+        if relationships_built == 0:
+            print("\n💡 No exact matches found between PDF key terms and mapping source columns.")
+            print("   This could mean:")
+            print("   • PDF key terms don't match source column names exactly")
+            print("   • Different naming conventions are used")
+            print("   • Consider reviewing the key terms extraction logic")
+            
+            # Show some examples for debugging
+            if pdf_chunks and mapping_rows:
+                print(f"\n🔍 Sample PDF key terms: {pdf_chunks[0]['key_terms'][:5]}")
+                print(f"🔍 Sample mapping columns: {[row['source_column'] for row in mapping_rows[:5]]}")
+        
+    except Exception as e:
+        logger.error(f"Error building relationships: {str(e)}")
+        print(f"❌ Error building relationships: {str(e)}")
+
 def export_command(semantic_rag, output_directory):
     """Export system state"""
     logger.info(f"Exporting system state to: {output_directory}")
@@ -319,6 +425,9 @@ Examples:
   # Process files and build system
   python main.py --process-files files/
 
+  # Build relationships between PDF terms and mapping columns
+  python main.py --build-relationships
+
   # Query the system
   python main.py --query "What are the main claims fields?"
 
@@ -335,6 +444,8 @@ Examples:
     
     parser.add_argument('--process-files', metavar='DIR',
                         help='Process files from directory')
+    parser.add_argument('--build-relationships', action='store_true',
+                        help='Build relationships between PDF key terms and mapping source columns')
     parser.add_argument('--query', metavar='TEXT',
                         help='Query the system')
     parser.add_argument('--export-state', metavar='DIR',
@@ -353,7 +464,7 @@ Examples:
     args = parser.parse_args()
     
     if not any([args.process_files, args.query, args.export_state, 
-                args.visualize_graph, args.interactive]):
+                args.visualize_graph, args.interactive, args.build_relationships]):
         parser.print_help()
         return
     
@@ -377,6 +488,9 @@ Examples:
         )
         if not success:
             return
+    
+    if args.build_relationships:
+        build_relationships_command(semantic_rag)
     
     if args.query:
         query_command(semantic_rag, args.query, args.n_results)
