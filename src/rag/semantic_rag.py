@@ -60,6 +60,43 @@ class SemanticRAG:
         self.relationships = []
         
         logger.info("Semantic RAG system initialized")
+
+    def load_processed_documents(self, documents_file: str = None) -> bool:
+        """
+        Load previously processed documents from JSON file.
+        
+        Args:
+            documents_file (str): Path to processed documents JSON file
+            
+        Returns:
+            bool: True if loaded successfully, False otherwise
+        """
+        if documents_file is None:
+            # Try default locations
+            possible_paths = [
+                "exports/processed_documents.json",
+                "data/exports/processed_documents.json",
+                "./processed_documents.json"
+            ]
+            
+            for path in possible_paths:
+                if os.path.exists(path):
+                    documents_file = path
+                    break
+            
+            if documents_file is None:
+                logger.info("No processed documents file found to load")
+                return False
+        
+        try:
+            with open(documents_file, 'r', encoding='utf-8') as f:
+                self.processed_documents = json.load(f)
+            
+            logger.info(f"Loaded {len(self.processed_documents)} processed documents from {documents_file}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to load processed documents: {e}")
+            return False
     
     def add_document(self, content: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -521,6 +558,26 @@ class SemanticRAG:
             logger.warning(f"   ⚠️ Errors encountered: {len(processing_results['errors'])}")
         
         return processing_results
+
+    def _initialize_graph_nodes(self):
+        """Initialize graph nodes from processed documents without heavy relationship building"""
+        logger.info("Initializing graph nodes from processed documents")
+        
+        # Add documents as nodes
+        for doc_id, doc_data in self.processed_documents.items():
+            node_attrs = {
+                'node_type': doc_data['type'],
+                'source_file': doc_data['source_file'],
+                'content_length': len(doc_data.get('content', ''))
+            }
+            
+            # Add metadata, avoiding conflicts
+            metadata = doc_data.get('metadata', {})
+            for key, value in metadata.items():
+                if key not in node_attrs:  # Avoid overwriting existing attributes
+                    node_attrs[key] = value
+            
+            self.relationship_graph.add_node(doc_id, **node_attrs)
     
     def generate_embeddings(self, batch_size: int = 32, use_local: bool = False) -> Dict[str, Any]:
         """

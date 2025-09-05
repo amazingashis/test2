@@ -202,25 +202,34 @@ class FileParser:
                 total_pages = len(reader.pages)
                 logger.info(f"📄 Starting PDF analysis: {total_pages} pages found")
                 
-                # Process each page as a separate chunk
+                # Process pages in batches of 5
+                pages_to_process = []
                 for page_num, page in enumerate(reader.pages):
-                    # Show progress for every 5 pages or at key milestones
-                    if page_num % 5 == 0 or page_num == 0 or page_num == total_pages - 1:
-                        progress = ((page_num + 1) / total_pages) * 100
-                        logger.info(f"   🔍 Analyzing page {page_num + 1}/{total_pages} ({progress:.1f}%)")
-                    
                     page_text = page.extract_text() or ""
                     if page_text.strip():
+                        pages_to_process.append((page_num + 1, page_text))
                         # Add page text to full text
                         text += f"\n--- Page {page_num + 1} ---\n{page_text}"
-                        
+                
+                # Process pages in batches of 5
+                batch_size = 5
+                for batch_start in range(0, len(pages_to_process), batch_size):
+                    batch_end = min(batch_start + batch_size, len(pages_to_process))
+                    batch_pages = pages_to_process[batch_start:batch_end]
+                    
+                    # Show progress for each batch
+                    progress = (batch_end / len(pages_to_process)) * 100
+                    logger.info(f"   🔍 Analyzing pages {batch_start + 1}-{batch_end}/{len(pages_to_process)} ({progress:.1f}%)")
+                    
+                    # Process each page in the batch
+                    for page_num, page_text in batch_pages:
                         # Create page chunk with LLM analysis
                         page_chunk = {
-                            'page_number': page_num + 1,
+                            'page_number': page_num,
                             'text': page_text,
-                            'chunk_id': f"page_{page_num + 1}",
+                            'chunk_id': f"page_{page_num}",
                             'source_file': os.path.basename(file_path),
-                            'llm_metadata': FileParser._analyze_page_with_llm(page_text, page_num + 1)
+                            'llm_metadata': FileParser._analyze_page_with_llm(page_text, page_num)
                         }
                         page_chunks.append(page_chunk)
                 

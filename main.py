@@ -2,7 +2,16 @@
 """
 Semantic RAG System Main Entry Point
 
-This script implements a comprehensive semantic RAG (Retrieval-Augmented Generation) system
+This script implements a comprehensive semantic RAG (Retrieval-Augmented        # Still initialize nodes even if skipping graph building
+        semantic_rag._initialize_graph_nodes()
+        
+        # Auto-export processed documents for relationship building
+        print("\n💾 Auto-exporting processed documents...")
+        os.makedirs("exports", exist_ok=True)
+        export_paths = semantic_rag.export_system_state("exports")
+        print(f"✅ Documents exported to exports/ for relationship building")
+        
+        # Show system statuseration) system
 with relationship graphs and vector database storage.
 
 Features:
@@ -126,19 +135,23 @@ def process_files_command(semantic_rag, files_directory, generate_embeddings=Tru
         # Build relationship graph
         if build_graph:
             print("\n🕸️  Building relationship graph...")
-            graph_results = semantic_rag.build_relationship_graph(similarity_threshold=0.7)
+            # Only build basic node structure, skip old semantic relationships
+            semantic_rag._initialize_graph_nodes()
+            print("✅ Graph nodes initialized (use --build-relationships for field mappings)")
             
-            if graph_results['success']:
-                stats = graph_results['graph_statistics']
-                print(f"✅ Built relationship graph:")
-                print(f"   - Nodes: {stats['num_nodes']}")
-                print(f"   - Edges: {stats['num_edges']}")
-                print(f"   - Density: {stats['density']:.3f}")
-                print(f"   - Semantic relationships: {graph_results['semantic_relationships']}")
-                print(f"   - Mapping relationships: {graph_results['mapping_relationships']}")
-                print(f"   - Field relationships: {graph_results['field_relationships']}")
-            else:
-                print("❌ Graph building failed")
+            # Show basic stats
+            status = semantic_rag.get_system_status()
+            print(f"   - Graph nodes: {status['relationship_graph']['num_nodes']}")
+            print(f"   - Graph edges: {status['relationship_graph']['num_edges']}")
+        else:
+            # Still initialize nodes even if skipping graph building
+            semantic_rag._initialize_graph_nodes()
+        
+        # Auto-export processed documents for relationship building
+        print("\n💾 Auto-exporting processed documents...")
+        os.makedirs("exports", exist_ok=True)
+        export_paths = semantic_rag.export_system_state("exports")
+        print(f"✅ Documents exported to exports/ for relationship building")
         
         # Show system status
         print("\n📊 System Status:")
@@ -206,6 +219,15 @@ def build_relationships_command(semantic_rag):
         print("\n🔗 Building PDF-to-Mapping Relationships...")
         print("=" * 50)
         
+        # Load existing processed documents if available
+        if not semantic_rag.processed_documents:
+            print("📂 Loading previously processed documents...")
+            if semantic_rag.load_processed_documents():
+                print(f"✅ Loaded {len(semantic_rag.processed_documents)} processed documents")
+            else:
+                print("⚠️  No processed documents found. Please run --process-files first.")
+                return
+        
         # Extract PDF chunks with key terms
         pdf_chunks = []
         mapping_rows = []
@@ -213,37 +235,100 @@ def build_relationships_command(semantic_rag):
         for doc_id, doc in semantic_rag.processed_documents.items():
             if doc.get('type') == 'pdf_page':
                 llm_analysis = doc.get('llm_analysis', {})
-                key_terms = llm_analysis.get('key_concepts', []) or llm_analysis.get('key_terms', [])
                 
-                # Also try to get key terms from metadata
-                if not key_terms:
-                    key_terms = doc.get('metadata', {}).get('key_terms', [])
+                # Try multiple sources for key terms
+                key_terms = []
+                
+                # 1. From LLM analysis key_concepts
+                if llm_analysis.get('key_concepts'):
+                    key_terms.extend(llm_analysis['key_concepts'])
+                
+                # 2. From LLM analysis fields (field names are key terms)
+                if llm_analysis.get('fields'):
+                    for field in llm_analysis['fields']:
+                        if field.get('field_name'):
+                            key_terms.append(field['field_name'])
+                
+                # 3. From metadata directly
+                metadata = doc.get('metadata', {})
+                if metadata.get('key_concepts'):
+                    key_terms.extend(metadata['key_concepts'])
+                if metadata.get('key_terms'):
+                    key_terms.extend(metadata['key_terms'])
+                
+                # 4. Fallback to table name and functional area
+                if llm_analysis.get('table_name'):
+                    key_terms.append(llm_analysis['table_name'])
+                if llm_analysis.get('functional_area'):
+                    key_terms.append(llm_analysis['functional_area'])
+                
+                # Remove duplicates and empty terms
+                key_terms = list(set([term.strip() for term in key_terms if term and term.strip()]))
                 
                 if key_terms:
                     pdf_chunks.append({
                         'id': doc_id,
                         'key_terms': key_terms,
                         'source_file': doc.get('source_file', 'unknown'),
-                        'page_number': doc.get('metadata', {}).get('page_number', 'unknown')
+                        'page_number': doc.get('metadata', {}).get('page_number', 'unknown'),
+                        'llm_analysis': llm_analysis
                     })
             
             elif doc.get('type') == 'csv_row' and doc.get('metadata', {}).get('_mapping_type') == 'data_mapping':
-                source_column = (doc.get('metadata', {}).get('source_column') or 
-                               doc.get('metadata', {}).get('Source Column'))
+                # Try multiple possible source column field names
+                metadata = doc.get('metadata', {})
+                source_column = None
+                
+                # Try different variations of source column names
+                possible_source_keys = [
+                    'source_column', 'Source Column', 'source_field', 'Source Field',
+                    '\ufeffSource\xa0Field',  # Handle BOM and non-breaking space
+                    'Source\xa0Field',       # Handle non-breaking space
+                    '\ufeffSource Field',    # Handle BOM with regular space
+                    'Source Field'           # Regular space
+                ]
+                
+                for key in possible_source_keys:
+                    if key in metadata and metadata[key]:
+                        source_column = metadata[key]
+                        break
+                
                 if source_column:
                     mapping_rows.append({
                         'id': doc_id,
                         'source_column': source_column,
-                        'source_table': doc.get('metadata', {}).get('source_table', ''),
-                        'target_field': doc.get('metadata', {}).get('target_field', ''),
+                        'source_table': metadata.get('source_table', ''),
+                        'target_field': metadata.get('target_field', ''),
                         'source_file': doc.get('source_file', 'unknown')
                     })
         
         print(f"📄 Found {len(pdf_chunks)} PDF chunks with key terms")
         print(f"📊 Found {len(mapping_rows)} mapping rows with source columns")
         
+        # Debug information
+        if len(pdf_chunks) > 0:
+            sample_chunk = pdf_chunks[0]
+            print(f"🔍 Sample PDF key terms: {sample_chunk['key_terms'][:10]}")  # Show first 10
+        if len(mapping_rows) > 0:
+            sample_mapping = mapping_rows[0]
+            print(f"🔍 Sample mapping columns: {[row['source_column'] for row in mapping_rows[:5]]}")
+        
         if not pdf_chunks:
             print("⚠️  No PDF chunks with key terms found. Make sure files have been processed.")
+            
+            # Show debug info about what PDF documents we have
+            pdf_docs = [doc for doc_id, doc in semantic_rag.processed_documents.items() 
+                       if doc.get('type') in ['pdf_page', 'pdf']]
+            print(f"🔍 Debug: Found {len(pdf_docs)} PDF documents in processed_documents")
+            
+            if pdf_docs:
+                sample_pdf = pdf_docs[0]
+                print(f"🔍 Debug: Sample PDF doc type: {sample_pdf.get('type')}")
+                print(f"🔍 Debug: Sample PDF metadata keys: {list(sample_pdf.get('metadata', {}).keys())}")
+                if sample_pdf.get('llm_analysis'):
+                    print(f"🔍 Debug: Sample LLM analysis keys: {list(sample_pdf.get('llm_analysis', {}).keys())}")
+                else:
+                    print("🔍 Debug: No llm_analysis found in sample PDF")
             return
         
         if not mapping_rows:
